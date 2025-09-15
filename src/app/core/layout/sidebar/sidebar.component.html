@@ -1,0 +1,33 @@
+<div class="h-full flex flex-col">
+  @let isCompact = navStyle() === "compact";
+  <section
+    class="flex items-center justify-between px-4 py-4"
+    [class.justify-center]="isCompact"
+  >
+    <figure class="h-8" [class.hidden]="isCompact">
+      <img
+        src="images/web/rd_admin_tool.svg"
+        alt="RD Admin Tool"
+        class="h-full"
+      />
+    </figure>
+    <button
+      (click)="toggleNavStyle()"
+      class="text-surface-500 size-8 rounded cursor-pointer hover:bg-surface-100 transition-colors duration-300"
+      [class.hidden]="!collapseButton()"
+    >
+      <i
+        class="fas"
+        [class]="isCompact ? 'fas fa-angles-right' : 'fas fa-angles-left'"
+      ></i>
+    </button>
+  </section>
+
+  <app-scroll-container styleClass="h-[calc(100dvh-104px)]">
+    <!-- <section class="flex-1 overflow-y-auto"> -->
+    <app-navigation [navItems]="navItems()" [navStyle]="navStyle()" />
+    <!-- </section> -->
+  </app-scroll-container>
+
+  <section class="h-10"></section>
+</div>

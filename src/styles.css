@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@import "../public/styles/color.css";
+@import "../public/styles/tailwind.css";
+@import "../public/styles/fonts.css";
+@import "../public/styles/global.css";
+@import "../public/styles/utilities.css";
+@import "../public/styles/primeng.css";
+
+@import "../public/fonts/fa-pro-6.2.1/css/all.min.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
