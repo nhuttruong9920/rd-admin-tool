@@ -11,7 +11,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
   template: `
     <!-- nav -->
     <nav
-      class="h-dvh fixed top-0 left-0 bg-surface transition-[width] duration-300 shadow-[0_0_8px_rgba(0,0,0,0.3)] hidden sm:block"
+      class="h-dvh fixed top-0 left-0 bg-surface transition-[width] duration-300 shadow-[0_0_4px_rgba(0,0,0,0.3)] hidden sm:block"
       [style.width.px]="navWidthPx()"
     >
       <app-sidebar />
