@@ -1,0 +1,219 @@
+<div class="p-6">
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">Dog Breeds</h1>
+    <div class="flex items-center justify-between mb-4">
+      <p class="text-gray-600">
+        @if (dogStore.hasBreeds()) {
+          @if (dogStore.isSearching()) {
+            Found {{ dogStore.filteredBreeds().length }} breeds matching your
+            search
+          } @else {
+            Showing {{ dogStore.breedsCount() }} of
+            {{ dogStore.totalRecords() }} breeds
+          }
+        } @else {
+          Discover amazing dog breeds from around the world
+        }
+      </p>
+      <button
+        (click)="onReset()"
+        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+        [disabled]="dogStore.isFetching()"
+      >
+        Reset
+      </button>
+    </div>
+
+    <!-- Search Bar -->
+    @if (dogStore.hasBreeds()) {
+      <div class="relative max-w-md">
+        <div
+          class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+        >
+          <i class="fas fa-search text-gray-400"></i>
+        </div>
+        <input
+          type="text"
+          [ngModel]="dogStore.searchTerm()"
+          (ngModelChange)="onSearch($event)"
+          placeholder="Search by breed name or description..."
+          class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+        />
+        @if (dogStore.isSearching()) {
+          <button
+            (click)="onClearSearch()"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center"
+          >
+            <i
+              class="fas fa-times text-gray-400 hover:text-gray-600 transition-colors"
+            ></i>
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Initial Loading State (Fetching) -->
+  @if (dogStore.isFetching()) {
+    <div class="flex items-center justify-center py-12">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+      ></div>
+      <span class="ml-3 text-lg text-gray-600">Loading dog breeds...</span>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (dogStore.hasError()) {
+    <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <i class="fas fa-exclamation-triangle text-red-400 text-xl"></i>
+        </div>
+        <div class="ml-3 flex-1">
+          <h3 class="text-sm font-medium text-red-800">Error</h3>
+          <p class="mt-1 text-sm text-red-700">{{ dogStore.errorMessage() }}</p>
+        </div>
+        <div class="ml-4">
+          <button
+            (click)="onRetry()"
+            class="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded text-sm font-medium transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Breeds Grid -->
+  @if (dogStore.hasBreeds()) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+      @for (breed of dogStore.filteredBreeds(); track breed.id) {
+        <div
+          class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+        >
+          <!-- Breed Header -->
+          <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-4">
+            <h3 class="text-xl font-bold text-white">
+              {{ breed.attributes.name }}
+            </h3>
+            @if (breed.attributes.hypoallergenic) {
+              <span
+                class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full mt-2"
+              >
+                Hypoallergenic
+              </span>
+            }
+          </div>
+
+          <!-- Breed Details -->
+          <div class="p-4">
+            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+              {{ breed.attributes.description }}
+            </p>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <!-- Lifespan -->
+              <div class="bg-gray-50 p-3 rounded">
+                <div class="flex items-center mb-1">
+                  <i class="fas fa-heart text-red-500 mr-2"></i>
+                  <span class="text-xs font-medium text-gray-500 uppercase"
+                    >Lifespan</span
+                  >
+                </div>
+                <p class="text-sm font-semibold text-gray-800">
+                  {{ breed.attributes.life.min }}-{{
+                    breed.attributes.life.max
+                  }}
+                  years
+                </p>
+              </div>
+
+              <!-- Male Weight -->
+              <div class="bg-gray-50 p-3 rounded">
+                <div class="flex items-center mb-1">
+                  <i class="fas fa-mars text-blue-500 mr-2"></i>
+                  <span class="text-xs font-medium text-gray-500 uppercase"
+                    >Male Weight</span
+                  >
+                </div>
+                <p class="text-sm font-semibold text-gray-800">
+                  {{ breed.attributes.male_weight.min }}-{{
+                    breed.attributes.male_weight.max
+                  }}
+                  kg
+                </p>
+              </div>
+
+              <!-- Female Weight -->
+              <div class="bg-gray-50 p-3 rounded col-span-2">
+                <div class="flex items-center mb-1">
+                  <i class="fas fa-venus text-pink-500 mr-2"></i>
+                  <span class="text-xs font-medium text-gray-500 uppercase"
+                    >Female Weight</span
+                  >
+                </div>
+                <p class="text-sm font-semibold text-gray-800">
+                  {{ breed.attributes.female_weight.min }}-{{
+                    breed.attributes.female_weight.max
+                  }}
+                  kg
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Load More Section -->
+    <div class="text-center">
+      @if (dogStore.currentPage() < dogStore.totalPages()) {
+        <button
+          (click)="onLoadMore()"
+          [disabled]="dogStore.isLoading()"
+          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          @if (dogStore.isLoading()) {
+            <i class="fas fa-spinner fa-spin mr-2"></i>
+            Loading More...
+          } @else {
+            Load More Breeds
+          }
+        </button>
+        <p class="text-sm text-gray-500 mt-2">
+          Page {{ dogStore.currentPage() }} of {{ dogStore.totalPages() }}
+        </p>
+      } @else {
+        <div class="text-gray-500">
+          <i class="fas fa-paw text-2xl mb-2"></i>
+          <p>You've seen all {{ dogStore.totalRecords() }} dog breeds!</p>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Empty State (when no breeds and not loading) -->
+  @if (
+    !dogStore.hasBreeds() && !dogStore.isFetching() && !dogStore.hasError()
+  ) {
+    <div class="text-center py-12">
+      <i class="fas fa-dog text-6xl text-gray-300 mb-4"></i>
+      <h3 class="text-xl font-semibold text-gray-700 mb-2">
+        No Dog Breeds Found
+      </h3>
+      <p class="text-gray-500 mb-4">
+        Click the button below to load dog breeds
+      </p>
+      <button
+        (click)="onRetry()"
+        class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        Load Dog Breeds
+      </button>
+    </div>
+  }
+</div>

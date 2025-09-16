@@ -1,0 +1,42 @@
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DogStore } from '../../shared/stores/dog.store';
+
+@Component({
+  selector: 'app-dogs-2',
+  imports: [CommonModule, FormsModule],
+  templateUrl: './dogs-2.component.html',
+})
+export class Dogs2Component implements OnInit {
+  readonly dogStore = inject(DogStore);
+
+  ngOnInit(): void {
+    // Ensure breeds are loaded (store handles the logic)
+    this.dogStore.ensureBreeds();
+  }
+
+  onLoadMore(): void {
+    const nextPage = this.dogStore.currentPage() + 1;
+    if (nextPage <= this.dogStore.totalPages()) {
+      this.dogStore.loadMoreBreeds({ page: nextPage });
+    }
+  }
+
+  onRetry(): void {
+    this.dogStore.clearError();
+    this.dogStore.loadBreeds({ page: 1 });
+  }
+
+  onReset(): void {
+    this.dogStore.reset();
+  }
+
+  onSearch(searchTerm: string): void {
+    this.dogStore.setSearchTerm(searchTerm);
+  }
+
+  onClearSearch(): void {
+    this.dogStore.clearSearch();
+  }
+}

@@ -77,6 +77,18 @@ export class SidebarComponent {
           routerLink: '/others/chatbot',
           command: (): void => this.closeOverlayNav(),
         },
+        {
+          label: 'Dog',
+          icon: 'far fa-dog',
+          routerLink: '/others/dogs',
+          command: (): void => this.closeOverlayNav(),
+        },
+        {
+          label: 'Dog 2',
+          icon: 'far fa-dog',
+          routerLink: '/others/dogs-2',
+          command: (): void => this.closeOverlayNav(),
+        },
       ],
     },
   ]);

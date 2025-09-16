@@ -71,6 +71,22 @@ export const routes: Routes = [
               ),
             title: 'Chatbot',
           },
+          {
+            path: 'dogs',
+            loadComponent: () =>
+              import('./features/dogs/dogs.component').then(
+                (m) => m.DogsComponent,
+              ),
+            title: 'Dog',
+          },
+          {
+            path: 'dogs-2',
+            loadComponent: () =>
+              import('./features/dogs-2/dogs-2.component').then(
+                (m) => m.Dogs2Component,
+              ),
+            title: 'Dog 2',
+          },
         ],
       },
     ],
