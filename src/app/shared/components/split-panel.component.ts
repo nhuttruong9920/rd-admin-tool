@@ -14,7 +14,7 @@ import { LayoutService } from '@core/services';
   imports: [NgTemplateOutlet],
   template: `
     <div class="h-full w-full p-0 sm:p-2 overflow-hidden">
-      <div class="h-full w-full ">
+      <div class="h-full w-full relative">
         <div
           class="h-full w-full flex gap-2"
           [class.!gap-0]="!isRightPanelOpened()"
@@ -32,6 +32,7 @@ import { LayoutService } from '@core/services';
             <ng-container *ngTemplateOutlet="rightContent()" />
           </section>
         </div>
+
         <section
           id="mobile-right-panel"
           class="h-full w-full sm:hidden bg-surface transition-transform duration-300 absolute top-0 left-0"

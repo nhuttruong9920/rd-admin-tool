@@ -2,9 +2,9 @@ import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { StorageService } from '@core/services';
 
-import { fromEvent, map, startWith } from 'rxjs';
 import { LSKeys } from '@shared/constants';
 import { NavStyle, WidthBreakpoint } from '@shared/types';
+import { fromEvent, map, startWith } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

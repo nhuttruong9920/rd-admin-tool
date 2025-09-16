@@ -5,10 +5,16 @@ import { ButtonModule } from 'primeng/button';
 import { LayoutService } from '@core/services';
 import { NavigationComponent } from '@shared/components';
 import { ScrollContainerComponent } from '@shared/components/scroll-container.component';
+import { LogoComponent } from '@shared/components/logo/logo.component';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [NavigationComponent, ButtonModule, ScrollContainerComponent],
+  imports: [
+    NavigationComponent,
+    ButtonModule,
+    ScrollContainerComponent,
+    LogoComponent,
+  ],
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent {
@@ -16,6 +22,7 @@ export class SidebarComponent {
   #themeService = inject(ThemeService);
 
   navStyle = computed(() => this.#layoutService.navStyle());
+  isDarkMode = computed(() => this.#themeService.isDarkMode());
 
   navItems = signal<NavItem[]>([
     {

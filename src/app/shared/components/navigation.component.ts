@@ -28,7 +28,7 @@ import { filter } from 'rxjs';
       @for (items of navItems(); track items.label; let last = $last) {
         @if (items.children) {
           <div class="mb-4" [class.!mb-0]="last">
-            <h6 class="text-sm font-bold text-surface-500 mb-1 ml-2">
+            <h6 class="text-sm font-bold text-surface-500 mb-1 ml-4">
               {{ items.label }}
             </h6>
             <div class="flex flex-col gap-1">

@@ -8,11 +8,11 @@
 .leaflet-touch .leaflet-control-layers-toggle {
   width: 36px;
   height: 36px;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .leaflet-control-layers {
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .leaflet-touch .leaflet-bar a {
@@ -24,13 +24,13 @@
 }
 
 .leaflet-touch .leaflet-bar a:first-child {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
 
 .leaflet-touch .leaflet-bar a:last-child {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
 .dark {

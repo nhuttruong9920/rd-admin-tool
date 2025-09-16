@@ -5,15 +5,11 @@
     [class.justify-center]="isCompact"
   >
     <figure class="h-8" [class.hidden]="isCompact">
-      <img
-        src="images/web/rd_admin_tool.svg"
-        alt="RD Admin Tool"
-        class="h-full"
-      />
+      <app-logo [width]="118" [height]="32" />
     </figure>
     <button
       (click)="toggleNavStyle()"
-      class="text-surface-500 size-8 rounded cursor-pointer hover:bg-surface-100 transition-colors duration-300"
+      class="text-surface-500 size-8 flex-center rounded cursor-pointer hover:bg-surface-100 transition-colors duration-300"
       [class.hidden]="!collapseButton()"
     >
       <i
@@ -29,5 +25,9 @@
     <!-- </section> -->
   </app-scroll-container>
 
-  <section class="h-10"></section>
+  <section class="h-10">
+    <button class="size-8 flex-center" (click)="toggleDarkMode()">
+      <i [class]="isDarkMode() ? 'fas fa-moon' : 'fas fa-sun'"></i>
+    </button>
+  </section>
 </div>
