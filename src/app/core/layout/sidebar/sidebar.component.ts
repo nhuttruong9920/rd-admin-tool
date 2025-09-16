@@ -33,17 +33,20 @@ export class SidebarComponent {
           icon: 'far fa-cars',
           routerLink: '/monitor/all-vehicles',
           attention: true,
+          command: (): void => this.closeOverlayNav(),
         },
         {
           label: 'Xem lại lộ trình',
           icon: 'far fa-history',
           routerLink: '/monitor/history-replay',
           badge: '1',
+          command: (): void => this.closeOverlayNav(),
         },
         {
           label: 'Gửi lệnh',
           icon: 'far fa-rectangle-terminal',
           routerLink: '/monitor/send-command',
+          command: (): void => this.closeOverlayNav(),
         },
       ],
     },
@@ -55,11 +58,13 @@ export class SidebarComponent {
           label: 'Reverse Proxy',
           icon: 'far fa-exchange-alt',
           routerLink: '/reverse-proxy/reverse-proxy',
+          command: (): void => this.closeOverlayNav(),
         },
         {
           label: 'Traffic',
           icon: 'far fa-chart-line',
           routerLink: '/reverse-proxy/traffic',
+          command: (): void => this.closeOverlayNav(),
         },
       ],
     },
@@ -70,6 +75,7 @@ export class SidebarComponent {
           label: 'Chatbot',
           icon: 'far fa-message-bot',
           routerLink: '/others/chatbot',
+          command: (): void => this.closeOverlayNav(),
         },
       ],
     },
@@ -85,5 +91,9 @@ export class SidebarComponent {
 
   protected toggleDarkMode(): void {
     this.#themeService.toggleDarkMode();
+  }
+
+  private closeOverlayNav(): void {
+    this.#layoutService.isOverlayNavOpened.set(false);
   }
 }

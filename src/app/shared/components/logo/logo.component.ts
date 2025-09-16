@@ -4,8 +4,9 @@ import {
   ElementRef,
   input,
   signal,
-  viewChild,
+  viewChild
 } from '@angular/core';
+
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -59,7 +60,7 @@ import { environment } from 'src/environments/environment';
         [class]="isVersionShowing() ? 'block' : 'hidden'"
         [style.font-size.px]="versionTextSize()"
       >
-        v{{ prodVersion }}
+        v{{ prodVersion() }}
       </span>
     </div>
   `,
@@ -69,7 +70,7 @@ export class LogoComponent {
   width = input<number>();
   height = input<number>();
 
-  prodVersion = environment.version;
+  prodVersion = signal<string>(environment.version);
 
   logoContainer =
     viewChild.required<ElementRef<HTMLDivElement>>('logoContainer');

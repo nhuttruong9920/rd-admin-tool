@@ -21,7 +21,7 @@ type Button = {
 
 type Api<T> = {
   data: T | null;
-  code: string | null;
+  isSucceeded: boolean;
   message: string | null;
 };
 
