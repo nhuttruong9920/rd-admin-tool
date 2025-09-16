@@ -6,6 +6,8 @@
 @import "../public/styles/global.css";
 @import "../public/styles/utilities.css";
 @import "../public/styles/primeng.css";
+@import "../node_modules/leaflet/dist/leaflet.css";
+@import "../public/styles/leaflet.css";
 
 @import "../public/fonts/fa-pro-6.2.1/css/all.min.css";
 

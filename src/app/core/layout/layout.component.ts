@@ -19,12 +19,20 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 
     <!-- overlay nav - mobile nav -->
     <nav
-      class="h-dvh fixed z-2000 top-0 left-0 bg-surface transition-transform duration-300 block sm:hidden"
+      class="h-dvh fixed z-2000 top-0 left-0 bg-surface transition-transform duration-300"
       [style.width.px]="NAV_WIDTH_DEFAULT"
       [class.-translate-x-full]="!isOverlayNavOpened()"
     >
       <app-sidebar [collapseButton]="false" />
     </nav>
+
+    <button
+      class="h-dvh w-full z-1999 fixed top-0 left-0 bg-black/50 blur-sm transition-colors duration-300"
+      [class.hidden]="!isOverlayNavOpened()"
+      (click)="closeOverlayNav()"
+    ></button>
+
+    <!-- end overlay nav -->
 
     <section
       class="h-10 fixed top-0 left-0 w-full bg-blue-500 block sm:hidden"
@@ -57,4 +65,8 @@ export class LayoutComponent {
       ? this.NAV_WIDTH_DEFAULT
       : this.NAV_WIDTH_COMPACT;
   });
+
+  protected closeOverlayNav(): void {
+    this.#layoutService.isOverlayNavOpened.set(false);
+  }
 }

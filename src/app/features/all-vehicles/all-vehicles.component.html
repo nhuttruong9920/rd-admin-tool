@@ -1,3 +1,17 @@
-<div class="h-[calc(100dvh-52px)] p-0 md:p-2">
-  <app-split-panel />
+<div class="h-full-main-layout">
+  <app-split-panel>
+    <ng-template #leftContent>
+      <div class="h-full w-full relative">
+        <app-all-vehicles-map />
+      </div>
+    </ng-template>
+
+    <ng-template #rightContent
+      >right content
+      <br />
+      <button (click)="splitPanel().toggleMobileRightPanel()">
+        Toggle Mobile Right Panel
+      </button>
+    </ng-template>
+  </app-split-panel>
 </div>
