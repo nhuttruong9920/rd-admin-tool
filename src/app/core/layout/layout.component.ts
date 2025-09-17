@@ -51,7 +51,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
   `,
 })
 export class LayoutComponent {
-  NAV_WIDTH_DEFAULT = 250;
+  NAV_WIDTH_DEFAULT = 220;
   NAV_WIDTH_COMPACT = 78;
   #layoutService = inject(LayoutService);
   topBarHeightPx = signal<number>(52);
