@@ -10,7 +10,8 @@ import { VehicleCardComponent } from './vehicle-card/vehicle-card.component';
 })
 export class AllVehiclesPanelComponent {
   deviceStore = inject(DeviceStore);
-  
+
+
   protected searchImeis(event: string): void {
     this.deviceStore.setSearchTerm(event);
   }

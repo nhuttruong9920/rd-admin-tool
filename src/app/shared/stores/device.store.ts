@@ -14,11 +14,9 @@ import {
   DeviceState,
   DeviceStatus,
   DeviceStatusDto,
-  HistoryWaypointDto,
+  FormattedDevice,
+  FormattedInfo,
   OdoMeter,
-  OdoMeterData,
-  OdoMeterMode,
-  StatusDto,
 } from '@shared/types';
 import {
   BehaviorSubject,
@@ -103,28 +101,12 @@ export const DeviceStore = signalStore(
           map((res) => {
             if (!res.data) return null;
 
-            return res.data.map((item: DeviceStatusDto) => {
-              const selectedTime = Math.max(item.gpsTime, item.pingTime);
-              return {
-                ...item,
-                currentState: getDeviceState(
-                  item.last.status,
-                  selectedTime,
-                  item.last.speed,
-                  item.last.maxSpeed,
-                  dateService,
-                ),
-                iconClass: getDeviceIconClass(
-                  item.last.status,
-                  selectedTime,
-                  item.last.speed,
-                  item.last.maxSpeed,
-                  dateService,
-                ),
-                parsedParams: JSON.parse(item.last.params),
-                parsedOdoMeter: parseOdoMeter(item.last),
-              };
-            });
+            const processedData = res.data.map((item: DeviceStatusDto) => ({
+              ...item,
+              formatted: getFormattedDevice(item, dateService),
+            }));
+
+            return processedData;
           }),
           tap((processedData) => {
             patchState(store, {
@@ -134,6 +116,7 @@ export const DeviceStore = signalStore(
             });
           }),
           catchError((error) => {
+            console.log('error', error);
             patchState(store, {
               _loading: false,
               error: error.message || 'Lỗi khi tải dữ liệu thiết bị',
@@ -179,6 +162,40 @@ export const DeviceStore = signalStore(
 );
 
 // Helper functions for device processing
+
+function getFormattedDevice(
+  deviceStatusDto: DeviceStatusDto,
+  dateService: DateService,
+): FormattedDevice {
+  const selectedTime = Math.max(
+    deviceStatusDto.gpsTime,
+    deviceStatusDto.pingTime,
+  );
+  const parsedOdoMeter = parseOdoMeter(deviceStatusDto.last.params);
+  return {
+    address: deviceStatusDto.last.info ?? 'Không xác định',
+    pingTime: dateService.getFormattedDate(deviceStatusDto.pingTime),
+    gpsTime: dateService.getFormattedDate(deviceStatusDto.gpsTime),
+    state: getDeviceState(
+      deviceStatusDto.last.status,
+      selectedTime,
+      deviceStatusDto.last.speed,
+      deviceStatusDto.last.maxSpeed,
+      dateService,
+    ),
+    lat: deviceStatusDto.last.x / 1e6,
+    long: deviceStatusDto.last.y / 1e6,
+    mode: getOdoMeterMode(parsedOdoMeter),
+    battery: getBatteryInfo(parsedOdoMeter),
+    gpsSpeed: getGpsSpeed(deviceStatusDto.last.speed),
+    range: getRange(parsedOdoMeter),
+    vehicleSpeed: getVehicleSpeed(parsedOdoMeter),
+    odoTime: getOdoTime(parsedOdoMeter),
+    voltage: getVoltage(parsedOdoMeter),
+    odometer: getOdometer(parsedOdoMeter),
+  };
+}
+
 function getDeviceState(
   status: number,
   gpsTime: number,
@@ -195,7 +212,7 @@ function getDeviceState(
     return 'offline';
   }
   if (status === 1) {
-    const vehicleMaxSpeed = maxSpeed ?? 8000;
+    const vehicleMaxSpeed = maxSpeed || 8000;
     if (speed > vehicleMaxSpeed) {
       return 'overspeed';
     }
@@ -207,80 +224,106 @@ function getDeviceState(
   return 'disconnected';
 }
 
-function getDeviceIconClass(
-  status: number,
-  gpsTime: number,
-  speed: number,
-  maxSpeed: number,
-  dateService: DateService,
-): string {
-  const state = getDeviceState(status, gpsTime, speed, maxSpeed, dateService);
-  return `bg-car_${state}`;
-}
-
-function getBatteryIcon(batteryNumber: number, isCharging: boolean): string {
-  if (isCharging) return 'fa-battery-bolt';
-  if (batteryNumber === 100) return 'fa-battery-full';
-  if (batteryNumber >= 75) return 'fa-battery-three-quarters';
-  if (batteryNumber >= 50) return 'fa-battery-half';
-  if (batteryNumber >= 25) return 'fa-battery-quarter';
-  if (batteryNumber >= 5) return 'fa-battery-low';
-  if (batteryNumber >= 0) return 'fa-battery-empty';
-  return 'fa-battery-exclamation';
-}
-
-function getBatteryColorClass(batteryNumber: number): {
-  containerBgClass: string;
-  textClass: string;
-  iconBgClass: string;
-  progressBarClass: string;
-} {
-  const classes = {
-    containerBgClass: '',
-    textClass: '',
-    iconBgClass: '',
-    progressBarClass: '',
-  };
-  if (batteryNumber > 50) {
-    classes.containerBgClass =
-      'from-green-500/10 to-green-500/30 border-green-500/30';
-    classes.textClass = 'text-green-800 dark:text-green-200';
-    classes.iconBgClass = 'bg-green-500';
-    classes.progressBarClass = 'bg-green-500';
-  } else if (batteryNumber > 25) {
-    classes.containerBgClass =
-      'from-yellow-500/10 to-yellow-500/30 border-yellow-500/30';
-    classes.textClass = 'text-yellow-800 dark:text-yellow-200';
-    classes.iconBgClass = 'bg-yellow-500';
-    classes.progressBarClass = 'bg-yellow-500';
-  } else {
-    classes.containerBgClass =
-      'from-red-500/10 to-red-500/30 border-red-500/30';
-    classes.textClass = 'text-red-800 dark:text-red-200';
-    classes.iconBgClass = 'bg-red-500';
-    classes.progressBarClass = 'bg-red-500';
+function getOdoMeterMode(
+  parsedOdoMeter: OdoMeter | null,
+): FormattedInfo | null {
+  if (!parsedOdoMeter) {
+    return null;
   }
-  return classes;
-}
-
-function getOdoMeterMode(modeId: string): OdoMeterMode {
+  const modeId = parsedOdoMeter[0];
   const modes = [
     {
-      id: '0',
-      icon: 'fa-steering-wheel',
-      name: 'Normal',
-      classes: 'bg-gray-500 border-gray-500 text-white',
+      title: 'Normal',
+      value: 'Normal',
+      icon: 'fas fa-steering-wheel',
+      iconClass: 'text-surface-500 dark:text-surface-400',
     },
     {
-      id: '1',
-      icon: 'fa-seedling',
-      name: 'Eco',
-      classes: 'bg-green-500 border-green-500 text-white',
+      title: 'Eco',
+      value: 'Eco',
+      icon: 'fas fa-seedling',
+      iconClass: 'text-green-500 dark:text-green-400',
     },
   ];
 
-  const mode = modes.find((m) => m.id === modeId);
+  const mode = modes.find((m, index) => index === +modeId);
   return mode || modes[0];
+}
+
+function getBatteryInfo(
+  parsedOdoMeter: OdoMeter | null,
+): FormattedInfo & { isCharging: boolean } {
+  if (!parsedOdoMeter) {
+    return {
+      title: 'Pin',
+      value: 'N/A',
+      icon: 'fas fa-battery-exclamation',
+      iconClass: 'text-surface-500 dark:text-surface-400',
+      isCharging: false,
+    };
+  }
+  const batteryValue = +parsedOdoMeter[1];
+  const isCharging = parsedOdoMeter[3] === '1';
+
+  let icon = 'fas fa-battery-exclamation';
+  if (isCharging) {
+    icon = 'fas fa-battery-bolt';
+  } else if (batteryValue === 100) {
+    icon = 'fas fa-battery-full';
+  } else if (batteryValue >= 75) {
+    icon = 'fas fa-battery-three-quarters';
+  } else if (batteryValue >= 50) {
+    icon = 'fas fa-battery-half';
+  } else if (batteryValue >= 25) {
+    icon = 'fas fa-battery-quarter';
+  } else if (batteryValue >= 5) {
+    icon = 'fas fa-battery-low';
+  } else if (batteryValue >= 0) {
+    icon = 'fas fa-battery-empty';
+  }
+
+  const iconClass =
+    batteryValue > 50
+      ? 'text-green-500 dark:text-green-400'
+      : batteryValue > 25
+        ? 'text-yellow-500 dark:text-yellow-400'
+        : 'text-red-500 dark:text-red-400';
+
+  return {
+    title: 'Pin',
+    value: `${batteryValue}%`,
+    icon: icon,
+    iconClass: iconClass,
+    isCharging,
+  };
+}
+
+function getRange(parsedOdoMeter: OdoMeter | null): FormattedInfo {
+  if (!parsedOdoMeter) {
+    return {
+      title: 'QĐ còn lại',
+      value: 'N/A',
+      icon: 'fas fa-road',
+      iconClass: 'text-teal-500 dark:text-teal-400',
+    };
+  }
+
+  const range = parsedOdoMeter[2];
+  return {
+    title: 'QĐ còn lại',
+    value: `${range} km`,
+    icon: 'fas fa-road',
+    iconClass: 'text-teal-500 dark:text-teal-400',
+  };
+}
+
+function getGpsSpeed(speed: number): FormattedInfo {
+  return {
+    title: 'Vận tốc GSP',
+    value: `${speed / 100} km/h`,
+    icon: 'fas fa-microchip',
+    iconClass: 'text-violet-500 dark:text-violet-400',
+  };
 }
 
 function hexToBinary(hex: string): string {
@@ -290,16 +333,45 @@ function hexToBinary(hex: string): string {
     .join('');
 }
 
-function getOdoMeterTime(
-  time1: string,
-  time2: string,
-  time3: string,
-  time4: string,
-): string {
-  const hex1 = parseInt(time1).toString(16).padStart(2, '0');
-  const hex2 = parseInt(time2).toString(16).padStart(2, '0');
-  const hex3 = parseInt(time3).toString(16).padStart(2, '0');
-  const hex4 = parseInt(time4).toString(16).padStart(2, '0');
+function getVehicleSpeed(parsedOdoMeter: OdoMeter | null): FormattedInfo {
+  if (!parsedOdoMeter) {
+    return {
+      title: 'Vận tốc xe',
+      value: 'N/A',
+      icon: 'fas fa-car',
+      iconClass: 'text-fuchsia-500 dark:text-fuchsia-400',
+    };
+  }
+  const vehicleSpeed = parsedOdoMeter[4];
+  return {
+    title: 'Vận tốc xe',
+    value: `${vehicleSpeed} km/h`,
+    icon: 'fas fa-car',
+    iconClass: 'text-fuchsia-500 dark:text-fuchsia-400',
+  };
+}
+
+function getOdoTime(parsedOdoMeter: OdoMeter | null): FormattedInfo {
+  if (!parsedOdoMeter) {
+    return {
+      title: 'Thời gian',
+      value: 'N/A',
+      icon: 'fas fa-clock',
+      iconClass: 'text-emerald-500 dark:text-emerald-400',
+    };
+  }
+
+  // Convert odoMeter time parts into binary
+  const [t1, t2, t3, t4] = [
+    parsedOdoMeter[5],
+    parsedOdoMeter[6],
+    parsedOdoMeter[7],
+    parsedOdoMeter[8],
+  ];
+  const hex1 = parseInt(t1).toString(16).padStart(2, '0');
+  const hex2 = parseInt(t2).toString(16).padStart(2, '0');
+  const hex3 = parseInt(t3).toString(16).padStart(2, '0');
+  const hex4 = parseInt(t4).toString(16).padStart(2, '0');
 
   const binary = hexToBinary(`${hex1}${hex2}${hex3}${hex4}`);
 
@@ -312,67 +384,78 @@ function getOdoMeterTime(
   const minute = padTwo(parseInt(binary.slice(20, 26), 2));
   const second = padTwo(parseInt(binary.slice(26, 32), 2));
 
-  return `${day}/${month}/20${year} ${hour}:${minute}:${second}`;
+  const odoTime = `${day}/${month}/20${year} ${hour}:${minute}:${second}`;
+
+  return {
+    title: 'Thời gian',
+    value: odoTime,
+    icon: 'fas fa-clock',
+    iconClass: 'text-emerald-500 dark:text-emerald-400',
+  };
 }
 
-function getOdoMeterVoltage(voltage1: string, voltage2: string): number {
+function getVoltage(parsedOdoMeter: OdoMeter | null): FormattedInfo {
+  if (!parsedOdoMeter) {
+    return {
+      title: 'Điện áp',
+      value: 'N/A',
+      icon: 'fas fa-bolt',
+      iconClass: 'text-orange-500 dark:text-orange-400',
+    };
+  }
+
+  const [voltage1, voltage2] = [parsedOdoMeter[9], parsedOdoMeter[10]];
   const hex1 = parseInt(voltage1).toString(16).padStart(2, '0');
   const hex2 = parseInt(voltage2).toString(16).padStart(2, '0');
   const decimal = parseInt(`${hex1}${hex2}`, 16);
-  return Number.isNaN(decimal) ? 0 : decimal / 10;
+  const voltage = Number.isNaN(decimal) ? 0 : decimal / 10;
+
+  return {
+    title: 'Điện áp',
+    value: `${voltage.toFixed(2)} V`,
+    icon: 'fas fa-bolt',
+    iconClass: 'text-orange-500 dark:text-orange-400',
+  };
 }
 
-function getOdoMeterOdometer(
-  odometer1: string,
-  odometer2: string,
-  odometer3: string,
-): number {
+function getOdometer(parsedOdoMeter: OdoMeter | null): FormattedInfo {
+  if (!parsedOdoMeter) {
+    return {
+      title: 'Odo',
+      value: 'N/A',
+      icon: 'fas fa-meter',
+      iconClass: 'text-lime-500 dark:text-lime-400',
+    };
+  }
+  const [odometer1, odometer2, odometer3] = [
+    parsedOdoMeter[11],
+    parsedOdoMeter[12],
+    parsedOdoMeter[13],
+  ];
+
   const hex1 = parseInt(odometer1).toString(16).padStart(2, '0');
   const hex2 = parseInt(odometer2).toString(16).padStart(2, '0');
   const hex3 = parseInt(odometer3).toString(16).padStart(2, '0');
   const decimal = parseInt(`${hex1}${hex2}${hex3}`, 16);
-  return Number.isNaN(decimal) ? 0 : decimal / 16;
+  const odometer = Number.isNaN(decimal) ? 0 : decimal / 16;
+
+  return {
+    title: 'Odo',
+    value: `${odometer.toLocaleString()} km`,
+    icon: 'fas fa-meter',
+    iconClass: 'text-lime-500 dark:text-lime-400',
+  };
 }
 
-function parseOdoMeter(
-  waypoint: StatusDto | HistoryWaypointDto,
-): OdoMeterData | null {
-  const parsedParams = JSON.parse(waypoint.params);
-  if (!parsedParams?.OdoMeter) {
+function parseOdoMeter(paramsString: string): OdoMeter | null {
+  try {
+    const parsedParams = JSON.parse(paramsString);
+    if (!parsedParams?.OdoMeter) {
+      return null;
+    }
+    return (JSON.parse(parsedParams.OdoMeter) as OdoMeter) ?? null;
+  } catch (error) {
+    console.log('error', error);
     return null;
   }
-  const odoMeter = JSON.parse(parsedParams.OdoMeter) as OdoMeter;
-
-  if (!odoMeter) {
-    return null;
-  }
-
-  const batteryNumber = parseInt(odoMeter[1]);
-  const isCharging = odoMeter[3] === '1';
-  const mode = getOdoMeterMode(odoMeter[0]);
-  const speed = odoMeter[4] ? parseInt(odoMeter[4]) : 0;
-  const time = getOdoMeterTime(
-    odoMeter[5],
-    odoMeter[6],
-    odoMeter[7],
-    odoMeter[8],
-  );
-  const voltage = getOdoMeterVoltage(odoMeter[9], odoMeter[10]);
-  const odometer = getOdoMeterOdometer(
-    odoMeter[11],
-    odoMeter[12],
-    odoMeter[13],
-  );
-  return {
-    mode,
-    battery: batteryNumber,
-    batteryIcon: getBatteryIcon(batteryNumber, isCharging),
-    batteryColorClass: getBatteryColorClass(batteryNumber),
-    range: Number(odoMeter[2]),
-    isCharging,
-    speed: speed,
-    time,
-    voltage,
-    odometer,
-  };
 }

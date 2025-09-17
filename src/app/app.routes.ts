@@ -7,11 +7,11 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      // {
-      //   path: '',
-      //   redirectTo: 'monitor/all-vehicles',
-      //   pathMatch: 'full',
-      // },
+      {
+        path: '',
+        redirectTo: 'monitor/all-vehicles',
+        pathMatch: 'full',
+      },
       {
         path: 'monitor',
         component: createWrapperComponent([DeviceStore]),
@@ -72,22 +72,6 @@ export const routes: Routes = [
                 (m) => m.ChatbotComponent,
               ),
             title: 'Chatbot',
-          },
-          {
-            path: 'dogs',
-            loadComponent: () =>
-              import('./features/dogs/dogs.component').then(
-                (m) => m.DogsComponent,
-              ),
-            title: 'Dog',
-          },
-          {
-            path: 'dogs-2',
-            loadComponent: () =>
-              import('./features/dogs-2/dogs-2.component').then(
-                (m) => m.Dogs2Component,
-              ),
-            title: 'Dog 2',
           },
         ],
       },

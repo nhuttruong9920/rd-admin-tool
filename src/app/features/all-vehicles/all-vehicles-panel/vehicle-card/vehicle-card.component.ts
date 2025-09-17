@@ -12,14 +12,13 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 
-import { StorageService, NavigationService } from '@core/services';
+import { NavigationService, StorageService } from '@core/services';
 import {
-  VehicleIconComponent,
   QuickCommandManagerComponent,
+  VehicleIconComponent,
 } from '@shared/components';
 import { LSKeys } from '@shared/constants';
 import { DeviceStatus } from '@shared/types';
-import { ToDatePipe } from '@shared/pipes';
 
 @Component({
   selector: 'app-vehicle-card',
@@ -29,7 +28,6 @@ import { ToDatePipe } from '@shared/pipes';
     TieredMenuModule,
     DialogModule,
     QuickCommandManagerComponent,
-    ToDatePipe,
   ],
   templateUrl: './vehicle-card.component.html',
 })
@@ -45,46 +43,12 @@ export class VehicleCardComponent implements OnInit {
   moreMenu = computed<MenuItem[]>(() => this.updateMoreMenu());
 
   waypointInfo = computed(() => [
-    {
-      id: 'range',
-      title: 'QĐ còn lại',
-      value: this.device().parsedOdoMeter?.range,
-      unit: 'km',
-      icon: 'fas fa-route',
-      iconColorClass: 'text-blue-500 dark:text-blue-400',
-    },
-    {
-      id: 'voltage',
-      title: 'Điện áp',
-      value: this.device().parsedOdoMeter?.voltage,
-      unit: 'V',
-      icon: 'fas fa-bolt',
-      iconColorClass: 'text-orange-500 dark:text-orange-400',
-    },
-    {
-      id: 'speed',
-      title: 'Vận tốc xe',
-      value: this.device().parsedOdoMeter?.speed,
-      unit: 'km/h',
-      icon: 'fas fa-car',
-      iconColorClass: 'text-purple-500 dark:text-purple-400',
-    },
-    {
-      id: 'gpsSpeed',
-      title: 'Vận tốc GPS',
-      value: this.device().last.speed / 100,
-      unit: 'km/h',
-      icon: 'fas fa-microchip',
-      iconColorClass: 'text-violet-500 dark:text-violet-400',
-    },
-    {
-      id: 'odometer',
-      title: 'Odo meter',
-      value: this.device().parsedOdoMeter?.odometer,
-      unit: 'km',
-      icon: 'fas fa-meter',
-      iconColorClass: 'text-yellow-500 dark:text-yellow-400',
-    },
+    { ...this.device().formatted.voltage, colSpan: 'col-span-1' },
+    { ...this.device().formatted.range, colSpan: 'col-span-1' },
+    { ...this.device().formatted.odometer, colSpan: 'col-span-1' },
+    { ...this.device().formatted.gpsSpeed, colSpan: 'col-span-1' },
+    { ...this.device().formatted.vehicleSpeed, colSpan: 'col-span-1' },
+    { ...this.device().formatted.odoTime, colSpan: 'col-span-2' },
   ]);
 
   ngOnInit(): void {
@@ -108,38 +72,28 @@ export class VehicleCardComponent implements OnInit {
 
     const menuItems: MenuItem[] = [
       {
-        label: ' Gửi lệnh',
+        label: 'Gửi lệnh nhanh',
         icon: 'far fa-rectangle-terminal',
-        items: [
-          {
-            label: 'Gửi nhanh',
-            icon: 'far fa-rectangle-terminal',
-            items: quickCommandItems,
-          },
-          {
-            label: 'Trang gửi lệnh',
-            icon: 'far fa-arrow-up-right-from-square',
-            command: (): void =>
-              this.#navigationService.toSendCommand({ id: this.device().id }),
-          },
-        ],
+        items: quickCommandItems,
       },
-      { separator: true },
       {
-        label: 'Xem lại lộ trình',
+        label: 'Trang gửi lệnh',
+        icon: 'far fa-arrow-up-right-from-square',
+        command: (): void =>
+          this.#navigationService.toSendCommand({ id: this.device().id }),
+      },
+
+      { separator: true },
+
+      {
+        label: 'Xem nhanh lộ trình',
         icon: 'far fa-history',
-        items: [
-          {
-            label: 'Xem nhanh',
-            icon: 'far fa-history',
-          },
-          {
-            label: 'Trang xem lại lộ trình',
-            icon: 'far fa-arrow-up-right-from-square',
-            command: (): void =>
-              this.#navigationService.toReplayHistory({ id: this.device().id }),
-          },
-        ],
+      },
+      {
+        label: 'Trang xem lại lộ trình',
+        icon: 'far fa-arrow-up-right-from-square',
+        command: (): void =>
+          this.#navigationService.toReplayHistory({ id: this.device().id }),
       },
     ];
 
@@ -158,7 +112,6 @@ export class VehicleCardComponent implements OnInit {
   }
 
   private loadLocalCommands(): void {
-    console.log('loadLocalCommands');
     const localCommands: string[] =
       this.#storageService.getLocal(LSKeys.QUICK_COMMANDS, true) || [];
     this.quickCommands.set(localCommands);

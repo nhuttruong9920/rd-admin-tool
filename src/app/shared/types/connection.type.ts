@@ -151,13 +151,39 @@ type Package = PackageDto & {
   type: { label: string; value: number; color: string };
   isNew: boolean;
 };
-type DeviceState = 'disconnected' | 'offline' | 'stop' | 'running' | 'overspeed';
+type DeviceState =
+  | 'disconnected'
+  | 'offline'
+  | 'stop'
+  | 'running'
+  | 'overspeed';
+
+type FormattedInfo = {
+  title: string;
+  value: string;
+  icon: string;
+  iconClass: string;
+};
+
+type FormattedDevice = {
+  address: string;
+  pingTime: string;
+  gpsTime: string;
+  state: DeviceState;
+  lat: number;
+  long: number;
+  mode: FormattedInfo | null;
+  battery: FormattedInfo & { isCharging: boolean };
+  gpsSpeed: FormattedInfo;
+  range: FormattedInfo;
+  vehicleSpeed: FormattedInfo;
+  voltage: FormattedInfo;
+  odometer: FormattedInfo;
+  odoTime: FormattedInfo;
+};
 
 type DeviceStatus = DeviceStatusDto & {
-  iconClass: string;
-  currentState: DeviceState;
-  parsedParams: Record<string, string>;
-  parsedOdoMeter: OdoMeterData | null;
+  formatted: FormattedDevice;
 };
 
 type GetDeviceHistoryReq = {
@@ -228,14 +254,12 @@ type OdoMeterMode = {
 
 type OdoMeterData = {
   mode: OdoMeterMode;
-  battery: number;
-  batteryColorClass: {
-    containerBgClass: string;
-    textClass: string;
-    iconBgClass: string;
-    progressBarClass: string;
+  battery: {
+    value: number;
+    isCharging: boolean;
+    icon: string;
+    iconClass: string;
   };
-  batteryIcon: string;
   range: number;
   isCharging: boolean;
   speed: number;
@@ -249,6 +273,8 @@ export type {
   DeviceState,
   DeviceStatus,
   DeviceStatusDto,
+  FormattedDevice,
+  FormattedInfo,
   GetDeviceHistoryReq,
   GetDeviceStatusReq,
   GetInfoReq,

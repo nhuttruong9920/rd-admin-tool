@@ -129,9 +129,15 @@ export class QuickCommandManagerComponent implements OnInit {
   }
 
   protected createCommand(): void {
-    if (this.newCommand().trim() === '') {
+    const existingCommand = this.commands().find(
+      (cmd) =>
+        cmd.trim().toUpperCase() === this.newCommand().trim().toUpperCase(),
+    );
+    if (this.newCommand().trim() === '' || existingCommand) {
+      this.cancelCreateCommand();
       return;
     }
+
     this.commands.update((commands) => [
       ...commands,
       this.newCommand().trim().toUpperCase(),
