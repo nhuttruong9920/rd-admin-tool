@@ -25,4 +25,11 @@ type Api<T> = {
   message: string | null;
 };
 
-export type { Api, Button, Column, KeyValue, LabelValue };
+type CommonStoreInitialState<T> = {
+  data: T | null;
+  _loading: boolean;
+  error: string | null;
+  searchTerm: string;
+};
+
+export type { Api, Button, Column, KeyValue, LabelValue, CommonStoreInitialState };

@@ -1,18 +1,20 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from '@core/layout/layout.component';
-
+import { DeviceStore } from '@shared/stores';
+import { createWrapperComponent } from '@shared/utils';
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      {
-        path: '',
-        redirectTo: 'monitor/all-vehicles',
-        pathMatch: 'full',
-      },
+      // {
+      //   path: '',
+      //   redirectTo: 'monitor/all-vehicles',
+      //   pathMatch: 'full',
+      // },
       {
         path: 'monitor',
+        component: createWrapperComponent([DeviceStore]),
         children: [
           {
             path: 'all-vehicles',

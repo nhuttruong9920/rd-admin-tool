@@ -16,13 +16,35 @@
           Discover amazing dog breeds from around the world
         }
       </p>
-      <button
-        (click)="onReset()"
-        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
-        [disabled]="dogStore.isFetching()"
-      >
-        Reset
-      </button>
+      <div class="flex gap-2">
+        <button
+          (click)="onToggleAutoRefresh()"
+          class="px-4 py-2 rounded transition-colors flex items-center gap-2"
+          [class.bg-green-500]="dogStore.isAutoRefreshEnabled()"
+          [class.text-white]="dogStore.isAutoRefreshEnabled()"
+          [class.hover:bg-green-600]="dogStore.isAutoRefreshEnabled()"
+          [class.bg-gray-200]="!dogStore.isAutoRefreshEnabled()"
+          [class.text-gray-700]="!dogStore.isAutoRefreshEnabled()"
+          [class.hover:bg-gray-300]="!dogStore.isAutoRefreshEnabled()"
+        >
+          <i
+            class="fas fa-sync-alt"
+            [class.animate-spin]="dogStore.isAutoRefreshEnabled()"
+          ></i>
+          {{
+            dogStore.isAutoRefreshEnabled()
+              ? "Auto-refresh ON"
+              : "Auto-refresh OFF"
+          }}
+        </button>
+        <button
+          (click)="onReset()"
+          class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+          [disabled]="dogStore.isFetching()"
+        >
+          Reset
+        </button>
+      </div>
     </div>
 
     <!-- Search Bar -->

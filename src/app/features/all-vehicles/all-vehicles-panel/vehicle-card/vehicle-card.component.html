@@ -1,0 +1,75 @@
+<div class="flex flex-col py-2 gap-1 border-b border-surface-200">
+  <section class="flex gap-1 w-full">
+    <app-vehicle-icon [iconClass]="device().iconClass" />
+    <div class="flex-1">
+      <p class="font-bold text-lg leading-none my-[5px]">{{ device().id }}</p>
+      <p class="text-xs text-surface-700 leading-none">
+        ping: {{ device().pingTime | toDate }} - gps:
+        {{ device().gpsTime | toDate }}
+      </p>
+    </div>
+    <div>
+      <p-button
+        [text]="true"
+        severity="secondary"
+        icon="fas fa-ellipsis-vertical"
+        [rounded]="true"
+        (click)="menu.toggle($event)"
+      />
+    </div>
+  </section>
+  <section>
+    <div class="text-surface-600 gap-0.5 flex items-center">
+      <figure class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full">
+        <i
+          class="text-xs fas fa-location-pin text-blue-400 dark:text-blue-500"
+        ></i>
+      </figure>
+      <span class="line-clamp-1 text-sm leading-none">
+        {{ device().last.info }}
+      </span>
+    </div>
+  </section>
+
+  <section class="grid grid-cols-3 gap-1">
+    @for (info of waypointInfo(); track info.id) {
+      <div class="flex items-center gap-1">
+        <figure
+          class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full"
+        >
+          <i
+            class="text-xs"
+            [class]="info.iconColorClass + ' ' + info.icon"
+          ></i>
+        </figure>
+
+        <span class="text-xs text-surface-700 leading-none">
+          {{ info.value ?? "N/A" }}
+          {{ info.unit }}
+        </span>
+      </div>
+    }
+  </section>
+</div>
+
+<p-tieredMenu
+  #menu
+  [model]="moreMenu()"
+  [popup]="true"
+  appendTo="body"
+  baseZIndex="1500"
+/>
+
+<p-dialog
+  header="Edit Profile"
+  [modal]="true"
+  [(visible)]="quickCommandDialogVisible"
+  [style]="{ width: '25rem' }"
+  (onHide)="onQuickCommandDialogClose()"
+>
+  <ng-template #headless>
+    <app-quick-command-manager
+      (closeDialog)="quickCommandDialogVisible.set(false)"
+    />
+  </ng-template>
+</p-dialog>

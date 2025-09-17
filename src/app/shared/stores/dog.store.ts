@@ -20,33 +20,38 @@ const initialState: DogState = {
   totalRecords: 0,
   searchTerm: '',
   allBreeds: [], // Store all loaded breeds for filtering
+  autoRefresh: false,
+  refreshInterval: null,
 };
 
 export const DogStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withComputed(({ breeds, loading, error, searchTerm, allBreeds }) => ({
-    breedsCount: computed(() => breeds().length),
-    hasBreeds: computed(() => breeds().length > 0),
-    hasError: computed(() => !!error()),
-    errorMessage: computed(() => error()),
-    isSearching: computed(() => searchTerm().trim().length > 0),
-    totalLoadedBreeds: computed(() => allBreeds().length),
-    // isFetching: loading state when no data exists yet (initial load)
-    isFetching: computed(() => loading() && !breeds().length),
-    // isLoading: loading state when data already exists (refetch/load more)
-    isLoading: computed(() => loading() && breeds().length > 0),
-    filteredBreeds: computed(() => {
-      const search = searchTerm().toLowerCase().trim();
-      if (!search) return breeds();
+  withComputed(
+    ({ breeds, loading, error, searchTerm, allBreeds, autoRefresh }) => ({
+      breedsCount: computed(() => breeds().length),
+      hasBreeds: computed(() => breeds().length > 0),
+      hasError: computed(() => !!error()),
+      errorMessage: computed(() => error()),
+      isSearching: computed(() => searchTerm().trim().length > 0),
+      totalLoadedBreeds: computed(() => allBreeds().length),
+      // isFetching: loading state when no data exists yet (initial load)
+      isFetching: computed(() => loading() && !breeds().length),
+      // isLoading: loading state when data already exists (refetch/load more)
+      isLoading: computed(() => loading() && breeds().length > 0),
+      filteredBreeds: computed(() => {
+        const search = searchTerm().toLowerCase().trim();
+        if (!search) return breeds();
 
-      return breeds().filter(
-        (breed) =>
-          breed.attributes.name.toLowerCase().includes(search) ||
-          breed.attributes.description.toLowerCase().includes(search),
-      );
+        return breeds().filter(
+          (breed) =>
+            breed.attributes.name.toLowerCase().includes(search) ||
+            breed.attributes.description.toLowerCase().includes(search),
+        );
+      }),
+      isAutoRefreshEnabled: computed(() => autoRefresh()),
     }),
-  })),
+  ),
   withMethods((store, http = inject(HttpClient)) => {
     const methods = {
       // Auto-load breeds if not already loaded
@@ -134,6 +139,39 @@ export const DogStore = signalStore(
       },
       clearSearch: (): void => {
         patchState(store, { searchTerm: '' });
+      },
+      // Auto-refresh functionality
+      startAutoRefresh: (): void => {
+        if (store.refreshInterval()) {
+          clearInterval(store.refreshInterval()!);
+        }
+
+        const intervalId = setInterval(() => {
+          if (!store.loading()) {
+            methods.loadBreeds({ page: 1 });
+          }
+        }, 1000); // 10 seconds
+
+        patchState(store, {
+          autoRefresh: true,
+          refreshInterval: intervalId as number,
+        });
+      },
+      stopAutoRefresh: (): void => {
+        if (store.refreshInterval()) {
+          clearInterval(store.refreshInterval()!);
+        }
+        patchState(store, {
+          autoRefresh: false,
+          refreshInterval: null,
+        });
+      },
+      toggleAutoRefresh: (): void => {
+        if (store.autoRefresh()) {
+          methods.stopAutoRefresh();
+        } else {
+          methods.startAutoRefresh();
+        }
       },
     };
     return methods;

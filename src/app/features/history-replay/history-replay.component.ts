@@ -1,8 +1,8 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
 @Component({
-  selector: "app-history-replay",
+  selector: 'app-history-replay',
   imports: [],
-  templateUrl: "./history-replay.component.html",
+  templateUrl: './history-replay.component.html',
 })
 export class HistoryReplayComponent {}

@@ -17,7 +17,9 @@ import {
   SendCommandReq,
 } from '@shared/types';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class ConnectionApiService {
   #restService = inject(RestService);
 

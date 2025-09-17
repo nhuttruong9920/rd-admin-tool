@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DogStore } from '../../shared/stores/dog.store';
@@ -8,12 +8,19 @@ import { DogStore } from '../../shared/stores/dog.store';
   imports: [CommonModule, FormsModule],
   templateUrl: './dogs.component.html',
 })
-export class DogsComponent implements OnInit {
+export class DogsComponent implements OnInit, OnDestroy {
   readonly dogStore = inject(DogStore);
 
   ngOnInit(): void {
     // Ensure breeds are loaded (store handles the logic)
     this.dogStore.ensureBreeds();
+    // Start auto-refresh by default
+    this.dogStore.startAutoRefresh();
+  }
+
+  ngOnDestroy(): void {
+    // Clean up auto-refresh when component is destroyed
+    this.dogStore.stopAutoRefresh();
   }
 
   onLoadMore(): void {
@@ -38,5 +45,9 @@ export class DogsComponent implements OnInit {
 
   onClearSearch(): void {
     this.dogStore.clearSearch();
+  }
+
+  onToggleAutoRefresh(): void {
+    this.dogStore.toggleAutoRefresh();
   }
 }

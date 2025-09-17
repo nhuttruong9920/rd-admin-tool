@@ -55,3 +55,91 @@
     background: var(--surface);
   }
 }
+
+.splitter-map .leaflet-top.leaflet-right {
+  margin-top: 44px;
+}
+
+.btn__leaflet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  font-size: 1rem;
+  background-color: var(--surface);
+  border-radius: 6px;
+  color: var(--surface-950);
+  cursor: pointer;
+  font-weight: 800;
+  background-clip: padding-box;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(165, 163, 174, 0.3) !important;
+
+  &:hover {
+    background-color: var(--surface-100);
+  }
+}
+
+/* car marker using css sprites */
+.car-marker {
+  width: 20px;
+  height: 39px;
+  background-image: url("/images/map/car_sprites.png");
+  background-repeat: no-repeat;
+}
+
+.bg-car_overspeed {
+  background-position: -10px -10px;
+}
+
+.bg-car_running {
+  background-position: -50px -10px;
+}
+
+.bg-car_stop {
+  background-position: -90px -10px;
+}
+
+.bg-car_park {
+  background-position: -10px -69px;
+}
+
+.bg-car_disconnected {
+  background-position: -50px -69px;
+}
+
+.bg-car_offline {
+  background-position: -90px -69px;
+}
+
+.dot-marker {
+  width: 12px;
+  height: 12px;
+  background-image: url("/images/map/dot_sprites.png");
+  background-repeat: no-repeat;
+}
+
+.bg-dot_overspeed {
+  background-position: -10px -10px;
+}
+
+.bg-dot_running {
+  background-position: -42px -10px;
+}
+
+.bg-dot_park {
+  background-position: -10px -42px;
+}
+
+.bg-dot_disconnected {
+  background-position: -42px -42px;
+}
+
+.bg-dot_stop {
+  background-position: -74px -10px;
+}
+
+.bg-dot_offline {
+  background-position: -74px -42px;
+}

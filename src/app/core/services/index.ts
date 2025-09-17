@@ -1,6 +1,7 @@
 export * from './date.service';
 export * from './layout.service';
 export * from './map.service';
+export * from './navigation.service';
 export * from './primeng.service';
 export * from './rest.service';
 export * from './storage.service';

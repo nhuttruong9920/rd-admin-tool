@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { LayoutService } from '@core/services';
 import { NavigationComponent } from '@shared/components';
 import { ScrollContainerComponent } from '@shared/components/scroll-container.component';
-import { LogoComponent } from '@shared/components/logo/logo.component';
+import { LogoComponent } from '@shared/components/logo.component';
 
 @Component({
   selector: 'app-sidebar',

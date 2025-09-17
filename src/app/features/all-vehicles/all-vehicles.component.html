@@ -6,12 +6,8 @@
       </div>
     </ng-template>
 
-    <ng-template #rightContent
-      >right content
-      <br />
-      <button (click)="splitPanel().toggleMobileRightPanel()">
-        Toggle Mobile Right Panel
-      </button>
+    <ng-template #rightContent>
+      <app-all-vehicles-panel />
     </ng-template>
   </app-split-panel>
 </div>

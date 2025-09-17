@@ -55,4 +55,6 @@ export interface DogState {
   totalRecords: number;
   searchTerm: string;
   allBreeds: DogBreed[]; // Store all loaded breeds for filtering
+  autoRefresh: boolean;
+  refreshInterval: number | null;
 }

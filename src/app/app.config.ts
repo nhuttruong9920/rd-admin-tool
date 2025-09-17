@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { provideRouter, TitleStrategy } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { TitleService } from '@core/services';
 import { routes } from './app.routes';
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(),
+    provideAnimationsAsync(),
     providePrimeNG({
       ripple: true,
     }),

@@ -151,7 +151,7 @@ type Package = PackageDto & {
   type: { label: string; value: number; color: string };
   isNew: boolean;
 };
-type DeviceState = 'disconnected' | 'offline' | 'stop' | 'running';
+type DeviceState = 'disconnected' | 'offline' | 'stop' | 'running' | 'overspeed';
 
 type DeviceStatus = DeviceStatusDto & {
   iconClass: string;

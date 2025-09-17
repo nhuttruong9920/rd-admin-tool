@@ -1,0 +1,23 @@
+<div class="h-full w-full p-2 flex flex-col gap-2">
+  <!-- toolbar -->
+  <section>
+    <app-toolbar
+      headerTitle="Danh sách thiết bị"
+      [amount]="deviceStore.count()"
+    >
+      <ng-template #rightContent>
+        <app-input-search
+          placeholder="Tìm theo imei"
+          (textChanged)="searchImeis($event)"
+        ></app-input-search>
+      </ng-template>
+    </app-toolbar>
+  </section>
+
+  <!-- vehicle list -->
+  <section class="flex-1 overflow-y-auto">
+    @for (device of deviceStore.filteredData(); track device.id) {
+      <app-vehicle-card [device]="device"></app-vehicle-card>
+    }
+  </section>
+</div>

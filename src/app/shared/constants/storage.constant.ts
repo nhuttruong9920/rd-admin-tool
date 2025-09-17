@@ -4,6 +4,7 @@ const LSKeys = {
   NAV_STYLE: "nav-style",
   MAP_LAYER: "map-layer",
   MAP_OVERLAY: "map-overlay",
+  QUICK_COMMANDS: "quick-commands",
 };
 
 /** Session storage keys */

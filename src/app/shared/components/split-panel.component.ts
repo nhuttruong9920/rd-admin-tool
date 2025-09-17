@@ -3,6 +3,7 @@ import {
   Component,
   contentChild,
   inject,
+  input,
   linkedSignal,
   TemplateRef,
 } from '@angular/core';
@@ -20,9 +21,18 @@ import { LayoutService } from '@core/services';
           [class.!gap-0]="!isRightPanelOpened()"
         >
           <section
-            class="bg-surface flex-1 overflow-hidden rounded-none sm:rounded shadow-none sm:shadow"
+            class="bg-surface flex-1 overflow-hidden rounded-none sm:rounded shadow-none sm:shadow relative"
           >
             <ng-container *ngTemplateOutlet="leftContent()" />
+            <button
+              class="btn__leaflet absolute top-2 right-2 z-401"
+              (click)="toggleMobileRightPanel()"
+            >
+              <i
+                class="fa-solid fa-chevron-right !transition-transform duration-300"
+                [class.rotate-180]="!isRightPanelOpened()"
+              ></i>
+            </button>
           </section>
           <section
             class="w-100 bg-surface overflow-hidden rounded-none sm:rounded shadow hidden sm:block transition-[width] duration-300"
@@ -35,10 +45,21 @@ import { LayoutService } from '@core/services';
 
         <section
           id="mobile-right-panel"
-          class="h-full w-full sm:hidden bg-surface transition-transform duration-300 absolute top-0 left-0"
+          class="h-full w-full sm:hidden bg-surface transition-transform duration-300 absolute top-0 left-0 z-1000"
           [class.translate-x-full]="!isRightPanelOpened()"
         >
-          <ng-container *ngTemplateOutlet="rightContent()" />
+          <div class="h-full w-full relative">
+            <ng-container *ngTemplateOutlet="rightContent()" />
+
+            <button
+              class="bg-surface shadow rounded-r-full flex-center absolute top-1/2 -translate-y-1/2 left-0 z-401 w-6 h-8 cursor-pointer"
+              (click)="toggleMobileRightPanel()"
+            >
+              <i
+                class="text-xs fa-solid fa-chevron-right !transition-transform duration-300"
+              ></i>
+            </button>
+          </div>
         </section>
       </div>
     </div>
@@ -50,6 +71,8 @@ export class SplitPanelComponent {
   isRightPanelOpened = linkedSignal<boolean>(() =>
     this.#layoutService.isSmallScreen() ? false : true,
   );
+
+  map = input<L.Map | undefined>(undefined);
 
   protected rightContent =
     contentChild.required<TemplateRef<void>>('rightContent');
