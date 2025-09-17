@@ -33,7 +33,7 @@
 
   <section class="grid grid-cols-3 gap-1">
     @for (info of waypointInfo(); track info.id) {
-      <div class="flex items-center gap-1">
+      <div class="flex items-center gap-1" [title]="info.title">
         <figure
           class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full"
         >
