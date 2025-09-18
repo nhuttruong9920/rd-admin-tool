@@ -25,7 +25,7 @@ export class ConnectionApiService {
 
   getAllConnectionByGroup(): Observable<Api<ConnectionDto[]>> {
     return this.#restService.get<Api<ConnectionDto[]>>(
-      '/connection/getallbygroup',
+      '/rd-dev/connection/getallbygroup',
     );
   }
 
@@ -33,14 +33,14 @@ export class ConnectionApiService {
     request: GetRawPackageReq,
   ): Observable<Api<PackageDto[]>> {
     return this.#restService.post<GetRawPackageReq, Api<PackageDto[]>>(
-      '/connection/GetRawPackage',
+      '/rd-dev/connection/GetRawPackage',
       request,
     );
   }
 
   fetchConnectionInfo(request: GetInfoReq): Observable<Api<string>> {
     return this.#restService.post<GetInfoReq, Api<string>>(
-      '/connection/GetInfo',
+      '/rd-dev/connection/GetInfo',
       request,
     );
   }
@@ -49,14 +49,14 @@ export class ConnectionApiService {
     request: GetSTDCommandReq,
   ): Observable<Api<PackageDto[]>> {
     return this.#restService.post<GetSTDCommandReq, Api<PackageDto[]>>(
-      '/connection/GetSTDCommand',
+      '/rd-dev/connection/GetSTDCommand',
       request,
     );
   }
 
   sendCommand(request: SendCommandReq): Observable<Api<null>> {
     return this.#restService.post<SendCommandReq, Api<null>>(
-      '/connection/SendCommand',
+      '/rd-dev/connection/SendCommand',
       request,
     );
   }
@@ -65,7 +65,7 @@ export class ConnectionApiService {
     request: GetDeviceStatusReq,
   ): Observable<Api<DeviceStatusDto[]>> {
     return this.#restService.post<GetDeviceStatusReq, Api<DeviceStatusDto[]>>(
-      '/connection/GetDeviceStatus',
+      '/rd-dev/connection/GetDeviceStatus',
       request,
     );
   }
@@ -77,7 +77,7 @@ export class ConnectionApiService {
       .post<
         GetDeviceHistoryReq,
         Api<string>
-      >('/History/GetWaypointRequest', request)
+      >('/rd-dev/history/GetWaypointRequest', request)
       .pipe(
         map((res) => {
           if (!res.isSucceeded) throw new Error(res.message ?? '');

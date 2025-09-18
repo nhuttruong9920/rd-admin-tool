@@ -1,8 +1,15 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { SplitPanelComponent } from '@shared/components';
+import { DeviceStore } from '@shared/stores';
 import { AllVehiclesMapComponent } from './all-vehicles-map/all-vehicles-map.component';
 import { AllVehiclesPanelComponent } from './all-vehicles-panel/all-vehicles-panel.component';
-import { DeviceStore } from '@shared/stores';
 
 @Component({
   selector: 'app-all-vehicles',
@@ -14,9 +21,27 @@ import { DeviceStore } from '@shared/stores';
   templateUrl: './all-vehicles.component.html',
 })
 export class AllVehiclesComponent implements OnInit {
-  #deviceStore = inject(DeviceStore);
+  deviceStore = inject(DeviceStore);
+  formattedDevices = computed(
+    () =>
+      this.deviceStore
+        .data()
+        ?.map((device) => ({ ...device.formatted, id: device.id })) ?? [],
+  );
 
+  selectedDeviceId = signal<string | null>(null);
+  selectedDevice = computed(() =>
+    this.deviceStore
+      .data()
+      ?.find((device) => device.id === this.selectedDeviceId()),
+  );
+
+  constructor() {
+    effect(() => {
+      // console.log('selectedDeviceId', this.selectedDeviceId());
+    });
+  }
   ngOnInit(): void {
-    this.#deviceStore.ensureDevices();
+    this.deviceStore.ensureDevices();
   }
 }

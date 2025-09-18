@@ -2,12 +2,16 @@
   <app-split-panel>
     <ng-template #leftContent>
       <div class="h-full w-full relative">
-        <app-all-vehicles-map />
+        <app-all-vehicles-map
+          [formattedDevices]="formattedDevices()"
+          [firstTimeHasData]="deviceStore.firstTimeHasData()"
+          [(selectedDeviceId)]="selectedDeviceId"
+        />
       </div>
     </ng-template>
 
     <ng-template #rightContent>
-      <app-all-vehicles-panel />
+      <app-all-vehicles-panel [(selectedDeviceId)]="selectedDeviceId" />
     </ng-template>
   </app-split-panel>
 </div>

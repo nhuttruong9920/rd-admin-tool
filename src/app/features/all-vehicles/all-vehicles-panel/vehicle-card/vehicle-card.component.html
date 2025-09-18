@@ -1,10 +1,21 @@
 <div
-  class="flex flex-col p-2 gap-1 border-b border-surface-200 hover:border-primary-300 transition-all duration-300 cursor-pointer hover:shadow-[inset_0_-10px_10px_-10px_var(--primary-500)]">
+  class="flex flex-col p-2 gap-1 border-b border-surface-200 hover:border-primary-300 transition-all duration-300 cursor-pointer"
+  [class.shadow-[inset_4px_0_0_0_var(--primary-500)]]="
+    selectedVehicleId() === device().id
+  "
+  tabindex="0"
+  (click)="selectVehicle($event)"
+  (keydown.enter)="selectVehicle($event)"
+  (keydown.space)="selectVehicle($event)"
+>
   <section class="flex gap-1 w-full">
-    @let isEcoMode = device().formatted.mode?.value === 'Eco';
+    @let isEcoMode = device().formatted.mode?.value === "Eco";
     @let isCharging = device().formatted.battery.isCharging;
-    <app-vehicle-icon [iconClass]="'bg-car_' + device().formatted.state" [isEcoMode]="isEcoMode"
-      [isCharging]="isCharging" />
+    <app-vehicle-icon
+      [iconClass]="'bg-car_' + device().formatted.state"
+      [isEcoMode]="isEcoMode"
+      [isCharging]="isCharging"
+    />
     <div class="flex-1">
       <p class="font-bold text-lg leading-none my-[5px]">{{ device().id }}</p>
       <p class="text-xs text-surface-700 leading-none">
@@ -13,29 +24,35 @@
       </p>
     </div>
     <div>
-      <p-button [text]="true" severity="secondary" icon="fas fa-ellipsis-vertical" [rounded]="true"
-        (click)="menu.toggle($event)" />
-    </div>
-  </section>
-  <section>
-    <div class="flex items-center gap-1" [title]="device().last.info">
-      <figure class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full">
-        <i class="text-xs fas fa-location-pin text-blue-400 dark:text-blue-500"></i>
-      </figure>
-
-      <span class="text-xs text-surface-700">
-        {{ device().last.info }}
-      </span>
+      <p-button
+        [text]="true"
+        severity="secondary"
+        icon="fas fa-ellipsis-vertical"
+        [rounded]="true"
+        (click)="menu.toggle($event)"
+      />
     </div>
   </section>
 
   <section class="grid grid-cols-4 gap-1">
+    <div class="flex items-center gap-1 col-span-4" title="Địa chỉ">
+      <figure class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full">
+        <i
+          class="text-xs fas fa-location-pin text-blue-400 dark:text-blue-500"
+        ></i>
+      </figure>
+
+      <span class="text-xs text-surface-700">
+        {{ device().formatted.address }}
+      </span>
+    </div>
+
     <div class="flex items-center gap-1" title="Pin">
       <figure class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full">
         @let batteryIcon = device().formatted.battery.icon;
         @let batteryIconClass = device().formatted.battery.iconClass;
         @if (batteryIcon) {
-        <i class="text-xs" [class]="batteryIconClass + ' ' + batteryIcon"></i>
+          <i class="text-xs" [class]="batteryIconClass + ' ' + batteryIcon"></i>
         }
       </figure>
 
@@ -44,24 +61,44 @@
       </span>
     </div>
     @for (info of waypointInfo(); track info.title) {
-    <div class="flex items-center gap-1" [class]="info.colSpan" [title]="info.title">
-      <figure class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full">
-        <i class="text-xs" [class]="info.iconClass + ' ' + info.icon"></i>
-      </figure>
+      <div
+        class="flex items-center gap-1"
+        [class]="info.colSpan"
+        [title]="info.title"
+      >
+        <figure
+          class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full"
+        >
+          <i class="text-xs" [class]="info.iconClass + ' ' + info.icon"></i>
+        </figure>
 
-      <span class="text-xs text-surface-700">
-        {{ info.value }}
-      </span>
-    </div>
+        <span class="text-xs text-surface-700">
+          {{ info.value }}
+        </span>
+      </div>
     }
   </section>
 </div>
 
-<p-tieredMenu #menu [model]="moreMenu()" [popup]="true" appendTo="body" baseZIndex="1500" autoDisplay />
+<p-tieredMenu
+  #menu
+  [model]="moreMenu()"
+  [popup]="true"
+  appendTo="body"
+  baseZIndex="1500"
+  autoDisplay
+/>
 
-<p-dialog header="Edit Profile" [modal]="true" [(visible)]="quickCommandDialogVisible" [style]="{ width: '25rem' }"
-  (onHide)="onQuickCommandDialogClose()">
+<p-dialog
+  header="Edit Profile"
+  [modal]="true"
+  [(visible)]="quickCommandDialogVisible"
+  [style]="{ width: '25rem' }"
+  (onHide)="onQuickCommandDialogClose()"
+>
   <ng-template #headless>
-    <app-quick-command-manager (closeDialog)="quickCommandDialogVisible.set(false)" />
+    <app-quick-command-manager
+      (closeDialog)="quickCommandDialogVisible.set(false)"
+    />
   </ng-template>
 </p-dialog>

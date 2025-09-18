@@ -172,6 +172,7 @@ type FormattedDevice = {
   state: DeviceState;
   lat: number;
   long: number;
+  heading: number;
   mode: FormattedInfo | null;
   battery: FormattedInfo & { isCharging: boolean };
   gpsSpeed: FormattedInfo;
@@ -181,6 +182,7 @@ type FormattedDevice = {
   odometer: FormattedInfo;
   odoTime: FormattedInfo;
 };
+
 
 type DeviceStatus = DeviceStatusDto & {
   formatted: FormattedDevice;

@@ -3,6 +3,7 @@ import {
   computed,
   inject,
   input,
+  model,
   OnInit,
   signal,
 } from '@angular/core';
@@ -42,6 +43,8 @@ export class VehicleCardComponent implements OnInit {
 
   moreMenu = computed<MenuItem[]>(() => this.updateMoreMenu());
 
+  selectedVehicleId = model.required<string | null>();
+
   waypointInfo = computed(() => [
     { ...this.device().formatted.voltage, colSpan: 'col-span-1' },
     { ...this.device().formatted.range, colSpan: 'col-span-1' },
@@ -53,6 +56,20 @@ export class VehicleCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadLocalCommands();
+  }
+
+  selectVehicle(event: Event): void {
+    const clickedElement = event.target as HTMLElement;
+
+    if (clickedElement.closest('.p-button')) return;
+
+    const vehicleId = this.device().id;
+
+    if (this.selectedVehicleId() === vehicleId) {
+      this.selectedVehicleId.set(null);
+    } else {
+      this.selectedVehicleId.set(vehicleId);
+    }
   }
 
   private updateMoreMenu(): MenuItem[] {

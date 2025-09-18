@@ -17,7 +17,10 @@
   <!-- vehicle list -->
   <section class="flex-1 overflow-y-auto">
     @for (device of deviceStore.filteredData(); track device.id) {
-      <app-vehicle-card [device]="device"></app-vehicle-card>
+      <app-vehicle-card
+        [device]="device"
+        [(selectedVehicleId)]="selectedDeviceId"
+      ></app-vehicle-card>
     }
   </section>
 </div>

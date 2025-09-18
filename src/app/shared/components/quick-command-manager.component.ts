@@ -1,10 +1,12 @@
 import {
   Component,
   effect,
+  ElementRef,
   inject,
   OnInit,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StorageService } from '@core/services';
@@ -49,6 +51,7 @@ import { FloatLabel } from 'primeng/floatlabel';
           <div class="flex items-center justify-between gap-2 mt-2">
             <p-floatlabel variant="on" class="flex-1">
               <input
+                #newCommandInput
                 type="text"
                 pInputText
                 id="newCommand"
@@ -81,7 +84,7 @@ import { FloatLabel } from 'primeng/floatlabel';
         } @else {
           <button
             class="flex-center gap-2 hover:bg-primary-500/20 rounded py-2 text-primary transition-colors duration-300 cursor-pointer"
-            (click)="isCreating.set(true)"
+            (click)="startCreateCommand()"
           >
             <i class="fas fa-plus"></i>
             <p class="font-medium">Thêm lệnh</p>
@@ -93,7 +96,7 @@ import { FloatLabel } from 'primeng/floatlabel';
 })
 export class QuickCommandManagerComponent implements OnInit {
   #storageService = inject(StorageService);
-
+  newCommandInput = viewChild<ElementRef>('newCommandInput');
   closeDialog = output<void>();
 
   commands = signal<string[]>([]);
@@ -121,6 +124,14 @@ export class QuickCommandManagerComponent implements OnInit {
       console.error('Error loading commands from localStorage:', error);
       this.commands.set([]);
     }
+  }
+
+  protected startCreateCommand(): void {
+    this.isCreating.set(true);
+    this.newCommand.set('');
+    setTimeout(() => {
+      this.newCommandInput()?.nativeElement.focus();
+    }, 100);
   }
 
   protected cancelCreateCommand(): void {

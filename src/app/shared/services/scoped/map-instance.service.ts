@@ -5,20 +5,6 @@ import * as L from 'leaflet';
 
 import { LSKeys } from '@shared/constants/storage.constant';
 
-export interface ExtendedMarkerOptions extends L.MarkerOptions {
-  id?: string | number;
-}
-export interface ExtendedCircleMarkerOptions extends L.CircleMarkerOptions {
-  id?: string | number;
-}
-export interface ExtendedPolylineOptions extends L.PolylineOptions {
-  id?: string | number;
-}
-
-export interface ExtendedLayerOptions extends L.LayerOptions {
-  id?: string | number;
-}
-
 enum LeafletControlPosition {
   TopLeft = 'topleft',
   TopRight = 'topright',

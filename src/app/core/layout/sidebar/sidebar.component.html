@@ -19,11 +19,11 @@
     </button>
   </section>
 
-  <app-scroll-container styleClass="h-[calc(100dvh-104px)]">
-    <!-- <section class="flex-1 overflow-y-auto"> -->
-    <app-navigation [navItems]="navItems()" [navStyle]="navStyle()" />
-    <!-- </section> -->
-  </app-scroll-container>
+  <section class="flex-1 overflow-hidden">
+    <app-scroll-container styleClass="h-full">
+      <app-navigation [navItems]="navItems()" [navStyle]="navStyle()" />
+    </app-scroll-container>
+  </section>
 
   <section class="h-10">
     <button class="size-8 flex-center" (click)="toggleDarkMode()">

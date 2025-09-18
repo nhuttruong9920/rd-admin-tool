@@ -35,9 +35,10 @@ import { LayoutService } from '@core/services';
             </button>
           </section>
           <section
-            class="w-100 bg-surface overflow-hidden rounded-none sm:rounded shadow hidden sm:block transition-[width] duration-300"
+            class="bg-surface overflow-hidden rounded-none sm:rounded shadow hidden sm:block transition-[width] duration-300"
             [class.!w-0]="!isRightPanelOpened()"
             [class.!overflow-hidden]="!isRightPanelOpened()"
+            [style.width.px]="rightPanelWidthPx()"
           >
             <ng-container *ngTemplateOutlet="rightContent()" />
           </section>
@@ -67,6 +68,8 @@ import { LayoutService } from '@core/services';
 })
 export class SplitPanelComponent {
   #layoutService = inject(LayoutService);
+
+  rightPanelWidthPx = input<number>(400);
 
   isRightPanelOpened = linkedSignal<boolean>(() =>
     this.#layoutService.isSmallScreen() ? false : true,
