@@ -5,7 +5,7 @@ import {
   input,
   model,
   OnInit,
-  signal
+  signal,
 } from '@angular/core';
 
 import { MenuItem } from 'primeng/api';
@@ -61,7 +61,7 @@ export class VehicleCardComponent implements OnInit {
   selectVehicle(event: Event): void {
     const clickedElement = event.target as HTMLElement;
 
-    if (clickedElement.closest('.p-button')) return;
+    if (clickedElement.closest('#more-menu-button')) return;
 
     const vehicleId = this.device().id;
 

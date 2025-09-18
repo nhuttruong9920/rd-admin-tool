@@ -13,14 +13,14 @@ import {
   TemplateRef,
   viewChild,
 } from '@angular/core';
-import { WidthBreakpoint } from '@shared/types';
 
 import { BadgeModule } from 'primeng/badge';
-import { ButtonModule } from 'primeng/button';
+
+import { WidthBreakpoint } from '@shared/types';
 
 @Component({
   selector: 'app-toolbar',
-  imports: [CommonModule, ButtonModule, BadgeModule],
+  imports: [CommonModule, BadgeModule],
   template: `
     <section
       #toolbarContainer
@@ -54,12 +54,15 @@ import { ButtonModule } from 'primeng/button';
       }
 
       <div class="hidden items-center gap-0.5" [class.!flex]="isToolbarSmall()">
-        <p-button
-          [icon]="showMobileMenu() ? 'fas fa-caret-down' : 'fas fa-caret-left'"
-          severity="secondary"
-          size="small"
+        <button
+          class="size-8 flex-center cursor-pointer hover:bg-surface-100 rounded-full transition-colors duration-300"
           (click)="onToggleCollapseMenu()"
-        />
+        >
+          <i
+            class="fas fa-caret-down transition-transform duration-300"
+            [class.rotate-90]="!showMobileMenu()"
+          ></i>
+        </button>
         <ng-container *ngTemplateOutlet="button() || null" />
       </div>
     </section>

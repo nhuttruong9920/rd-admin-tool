@@ -18,19 +18,19 @@
     />
     <div class="flex-1">
       <p class="font-bold text-lg leading-none my-[5px]">{{ device().id }}</p>
-      <p class="text-xs text-surface-700 leading-none">
+      <p class="text-xs text-surface-800 leading-none">
         ping: {{ device().formatted.pingTime }} - gps:
         {{ device().formatted.gpsTime }}
       </p>
     </div>
     <div>
-      <p-button
-        [text]="true"
-        severity="secondary"
-        icon="fas fa-ellipsis-vertical"
-        [rounded]="true"
+      <button
+        id="more-menu-button"
+        class="size-10 flex-center cursor-pointer hover:bg-surface-100 rounded-full transition-colors duration-300"
         (click)="menu.toggle($event)"
-      />
+      >
+        <i class="fas fa-ellipsis-vertical"></i>
+      </button>
     </div>
   </section>
 
@@ -42,7 +42,7 @@
         ></i>
       </figure>
 
-      <span class="text-xs text-surface-700">
+      <span class="text-xs text-surface-800">
         {{ device().formatted.address }}
       </span>
     </div>
@@ -56,7 +56,7 @@
         }
       </figure>
 
-      <span class="text-xs text-surface-700">
+      <span class="text-xs text-surface-800">
         {{ device().formatted.battery.value }}
       </span>
     </div>
@@ -72,7 +72,7 @@
           <i class="text-xs" [class]="info.iconClass + ' ' + info.icon"></i>
         </figure>
 
-        <span class="text-xs text-surface-700">
+        <span class="text-xs text-surface-800">
           {{ info.value }}
         </span>
       </div>

@@ -42,11 +42,11 @@ export class AllVehiclesPanelComponent {
   }
 
   constructor() {
-    effect(() => {
-      const selectedDeviceIdx = this.selectedDeviceIdx();
-      if (selectedDeviceIdx !== undefined && selectedDeviceIdx >= 0) {
-        cdkScrollWhileHidden(this.cdkViewport(), selectedDeviceIdx, true);
-      }
-    });
+    // effect(() => {
+    //   const selectedDeviceIdx = this.selectedDeviceIdx();
+    //   if (selectedDeviceIdx !== undefined && selectedDeviceIdx >= 0) {
+    //     cdkScrollWhileHidden(this.cdkViewport(), selectedDeviceIdx, true);
+    //   }
+    // });
   }
 }
