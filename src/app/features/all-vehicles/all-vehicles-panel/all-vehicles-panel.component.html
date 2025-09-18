@@ -16,11 +16,19 @@
 
   <!-- vehicle list -->
   <section class="flex-1 overflow-y-auto">
-    @for (device of deviceStore.filteredData(); track device.id) {
-      <app-vehicle-card
-        [device]="device"
-        [(selectedVehicleId)]="selectedDeviceId"
-      ></app-vehicle-card>
-    }
+    <cdk-virtual-scroll-viewport #cdkViewport itemSize="129" class="h-full">
+      <div
+        *cdkVirtualFor="
+          let device of deviceStore.filteredData();
+          let idx = index
+        "
+      >
+        <app-vehicle-card
+          [id]="idx"
+          [device]="device"
+          [(selectedVehicleId)]="selectedDeviceId"
+        ></app-vehicle-card>
+      </div>
+    </cdk-virtual-scroll-viewport>
   </section>
 </div>

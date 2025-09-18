@@ -5,7 +5,7 @@ import {
   input,
   model,
   OnInit,
-  signal,
+  signal
 } from '@angular/core';
 
 import { MenuItem } from 'primeng/api';

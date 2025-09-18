@@ -9,6 +9,7 @@ import {
   ApplicationRef,
   ComponentRef,
   model,
+  signal,
 } from '@angular/core';
 
 import * as L from 'leaflet';
@@ -34,7 +35,7 @@ export class AllVehiclesMapComponent implements AfterViewInit, OnDestroy {
 
   selectedDeviceId = model.required<string | null>();
 
-  map!: L.Map;
+  map = signal<L.Map | undefined>(undefined);
   deviceLayer: L.LayerGroup = new L.LayerGroup();
 
   // Store component references for dynamic updates
@@ -45,12 +46,12 @@ export class AllVehiclesMapComponent implements AfterViewInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      this.renderDeviceMarkers(this.formattedDevices());
+      this.renderDeviceMarkers(this.map(), this.formattedDevices());
     });
 
     effect(() => {
       if (this.firstTimeHasData()) {
-        this.#mapService.fitBounds(this.map);
+        this.#mapService.fitBounds(this.map()!);
       }
     });
 
@@ -61,33 +62,25 @@ export class AllVehiclesMapComponent implements AfterViewInit, OnDestroy {
           this.selectedDeviceId()!,
         ) as L.Marker;
         if (marker) {
-          this.#mapService.setMarkerView(this.map, marker);
+          this.#mapService.setMarkerView(this.map()!, marker);
           marker.openPopup();
         }
       } else {
-        this.map?.closePopup();
+        this.map()?.closePopup();
       }
     });
   }
 
   ngAfterViewInit(): void {
-    this.map = this.#mapInstanceService.createMap('all-vehicles-map');
-    this.map.addLayer(this.deviceLayer);
-  }
-
-  ngOnDestroy(): void {
-    // Clean up all popup components
-    for (const [, compRef] of this.popupComponents.entries()) {
-      this.#appRef.detachView(compRef.hostView);
-      compRef.destroy();
-    }
-    this.popupComponents.clear();
+    this.map.set(this.#mapInstanceService.createMap('all-vehicles-map'));
+    this.map()?.addLayer(this.deviceLayer);
   }
 
   private renderDeviceMarkers(
+    map: L.Map | undefined,
     formattedDevices: (FormattedDevice & { id: string })[],
   ): void {
-    if (!this.map || !formattedDevices.length) return;
+    if (!map || !formattedDevices.length) return;
 
     formattedDevices.forEach((device) => {
       const marker = this.#mapService.getElementById(
@@ -201,5 +194,14 @@ export class AllVehiclesMapComponent implements AfterViewInit, OnDestroy {
         }
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    // Clean up all popup components
+    for (const [, compRef] of this.popupComponents.entries()) {
+      this.#appRef.detachView(compRef.hostView);
+      compRef.destroy();
+    }
+    this.popupComponents.clear();
   }
 }

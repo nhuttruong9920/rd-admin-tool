@@ -263,7 +263,9 @@ export class MapInstanceService implements OnDestroy {
     });
 
     map.on('locationerror', () => {
-      this.#toastService.showError('Map.MyLocation.PermissionNotSupport');
+      this.#toastService.showError(
+        'Chưa cấp quyền truy cập vị trí hoặc vị trí không được hỗ trợ!',
+      );
       button.state('start-updating');
     });
   }

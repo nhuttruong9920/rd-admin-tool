@@ -92,6 +92,7 @@
 <p-dialog
   header="Edit Profile"
   [modal]="true"
+  [appendTo]="'body'"
   [(visible)]="quickCommandDialogVisible"
   [style]="{ width: '25rem' }"
   (onHide)="onQuickCommandDialogClose()"
