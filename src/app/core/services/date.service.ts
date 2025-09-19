@@ -10,7 +10,6 @@ export class DateService {
     { label: 'Hôm qua', value: 'yesterday' },
     { label: '3 ngày trước', value: 'threeDaysAgo' },
     { label: '5 ngày trước', value: 'fiveDaysAgo' },
-    { label: '5 ngày trước', value: 'fiveDaysAgo' },
     { label: '7 ngày trước', value: 'sevenDaysAgo' },
     { label: 'Tuần này', value: 'thisWeek' },
     { label: 'Tuần trước', value: 'lastWeek' },
@@ -116,7 +115,7 @@ export class DateService {
 
   formatSecondsToDuration(
     seconds: number,
-    format: 'verbose' | 'short' | 'compact' = 'compact',
+    format: 'verbose' | 'short' | 'compact' = 'short',
   ): string {
     // Handle edge cases
     if (!seconds || seconds <= 0) return format === 'compact' ? '0:00' : '0';

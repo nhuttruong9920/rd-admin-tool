@@ -1,6 +1,5 @@
 import { NgClass } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -9,7 +8,7 @@ import {
   input,
   model,
   output,
-  viewChild,
+  viewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -49,7 +48,6 @@ import { Subject, debounceTime, takeUntil } from 'rxjs';
       }
     </span>
   </div> `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputSearchComponent implements OnInit, OnDestroy {
   private readonly ngUnsubscribe = new Subject<void>();

@@ -4,8 +4,12 @@ import { Component, input } from '@angular/core';
   selector: 'app-vehicle-icon',
   imports: [],
   template: `
-    <figure class="h-10 w-fit flex-center">
-      <div class="car-marker relative" [class]="iconClass()">
+    <figure class="w-fit flex-center" [class]="isSmall() ? 'h-5' : 'h-10'">
+      <div
+        class="car-marker relative"
+        [class]="iconClass()"
+        [class.scale-60]="isSmall()"
+      >
         <span
           [class.!hidden]="!isEcoMode()"
           class="absolute top-0 -left-1 size-4 border border-green-600 rounded-full bg-white flex-center"
@@ -27,4 +31,5 @@ export class VehicleIconComponent {
   iconClass = input.required<string>();
   isEcoMode = input<boolean>(false);
   isCharging = input<boolean>(false);
+  isSmall = input<boolean>(false);
 }

@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
+  computed,
   contentChild,
   inject,
   input,
@@ -40,7 +41,9 @@ import { LayoutService } from '@core/services';
             [class.!overflow-hidden]="!isRightPanelOpened()"
             [style.width.px]="rightPanelWidthPx()"
           >
-            <ng-container *ngTemplateOutlet="rightContent()" />
+            @if (!isSmallScreen()) {
+              <ng-container *ngTemplateOutlet="rightContent()" />
+            }
           </section>
         </div>
 
@@ -50,7 +53,9 @@ import { LayoutService } from '@core/services';
           [class.translate-x-full]="!isRightPanelOpened()"
         >
           <div class="h-full w-full relative">
-            <ng-container *ngTemplateOutlet="rightContent()" />
+            @if (isSmallScreen()) {
+              <ng-container *ngTemplateOutlet="rightContent()" />
+            }
 
             <button
               class="bg-surface shadow rounded-r-full flex-center absolute top-1/2 -translate-y-1/2 left-0 z-401 w-6 h-8 cursor-pointer"
@@ -68,11 +73,12 @@ import { LayoutService } from '@core/services';
 })
 export class SplitPanelComponent {
   #layoutService = inject(LayoutService);
+  isSmallScreen = computed(() => this.#layoutService.isSmallScreen());
 
   rightPanelWidthPx = input<number>(400);
 
   isRightPanelOpened = linkedSignal<boolean>(() =>
-    this.#layoutService.isSmallScreen() ? false : true,
+    this.isSmallScreen() ? false : true,
   );
 
   map = input<L.Map | undefined>(undefined);

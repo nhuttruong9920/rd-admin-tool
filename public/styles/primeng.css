@@ -1,4 +1,32 @@
-
 .p-tooltip-text {
   color: white !important;
+}
+
+/* date-picker */
+.hidden-time-picker {
+  .p-datepicker-time-picker {
+    display: none !important;
+  }
+}
+
+.p-datepicker-panel-inline {
+  border: none !important;
+}
+
+.p-popover {
+  &::before,
+  &::after {
+    content: unset !important;
+  }
+
+  .p-popover-content {
+    padding: 0;
+  }
+}
+
+.p-confirmpopup {
+  &::before,
+  &::after {
+    content: unset !important;
+  }
 }

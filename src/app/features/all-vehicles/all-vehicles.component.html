@@ -1,7 +1,7 @@
 <div class="h-full-main-layout">
   <app-split-panel>
     <ng-template #leftContent>
-      <div class="h-full w-full relative">
+      <div class="h-full w-full absolute top-0 left-0">
         <app-all-vehicles-map
           [formattedDevices]="formattedDevices()"
           [firstTimeHasData]="deviceStore.firstTimeHasData()"

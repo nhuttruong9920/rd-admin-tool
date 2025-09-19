@@ -1,0 +1,111 @@
+<div class="h-full w-full p-2 flex flex-col gap-2">
+  <!-- toolbar -->
+  <section>
+    <app-toolbar headerTitle="Xem lại lộ trình">
+      <ng-template #rightContent>
+        <p-select
+          [options]="deviceStatus()"
+          appendTo="body"
+          [(ngModel)]="selectedDeviceId"
+          optionLabel="id"
+          optionValue="id"
+          placeholder="Chọn thiết bị"
+          class="w-full"
+          [filter]="true"
+          size="small"
+        >
+          <ng-template #selectedItem let-selectedOption>
+            @if (selectedOption) {
+              <div class="flex items-center gap-1">
+                <app-vehicle-icon
+                  [iconClass]="'bg-car_' + selectedOption.formatted.state"
+                  [isSmall]="true"
+                />
+                <div>{{ selectedOption.id }}</div>
+              </div>
+            }
+          </ng-template>
+          <ng-template let-device #item>
+            <div class="flex items-center gap-1">
+              <app-vehicle-icon
+                [iconClass]="'bg-car_' + device.formatted.state"
+                [isSmall]="true"
+              />
+              <div>{{ device.id }}</div>
+            </div>
+          </ng-template>
+        </p-select>
+
+        <div class="flex gap-1">
+          <app-date-time-picker
+            [(date)]="historyFromDate"
+            inputId="from"
+            size="small"
+            [showIcon]="false"
+          />
+          <app-date-time-picker
+            [(date)]="historyToDate"
+            inputId="to"
+            size="small"
+            [showIcon]="false"
+          />
+          <p-button
+            icon="fas fa-ellipsis-vertical"
+            text
+            severity="secondary"
+            (click)="dateRangeMenu.toggle($event)"
+            size="small"
+          />
+        </div>
+
+        <div class="flex gap-1 justify-end">
+          <p-button
+            icon="fas fa-magnifying-glass"
+            size="small"
+            label="Tải"
+            (click)="loadHistory()"
+          />
+          <p-button
+            severity="secondary"
+            icon="fas fa-file-excel"
+            size="small"
+            label="Xuất file"
+          />
+        </div>
+      </ng-template>
+    </app-toolbar>
+  </section>
+
+  <!-- history controls -->
+  <section>
+    <app-history-controls
+      [historyLength]="historyStore.data()?.length"
+      [(currentPlayingIndex)]="currentPlayingIndex"
+      [(isHistoryPlaying)]="isHistoryPlaying"
+      [(selectedPlayingSpeed)]="selectedPlayingSpeed"
+    />
+  </section>
+
+  <!-- vehicle list -->
+  <section class="flex-1 overflow-y-auto">
+    <cdk-virtual-scroll-viewport #cdkViewport itemSize="129" class="h-full">
+      <div
+        *cdkVirtualFor="let waypoint of historyStore.data(); let idx = index"
+      >
+        <app-history-card
+          [id]="idx"
+          [waypoint]="waypoint"
+          [isSelected]="currentPlayingIndex() === idx"
+          (click)="selectWaypoint(idx)"
+        ></app-history-card>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </section>
+</div>
+
+<p-menu
+  #dateRangeMenu
+  appendTo="body"
+  [model]="dateRangeItems"
+  [popup]="true"
+/>

@@ -54,6 +54,7 @@ export class PrimengService {
       components: {},
     });
 
+    // set primeng theme
     this.primeng.setThemeConfig({
       theme: {
         preset: newPreset,
@@ -64,5 +65,76 @@ export class PrimengService {
         },
       },
     });
+
+    // set primeng translation
+    this.primeng.setTranslation(this.getPrimeNGLocaleObject());
+  }
+
+  private getPrimeNGLocaleObject(): Record<string, string | string[]> {
+    return {
+      dayNames: [
+        'Chủ nhật',
+        'Thứ hai',
+        'Thứ ba',
+        'Thứ tư',
+        'Thứ năm',
+        'Thứ sáu',
+        'Thứ bảy',
+      ],
+      dayNamesShort: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
+      dayNamesMin: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
+      monthNames: [
+        'Tháng 1',
+        'Tháng 2',
+        'Tháng 3',
+        'Tháng 4',
+        'Tháng 5',
+        'Tháng 6',
+        'Tháng 7',
+        'Tháng 8',
+        'Tháng 9',
+        'Tháng 10',
+        'Tháng 11',
+        'Tháng 12',
+      ],
+      monthNamesShort: [
+        'Th1',
+        'Th2',
+        'Th3',
+        'Th4',
+        'Th5',
+        'Th6',
+        'Th7',
+        'Th8',
+        'Th9',
+        'Th10',
+        'Th11',
+        'Th12',
+      ],
+      today: 'Hôm nay',
+      clear: 'Xóa',
+      dateFormat: 'yy-mm-dd',
+      addRule: 'Thêm điều kiện',
+      removeRule: 'Xóa điều kiện',
+      equals: 'Bằng',
+      notEquals: 'Không bằng',
+      contains: 'Chứa',
+      notContains: 'Không chứa',
+      endsWith: 'Kết thúc bằng',
+      apply: 'Áp dụng',
+      matchAll: 'Khớp tất cả',
+      matchAny: 'Khớp bất kỳ',
+      startsWith: 'Bắt đầu bằng',
+      lt: 'Nhỏ hơn',
+      lte: 'Nhỏ hơn hoặc bằng',
+      gt: 'Lớn hơn',
+      gte: 'Lớn hơn hoặc bằng',
+      dateIs: 'Ngày là',
+      dateIsNot: 'Ngày không là',
+      dateBefore: 'Trước ngày',
+      dateAfter: 'Sau ngày',
+      weekHeader: 'Tuần',
+      emptyMessage: 'Không có dữ liệu',
+    };
   }
 }

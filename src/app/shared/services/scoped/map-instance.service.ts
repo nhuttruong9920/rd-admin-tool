@@ -13,7 +13,7 @@ enum LeafletControlPosition {
 }
 
 type MapOverlay = {
-  labelKey: string;
+  label: string;
   layer: L.Layer | L.LayerGroup;
 };
 
@@ -164,7 +164,7 @@ export class MapInstanceService implements OnDestroy {
 
     if (mapOption.mapOverlays) {
       mapOption.mapOverlays.forEach((mapOverlay) => {
-        overlays[mapOverlay.labelKey] = mapOverlay.layer;
+        overlays[mapOverlay.label] = mapOverlay.layer;
       });
     }
 

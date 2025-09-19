@@ -1,13 +1,16 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
-import { FormattedDevice } from '@shared/types';
-import { VehicleIconComponent } from './vehicle-icon.component';
-import { ScrollContainerComponent } from './scroll-container.component';
-import { StorageService } from '@core/services';
-import { LSKeys } from '@shared/constants';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { FloatLabel } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
+
+import { ButtonModule } from 'primeng/button';
+import { FloatLabel } from 'primeng/floatlabel';
+import { InputTextModule } from 'primeng/inputtext';
+
+import { StorageService } from '@core/services';
+import { AllVehiclesService } from '@features/all-vehicles/all-vehicles.service';
+import { LSKeys } from '@shared/constants';
+import { FormattedDevice } from '@shared/types';
+import { ScrollContainerComponent } from './scroll-container.component';
+import { VehicleIconComponent } from './vehicle-icon.component';
 
 @Component({
   selector: 'app-vehicle-marker-popup',
@@ -160,11 +163,12 @@ import { FormsModule } from '@angular/forms';
 })
 export class VehicleMarkerPopupComponent {
   #storageService = inject(StorageService);
+  #allVehiclesService = inject(AllVehiclesService);
 
   deviceId = input.required<string>();
   device = input.required<FormattedDevice>();
 
-  selectedTabIdx = signal<number>(0);
+  selectedTabIdx = this.#allVehiclesService.selectedTabIdx;
 
   tabs = [
     {

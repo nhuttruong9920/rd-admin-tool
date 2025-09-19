@@ -183,7 +183,6 @@ type FormattedDevice = {
   odoTime: FormattedInfo;
 };
 
-
 type DeviceStatus = DeviceStatusDto & {
   formatted: FormattedDevice;
 };
@@ -194,6 +193,7 @@ type GetDeviceHistoryReq = {
   toTime: string;
 };
 
+// history
 type HistoryWaypointDto = {
   gpsTime: number;
   heading: number;
@@ -210,24 +210,38 @@ type HistoryWaypointDto = {
   params: string;
 };
 
-type HistoryWaypoint = HistoryWaypointDto & {
-  currentState: DeviceState;
+type FormattedWaypoint = {
+  id: string;
+  address: string;
+  gpsTime: string;
+  state: DeviceState;
+  lat: number;
+  long: number;
+  heading: number;
+  mode: FormattedInfo | null;
+  battery: FormattedInfo & { isCharging: boolean };
+  gpsSpeed: FormattedInfo;
+  range: FormattedInfo;
+  vehicleSpeed: FormattedInfo;
+  voltage: FormattedInfo;
+  odometer: FormattedInfo;
+  odoTime: FormattedInfo;
   stateColor: string;
-  iconClass: string;
-  parsedParams: Record<string, string>;
-  deltaGpsSecs: number;
-  parsedOdoMeter: OdoMeterData | null;
+};
+
+type HistoryWaypoint = HistoryWaypointDto & {
+  formatted: FormattedWaypoint;
 };
 
 type HistoryStopRange = {
   startIndex: number;
   endIndex: number;
-  duration: number;
-  fromTime: number;
-  toTime: number;
-  x: number;
-  y: number;
-  info: string;
+  duration: string;
+  fromTime: string;
+  toTime: string;
+  lat: number;
+  long: number;
+  address: string;
 };
 
 type OdoMeter = [
@@ -276,6 +290,7 @@ export type {
   DeviceStatus,
   DeviceStatusDto,
   FormattedDevice,
+  FormattedWaypoint,
   FormattedInfo,
   GetDeviceHistoryReq,
   GetDeviceStatusReq,

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
   afterNextRender,
-  ChangeDetectionStrategy,
   Component,
   computed,
   contentChild,
@@ -11,7 +10,7 @@ import {
   output,
   signal,
   TemplateRef,
-  viewChild,
+  viewChild
 } from '@angular/core';
 
 import { BadgeModule } from 'primeng/badge';
@@ -86,7 +85,6 @@ import { WidthBreakpoint } from '@shared/types';
       </section>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToolbarComponent {
   readonly headerTitle = input.required<string>();

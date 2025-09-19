@@ -72,7 +72,7 @@ export class ConnectionApiService {
 
   fetchDeviceHistory(
     request: GetDeviceHistoryReq,
-  ): Observable<Api<HistoryWaypointDto[]>> {
+  ): Observable<HistoryWaypointDto[]> {
     return this.#restService
       .post<
         GetDeviceHistoryReq,

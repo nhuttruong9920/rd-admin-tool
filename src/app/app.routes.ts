@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from '@core/layout/layout.component';
-import { DeviceStore } from '@shared/stores';
+import { DeviceStore, HistoryStore } from '@shared/stores';
 import { createWrapperComponent } from '@shared/utils';
 export const routes: Routes = [
   {
@@ -14,7 +14,7 @@ export const routes: Routes = [
       },
       {
         path: 'monitor',
-        component: createWrapperComponent([DeviceStore]),
+        component: createWrapperComponent([DeviceStore, HistoryStore]),
         children: [
           {
             path: 'all-vehicles',

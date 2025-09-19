@@ -12,139 +12,75 @@ import { ConnectionApiService } from '@shared/services';
 import {
   CommonStoreInitialState,
   DeviceState,
-  DeviceStatus,
-  DeviceStatusDto,
-  FormattedDevice,
   FormattedInfo,
+  FormattedWaypoint,
+  GetDeviceHistoryReq,
+  HistoryStopRange,
+  HistoryWaypoint,
+  HistoryWaypointDto,
   OdoMeter,
 } from '@shared/types';
-import {
-  BehaviorSubject,
-  catchError,
-  combineLatest,
-  interval,
-  map,
-  of,
-  startWith,
-  switchMap,
-  tap,
-} from 'rxjs';
-import { ConnectionStore } from './connection.store';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
 
-const initialState: CommonStoreInitialState<DeviceStatus[]> & {
-  refreshInterval: number;
-} = {
+const initialState: CommonStoreInitialState<HistoryWaypoint[]> = {
   data: null,
   _loading: false,
   error: null,
   searchTerm: '',
-  refreshInterval: 10000,
 };
 
-export const DeviceStore = signalStore(
+export const HistoryStore = signalStore(
   withState(initialState),
-  withComputed(({ data, _loading, searchTerm }) => ({
-    count: computed(() => data()?.length ?? 0),
-    isFetching: computed(() => _loading() && !data()),
-    isLoading: computed(() => _loading() && data() !== null),
-    firstTimeHasData: computed(() => data() !== null),
-    filteredData: computed(() => {
-      const allDevices = data();
-      const search = searchTerm().toLowerCase().trim();
 
-      if (!allDevices || !search) {
-        return allDevices;
-      }
-
-      return allDevices.filter((device) =>
-        device.last.imei.toLowerCase().includes(search),
-      );
-    }),
-  })),
+  withComputed(({ data, _loading }) => {
+    const dateService = inject(DateService);
+    return {
+      waypointCount: computed(() => data()?.length ?? 0),
+      isFetching: computed(() => _loading() && !data()),
+      isLoading: computed(() => _loading() && data() !== null),
+      stopRanges: computed(() =>
+        getHistoryStopRanges(data(), dateService),
+      ),
+    };
+  }),
   withMethods((store) => {
     const connectionApiService = inject(ConnectionApiService);
-    const connectionStore = inject(ConnectionStore);
     const dateService = inject(DateService);
 
-    const refreshStatus$ = new BehaviorSubject<void>(undefined);
-
-    const allConnections$ = connectionApiService.getAllConnectionByGroup().pipe(
-      catchError(() => {
-        patchState(store, {
-          _loading: false,
-          error: 'Lỗi khi tải dữ liệu',
-        });
-        return of(null);
-      }),
-    );
-
-    const deviceStatusInterval$ = combineLatest([
-      allConnections$,
-      refreshStatus$.asObservable(),
-      interval(store.refreshInterval()).pipe(startWith(0)),
-    ]).pipe(
-      tap(() => patchState(store, { _loading: true, error: null })),
-      switchMap(([allConnections]) => {
-        if (!allConnections) {
-          patchState(store, {
-            _loading: false,
-            error: 'Lỗi khi tải dữ liệu',
-          });
-          return of(null);
-        }
-
-        connectionStore.patchData(allConnections.data ?? []);
-
-        const imeis = allConnections.data?.map((c) => c.imei).join(',') ?? '';
-
-        return connectionApiService.fetchDeviceStatus({ imeis, time: 0 }).pipe(
-          map((res) => {
-            if (!res.data) return null;
-
-            return res.data.map((item: DeviceStatusDto) => ({
-              ...item,
-              formatted: getFormattedDevice(item, dateService),
-            }));
-          }),
-          tap((processedData) => {
-            patchState(store, {
-              data: processedData,
-              _loading: false,
-              error: null,
-            });
-          }),
-          catchError((error) => {
-            console.log('error', error);
-            patchState(store, {
-              _loading: false,
-              error: error.message || 'Lỗi khi tải dữ liệu thiết bị',
-            });
-            return of(null);
-          }),
-        );
-      }),
-    );
-
     const methods = {
-      ensureDevices: (): void => {
-        if (!store.data()) {
-          methods.startAutoRefresh();
-        }
-      },
+      fetchHistory: rxMethod<GetDeviceHistoryReq>(
+        switchMap((request) => {
+          patchState(store, {
+            _loading: true,
+            error: null,
+          });
 
-      load: rxMethod<void>(switchMap(() => deviceStatusInterval$)),
-
-      refresh: (): void => {
-        refreshStatus$.next();
-      },
-
-      startAutoRefresh: (): void => {
-        methods.load();
-      },
-
-      setRefreshInterval: (interval: number): void => {
-        patchState(store, { refreshInterval: interval });
-      },
+          return connectionApiService.fetchDeviceHistory(request).pipe(
+            map((response) => {
+              if (!response) return null;
+              return response.map((item: HistoryWaypointDto) => ({
+                ...item,
+                formatted: getFormattedWaypoint(item, dateService),
+              }));
+            }),
+            tap((processedData) => {
+              patchState(store, {
+                data: processedData,
+                _loading: false,
+                error: null,
+              });
+            }),
+            catchError((error) => {
+              console.error('History fetch error:', error);
+              patchState(store, {
+                _loading: false,
+                error: error.message || 'Lỗi khi tải dữ liệu lịch sử',
+              });
+              return of(null);
+            }),
+          );
+        }),
+      ),
 
       setSearchTerm: (searchTerm: string): void => {
         patchState(store, { searchTerm });
@@ -152,6 +88,13 @@ export const DeviceStore = signalStore(
 
       clearSearch: (): void => {
         patchState(store, { searchTerm: '' });
+      },
+
+      clearData: (): void => {
+        patchState(store, {
+          data: null,
+          error: null,
+        });
       },
     };
 
@@ -161,32 +104,37 @@ export const DeviceStore = signalStore(
 
 // Helper functions for device processing
 
-function getFormattedDevice(
-  deviceStatusDto: DeviceStatusDto,
+function getFormattedWaypoint(
+  deviceStatusDto: HistoryWaypointDto,
   dateService: DateService,
-): FormattedDevice {
-  const selectedTime = Math.max(
-    deviceStatusDto.gpsTime,
-    deviceStatusDto.pingTime,
-  );
-  const parsedOdoMeter = parseOdoMeter(deviceStatusDto.last.params);
+): FormattedWaypoint {
+  const parsedOdoMeter = parseOdoMeter(deviceStatusDto.params);
   return {
-    address: deviceStatusDto.last.info || 'Không xác định',
-    pingTime: dateService.getFormattedDate(deviceStatusDto.pingTime),
+    id: deviceStatusDto.unitId,
+    address: deviceStatusDto.info?.trim() || 'Không xác định',
     gpsTime: dateService.getFormattedDate(deviceStatusDto.gpsTime),
     state: getDeviceState(
-      deviceStatusDto.last.status,
-      selectedTime,
-      deviceStatusDto.last.speed,
-      deviceStatusDto.last.maxSpeed,
+      deviceStatusDto.status,
+      deviceStatusDto.gpsTime,
+      deviceStatusDto.speed,
+      80000,
       dateService,
     ),
-    lat: deviceStatusDto.last.y / 1e6,
-    long: deviceStatusDto.last.x / 1e6,
-    heading: deviceStatusDto.last.heading * 2,
+    lat: deviceStatusDto.y / 1e6,
+    long: deviceStatusDto.x / 1e6,
+    heading: deviceStatusDto.heading * 2,
+    stateColor: getDeviceStateColor(
+      getDeviceState(
+        deviceStatusDto.status,
+        deviceStatusDto.gpsTime,
+        deviceStatusDto.speed,
+        80000,
+        dateService,
+      ),
+    ),
     mode: getOdoMeterMode(parsedOdoMeter),
     battery: getBatteryInfo(parsedOdoMeter),
-    gpsSpeed: getGpsSpeed(deviceStatusDto.last.speed),
+    gpsSpeed: getGpsSpeed(deviceStatusDto.speed),
     range: getRange(parsedOdoMeter),
     vehicleSpeed: getVehicleSpeed(parsedOdoMeter),
     odoTime: getOdoTime(parsedOdoMeter),
@@ -457,4 +405,79 @@ function parseOdoMeter(paramsString: string): OdoMeter | null {
     console.log('error', error);
     return null;
   }
+}
+
+function getDeviceStateColor(deviceState: DeviceState): string {
+  switch (deviceState) {
+    case 'disconnected':
+    case 'offline':
+      return '#495057';
+    case 'stop':
+      return '#fcc419';
+    case 'running':
+      return '#51cf66';
+    case 'overspeed':
+      return '#ff6b6b';
+    default:
+      return '#495057';
+  }
+}
+
+function getHistoryStopRanges(
+  historyData: HistoryWaypoint[] | null,
+  dateService: DateService,
+): HistoryStopRange[] {
+  if (!historyData) return [];
+
+  const minDurationSecs = 60;
+
+  const stopRanges = [];
+  let currentRange = null;
+
+  for (let i = 0; i < historyData.length; i++) {
+    const point = historyData[i];
+
+    if (point.formatted.state !== 'running' && !currentRange) {
+      currentRange = {
+        startIndex: i,
+        fromTime: point.gpsTime,
+        x: point.x,
+        y: point.y,
+        info: point.info,
+        endIndex: i,
+        duration: 0,
+        toTime: point.gpsTime,
+      };
+    }
+
+    if (point.formatted.state === 'running' && currentRange) {
+      currentRange.endIndex = i;
+      currentRange.toTime = point.gpsTime;
+      currentRange.duration = currentRange.toTime - currentRange.fromTime;
+      if (currentRange.duration > minDurationSecs) {
+        stopRanges.push(currentRange);
+      }
+      currentRange = null;
+    }
+  }
+
+  if (currentRange) {
+    currentRange.endIndex = historyData.length - 1;
+    currentRange.toTime = historyData[historyData.length - 1].gpsTime;
+    currentRange.duration = currentRange.toTime - currentRange.fromTime;
+    if (currentRange.duration > minDurationSecs) {
+      stopRanges.push(currentRange);
+    }
+  }
+
+  return stopRanges.map((stopRange) => ({
+    startIndex: stopRange.startIndex,
+    endIndex: stopRange.endIndex,
+    lat: stopRange.y / 1e6,
+    long: stopRange.x / 1e6,
+    address: stopRange.info?.trim() || 'Không xác định',
+    duration: dateService.formatSecondsToDuration(stopRange.duration),
+    fromTime: dateService.getFormattedDate(stopRange.fromTime),
+    toTime: dateService.getFormattedDate(stopRange.toTime),
+  }));
 }

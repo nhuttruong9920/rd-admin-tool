@@ -1,1 +1,24 @@
-<p>history-replay works!</p>
+<div class="h-full-main-layout">
+  <app-split-panel>
+    <ng-template #leftContent>
+      <div class="h-full w-full absolute top-0 left-0">
+        <app-vehicle-history-map
+          [formattedHistory]="formattedHistory()"
+          [(isHistoryPlaying)]="isHistoryPlaying"
+          [(currentPlayingIndex)]="currentPlayingIndex"
+        />
+      </div>
+      ''
+    </ng-template>
+
+    <ng-template #rightContent>
+      <app-history-panel
+        [deviceStatus]="deviceStore.data() ?? []"
+        (historyReq)="fetchHistory($event)"
+        [(isHistoryPlaying)]="isHistoryPlaying"
+        [(selectedPlayingSpeed)]="selectedPlayingSpeed"
+        [(currentPlayingIndex)]="currentPlayingIndex"
+      />
+    </ng-template>
+  </app-split-panel>
+</div>

@@ -6,13 +6,14 @@ import {
   model,
   viewChild,
 } from '@angular/core';
-import { InputSearchComponent, ToolbarComponent } from '@shared/components';
-import { DeviceStore } from '@shared/stores';
-import { VehicleCardComponent } from './vehicle-card/vehicle-card.component';
 import {
   CdkVirtualScrollViewport,
   ScrollingModule,
 } from '@angular/cdk/scrolling';
+
+import { InputSearchComponent, ToolbarComponent } from '@shared/components';
+import { DeviceStore } from '@shared/stores';
+import { VehicleCardComponent } from './vehicle-card/vehicle-card.component';
 import { cdkScrollWhileHidden } from '@shared/utils';
 
 @Component({
@@ -42,11 +43,11 @@ export class AllVehiclesPanelComponent {
   }
 
   constructor() {
-    // effect(() => {
-    //   const selectedDeviceIdx = this.selectedDeviceIdx();
-    //   if (selectedDeviceIdx !== undefined && selectedDeviceIdx >= 0) {
-    //     cdkScrollWhileHidden(this.cdkViewport(), selectedDeviceIdx, true);
-    //   }
-    // });
+    effect(() => {
+      const selectedDeviceIdx = this.selectedDeviceIdx();
+      if (selectedDeviceIdx !== undefined && selectedDeviceIdx >= 0) {
+        cdkScrollWhileHidden(this.cdkViewport(), selectedDeviceIdx, true);
+      }
+    });
   }
 }

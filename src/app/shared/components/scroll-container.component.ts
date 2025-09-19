@@ -1,12 +1,11 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   input,
   OnDestroy,
   signal,
-  viewChild,
+  viewChild
 } from '@angular/core';
 
 @Component({
@@ -71,7 +70,6 @@ import {
       background: transparent;
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScrollContainerComponent implements AfterViewInit, OnDestroy {
   scrollContainer = viewChild<ElementRef<HTMLDivElement>>('scrollContainer');
