@@ -136,7 +136,7 @@ import { FormsModule } from '@angular/forms';
               <div class="flex flex-wrap gap-1">
                 @for (command of quickCommands; track command) {
                   <button
-                    class="text-xs bg-gray-200 rounded-full px-2 py-1 cursor-pointer"
+                    class="text-xs bg-gray-200 rounded-full px-1 py-0.5 cursor-pointer"
                     (click)="inputCommand.set(command)"
                   >
                     {{ command }}

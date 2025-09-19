@@ -14,6 +14,7 @@ import { LSKeys } from '../constants/storage.constant';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabel } from 'primeng/floatlabel';
+
 @Component({
   selector: 'app-quick-command-manager',
   standalone: true,
@@ -30,7 +31,7 @@ import { FloatLabel } from 'primeng/floatlabel';
           (onClick)="closeDialog.emit()"
         />
       </div>
-      <div class="flex flex-col gap-2 px-2">
+      <div class="flex flex-col gap-2 px-2 h-100 overflow-y-auto">
         @for (command of commands(); track command) {
           <div
             class="flex items-center gap-2 justify-between border-b border-surface-200 py-1"
@@ -46,51 +47,51 @@ import { FloatLabel } from 'primeng/floatlabel';
             />
           </div>
         }
-
-        @if (isCreating()) {
-          <div class="flex items-center justify-between gap-2 mt-2">
-            <p-floatlabel variant="on" class="flex-1">
-              <input
-                #newCommandInput
-                type="text"
-                pInputText
-                id="newCommand"
-                [(ngModel)]="newCommand"
-                autocomplete="off"
-                pSize="small"
-                class="w-full"
-              />
-              <label for="newCommand">Lệnh mới</label>
-            </p-floatlabel>
-            <div class="flex-center gap-2">
-              <p-button
-                icon="fas fa-xmark"
-                severity="danger"
-                [rounded]="true"
-                [text]="true"
-                size="small"
-                (onClick)="cancelCreateCommand()"
-              />
-              <p-button
-                icon="fas fa-check"
-                severity="success"
-                [rounded]="true"
-                [text]="true"
-                size="small"
-                (onClick)="createCommand()"
-              />
-            </div>
-          </div>
-        } @else {
-          <button
-            class="flex-center gap-2 hover:bg-primary-500/20 rounded py-2 text-primary transition-colors duration-300 cursor-pointer"
-            (click)="startCreateCommand()"
-          >
-            <i class="fas fa-plus"></i>
-            <p class="font-medium">Thêm lệnh</p>
-          </button>
-        }
       </div>
+
+      @if (isCreating()) {
+        <div class="flex items-center justify-between gap-2 mt-2">
+          <p-floatlabel variant="on" class="flex-1">
+            <input
+              #newCommandInput
+              type="text"
+              pInputText
+              id="newCommand"
+              [(ngModel)]="newCommand"
+              autocomplete="off"
+              pSize="small"
+              class="w-full"
+            />
+            <label for="newCommand">Lệnh mới</label>
+          </p-floatlabel>
+          <div class="flex-center gap-2">
+            <p-button
+              icon="fas fa-xmark"
+              severity="danger"
+              [rounded]="true"
+              [text]="true"
+              size="small"
+              (onClick)="cancelCreateCommand()"
+            />
+            <p-button
+              icon="fas fa-check"
+              severity="success"
+              [rounded]="true"
+              [text]="true"
+              size="small"
+              (onClick)="createCommand()"
+            />
+          </div>
+        </div>
+      } @else {
+        <button
+          class="w-full mt-1 flex-center gap-2 hover:bg-primary-500/20 rounded py-2 text-primary transition-colors duration-300 cursor-pointer"
+          (click)="startCreateCommand()"
+        >
+          <i class="fas fa-plus"></i>
+          <p class="font-medium">Thêm lệnh</p>
+        </button>
+      }
     </div>
   `,
 })
