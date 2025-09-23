@@ -1,17 +1,9 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, Signal, inject, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
-import { finalize, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-
-type QueryResult<T> = {
-  data: Signal<T | null>;
-  error: Signal<any>;
-  isLoading: Signal<boolean>;
-  isRefetching: Signal<boolean>;
-  refetch: () => void;
-};
 
 @Injectable({
   providedIn: 'root',
@@ -151,65 +143,5 @@ export class RestService {
     const headers = new HttpHeaders({ 'Content-Type': contentType });
 
     return this.#httpClient.put<R>(baseUrl + endpoint, body, { headers });
-  }
-
-  useQuery<T>(
-    endpoint: string,
-    method: 'post' | 'get' = 'get',
-    body?: Record<string, unknown>,
-    contentType: string = 'application/json',
-  ): QueryResult<T> {
-    const data = signal<T | null>(null);
-    const error = signal<any>(null);
-    const isLoading = signal<boolean>(false);
-    const isRefetching = signal<boolean>(false);
-
-    const fetch = (isRefetch = false): void => {
-      if (isRefetch) {
-        isRefetching.set(true);
-      } else {
-        isLoading.set(true);
-      }
-
-      let request$;
-
-      switch (method) {
-        case 'get':
-          request$ = this.get(
-            endpoint,
-            body as Record<string, string | number | boolean>,
-            contentType,
-          );
-          break;
-        case 'post':
-          request$ = this.post(endpoint, body, contentType);
-          break;
-      }
-
-      request$
-        .pipe(
-          finalize(() => {
-            isLoading.set(false);
-            isRefetching.set(false);
-          }),
-        )
-        .subscribe({
-          next: (res) => {
-            data.set(res as T);
-            error.set(null);
-          },
-          error: (err) => error.set(err),
-        });
-    };
-
-    fetch();
-
-    return {
-      data,
-      error,
-      isLoading,
-      isRefetching,
-      refetch: () => fetch(true),
-    };
   }
 }

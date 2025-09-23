@@ -25,9 +25,12 @@
     </app-scroll-container>
   </section>
 
-  <section class="h-10">
+  <section class="h-10 flex-center">
     <button class="size-8 flex-center" (click)="toggleDarkMode()">
       <i [class]="isDarkMode() ? 'fas fa-moon' : 'fas fa-sun'"></i>
+    </button>
+    <button class="size-8 flex-center" (click)="logout()">
+      <i class="fas fa-power-off"></i>
     </button>
   </section>
 </div>

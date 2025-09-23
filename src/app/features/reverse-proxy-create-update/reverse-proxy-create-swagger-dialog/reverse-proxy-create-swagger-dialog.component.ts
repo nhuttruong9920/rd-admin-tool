@@ -1,10 +1,9 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
   model,
-  output,
+  output
 } from '@angular/core';
 import {
   FormArray,
@@ -12,11 +11,13 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { SwaggerConfig } from '@shared/types';
+
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+
+import { SwaggerConfig } from '@shared/types';
 
 @Component({
   selector: 'app-reverse-proxy-create-swagger-dialog',
@@ -28,7 +29,6 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
     ToggleSwitchModule,
   ],
   templateUrl: './reverse-proxy-create-swagger-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReverseProxyCreateSwaggerDialogComponent {
   readonly updatingSwagger = model<SwaggerConfig | null>();

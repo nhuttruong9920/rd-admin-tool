@@ -26,7 +26,9 @@ export class HistoryReplayComponent implements OnInit {
   deviceStore = inject(DeviceStore);
   historyStore = inject(HistoryStore);
 
-  formattedHistory = computed(() => this.historyStore.data()?.map((item) => item.formatted) ?? []);
+  formattedHistory = computed(
+    () => this.historyStore.data()?.map((item) => item.formatted) ?? [],
+  );
 
   // playing
   isHistoryPlaying = linkedSignal(() => {
@@ -53,7 +55,7 @@ export class HistoryReplayComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.deviceStore.ensureDevices();
+    this.deviceStore.ensureData();
   }
 
   fetchHistory(request: GetDeviceHistoryReq): void {

@@ -114,6 +114,14 @@ type PackageDto = {
   s: number;
 };
 
+type FormattedPackage = {
+type: { label: string; value: number; color: string };
+};
+
+type Package = PackageDto & {
+  formatted: FormattedPackage;
+};
+
 const PackageType = {
   0: {
     label: 'UTF8',
@@ -147,10 +155,7 @@ const PackageType = {
   },
 } as const;
 
-type Package = PackageDto & {
-  type: { label: string; value: number; color: string };
-  isNew: boolean;
-};
+
 type DeviceState =
   | 'disconnected'
   | 'offline'
@@ -284,7 +289,10 @@ type OdoMeterData = {
   odometer: number;
 };
 
+type DisplayOption = 'raw' | 'parsed' | 'content';
+
 export type {
+  FormattedPackage,
   ConnectionDto,
   DeviceState,
   DeviceStatus,
@@ -307,6 +315,7 @@ export type {
   PackageDto,
   SendCommandReq,
   StatusDto,
+  DisplayOption,
 };
 
 export { PackageType };

@@ -1,10 +1,9 @@
 import { KeyValuePipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   inject,
   signal,
-  viewChild,
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -15,6 +14,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+
+import { ButtonModule } from 'primeng/button';
+import { FieldsetModule } from 'primeng/fieldset';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
+import { PopoverModule } from 'primeng/popover';
+import { SelectModule } from 'primeng/select';
+import { startWith, take } from 'rxjs/operators';
+
 import { DateService, NavigationService, ToastService } from '@core/services';
 import { ReverseProxyApiService } from '@shared/services';
 import {
@@ -26,16 +35,9 @@ import {
   ReverseProxyDto,
   SwaggerConfig,
 } from '@shared/types';
-import { ButtonModule } from 'primeng/button';
-import { FieldsetModule } from 'primeng/fieldset';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { InputTextModule } from 'primeng/inputtext';
-import { PopoverModule } from 'primeng/popover';
-import { SelectModule } from 'primeng/select';
-import { startWith, take } from 'rxjs/operators';
 import { ReverseProxyCreateSwaggerDialogComponent } from './reverse-proxy-create-swagger-dialog/reverse-proxy-create-swagger-dialog.component';
 import { ReverseProxyCreateTransformDialogComponent } from './reverse-proxy-create-transform-dialog/reverse-proxy-create-transform-dialog.component';
+
 @Component({
   selector: 'app-reverse-proxy-create-dialog',
   imports: [
@@ -52,7 +54,6 @@ import { ReverseProxyCreateTransformDialogComponent } from './reverse-proxy-crea
     SelectModule,
   ],
   templateUrl: './reverse-proxy-create-update.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReverseProxyCreateUpdateComponent {
   proxyLoadBalancingPolicyStore = inject(ProxyLoadBalancingPolicyStore);
@@ -261,28 +262,27 @@ export class ReverseProxyCreateUpdateComponent {
   }
 
   private mapReverseProxyToForm(proxy: ReverseProxyDto): void {
-    const proxyConfigs = proxy.configs;
     const transformedProxy = {
-      id: proxyConfigs.id,
+      id: proxy.id,
       destinationAddress:
-        proxyConfigs.cluster?.destinations?.destination1?.address || '',
+        proxy.cluster?.destinations?.destination1?.address || '',
       swaggers:
-        proxyConfigs.cluster?.destinations?.destination1?.swaggers || [],
+        proxy.cluster?.destinations?.destination1?.swaggers || [],
       timeoutSeconds: this.#dateService.getSecondsFromDuration(
-        proxyConfigs.cluster?.httpRequest?.timeout,
+        proxy.cluster?.httpRequest?.timeout,
       ),
-      path: proxyConfigs.route?.match?.path || '',
-      order: proxyConfigs.route?.order || 0,
-      authorizationPolicy: proxyConfigs.route?.authorizationPolicy || '',
-      rateLimiterPolicy: proxyConfigs.route?.rateLimiterPolicy || '',
-      outputCachePolicy: proxyConfigs.route?.outputCachePolicy || '',
-      timeoutPolicy: proxyConfigs.route?.timeoutPolicy || '',
-      corsPolicy: proxyConfigs.route?.corsPolicy || '',
-      timeout: proxyConfigs.route?.timeout || '',
-      transforms: proxyConfigs.route?.transforms || [],
+      path: proxy.route?.match?.path || '',
+      order: proxy.route?.order || 0,
+      authorizationPolicy: proxy.route?.authorizationPolicy || '',
+      rateLimiterPolicy: proxy.route?.rateLimiterPolicy || '',
+      outputCachePolicy: proxy.route?.outputCachePolicy || '',
+      timeoutPolicy: proxy.route?.timeoutPolicy || '',
+      corsPolicy: proxy.route?.corsPolicy || '',
+      timeout: proxy.route?.timeout || '',
+      transforms: proxy.route?.transforms || [],
     };
 
-    Object.entries(proxyConfigs.route?.metadata || {}).forEach(
+    Object.entries(proxy.route?.metadata || {}).forEach(
       ([key, value]) => {
         const metadataGroup = new FormGroup({
           key: new FormControl<string>(key),

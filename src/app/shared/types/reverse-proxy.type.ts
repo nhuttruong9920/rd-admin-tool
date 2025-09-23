@@ -43,7 +43,8 @@ type Cluster = {
   };
 };
 
-type ReverseProxyConfigDto = {
+
+type ReverseProxyDto = {
   route: Route;
   cluster: Cluster;
   createdAt: string; // ISO 8601 datetime string
@@ -53,17 +54,6 @@ type ReverseProxyConfigDto = {
   id: string;
   lastModified: string; // ISO 8601 datetime string
   isDeleted: boolean;
-};
-
-type ReverseProxyStatusDto = {
-  state: boolean;
-  environment: string | null;
-  lastAppliedAt: string | null;
-};
-
-type ReverseProxyDto = {
-  configs: ReverseProxyConfigDto;
-  status: ReverseProxyStatusDto;
 };
 
 type ReverseProxyCtaDto = {
@@ -110,8 +100,6 @@ type ReverseProxyOptionDto = {
 };
 
 export type {
-  ReverseProxyConfigDto,
-  ReverseProxyStatusDto,
   ReverseProxyOptionDto,
   SwaggerConfig,
   Destination,

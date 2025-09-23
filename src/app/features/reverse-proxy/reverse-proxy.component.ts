@@ -9,7 +9,7 @@ import { NavigationService, ToastService } from '@core/services';
 import { InputSearchComponent, ToolbarComponent } from '@shared/components';
 import { ReverseProxyApiService } from '@shared/services';
 import { ReverseProxyStore } from '@shared/stores';
-import { ReverseProxyConfigDto } from '@shared/types';
+import { ReverseProxyDto } from '@shared/types';
 import { ReverseProxyCardComponent } from './reverse-proxy-card/reverse-proxy-card.component';
 import { ReverseProxyTableComponent } from './reverse-proxy-table/reverse-proxy-table.component';
 
@@ -35,7 +35,7 @@ export class ReverseProxyComponent {
   #toastService = inject(ToastService);
 
   reverseProxyDetailDialogVisible = signal<boolean>(false);
-  reverseProxyDetail = signal<ReverseProxyConfigDto | null>(null);
+  reverseProxyDetail = signal<ReverseProxyDto | null>(null);
 
   constructor() {
     this.reverseProxyStore.ensureData();
@@ -49,7 +49,7 @@ export class ReverseProxyComponent {
     this.#navigationService.toReverseProxyConfig();
   }
 
-  protected detailReverseProxy(reverseProxy: ReverseProxyConfigDto): void {
+  protected detailReverseProxy(reverseProxy: ReverseProxyDto): void {
     this.reverseProxyDetail.set(reverseProxy);
     this.reverseProxyDetailDialogVisible.set(true);
   }

@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from '@core/auth/guards/auth.guard';
+import { ReturnGuard } from '@core/auth/guards/return.guard';
 
 import { LayoutComponent } from '@core/layout/layout.component';
 import { DeviceStore, HistoryStore, ReverseProxyStore } from '@shared/stores';
@@ -6,8 +8,22 @@ import { createWrapperComponent } from '@shared/utils';
 
 export const routes: Routes = [
   {
+    path: 'auth',
+    canActivate: [ReturnGuard],
+    children: [
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('@core/auth/pages/login/login.component').then(
+            (m) => m.LoginComponent,
+          ),
+      },
+    ],
+  },
+  {
     path: '',
     component: LayoutComponent,
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -35,10 +51,10 @@ export const routes: Routes = [
             title: 'Xem lại lộ trình',
           },
           {
-            path: 'send-command',
+            path: 'command',
             loadComponent: () =>
-              import('./features/send-command/send-command.component').then(
-                (m) => m.SendCommandComponent,
+              import('./features/command/command.component').then(
+                (m) => m.CommandComponent,
               ),
             title: 'Gửi lệnh',
           },

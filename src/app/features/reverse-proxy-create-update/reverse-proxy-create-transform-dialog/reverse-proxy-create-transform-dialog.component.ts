@@ -1,10 +1,9 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
   model,
-  output,
+  output
 } from '@angular/core';
 import {
   FormArray,
@@ -12,6 +11,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
+
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -25,7 +25,6 @@ import { InputTextModule } from 'primeng/inputtext';
     InputTextModule,
   ],
   templateUrl: './reverse-proxy-create-transform-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReverseProxyCreateTransformDialogComponent {
   readonly closePopover = output<void>();

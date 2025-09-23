@@ -1,17 +1,16 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
-  input,
+  input
 } from '@angular/core';
 
-import { use as useEcharts, EChartsCoreOption } from 'echarts/core';
+import { DecimalPipe } from '@angular/common';
+import { EChartsCoreOption, use as useEcharts } from 'echarts/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
-import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { DecimalPipe } from '@angular/common';
+import { TableModule } from 'primeng/table';
 
 import { ThemeService } from '@core/services';
 import { TrafficByRouteDto } from '@shared/types';
@@ -49,7 +48,6 @@ useEcharts([
     DecimalPipe,
   ],
   templateUrl: './traffic-by-route.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrafficByRouteComponent {
   readonly #themeService = inject(ThemeService);

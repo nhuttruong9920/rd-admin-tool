@@ -4,9 +4,9 @@ import {
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, TitleStrategy } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { TitleService } from '@core/services';
 import { routes } from './app.routes';

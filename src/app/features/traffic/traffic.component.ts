@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import * as echarts from 'echarts/core';
 import { provideEchartsCore } from 'ngx-echarts';
@@ -11,7 +11,6 @@ import { TrafficSummaryComponent } from './traffic-summary/traffic-summary.compo
   selector: 'app-traffic',
   imports: [TrafficSummaryComponent, TrafficByRouteComponent],
   templateUrl: './traffic.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideEchartsCore({ echarts }), TrafficStore],
 })
 export class TrafficComponent {

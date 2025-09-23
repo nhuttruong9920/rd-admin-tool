@@ -1,0 +1,277 @@
+<div class="bg-surface h-full flex flex-col">
+  <section class="flex-1 overflow-y-auto" #conversationContainer>
+    <div class="py-2 md:py-4 xl:py-8 px-2 md:px-8 xl:px-16 2xl:px-64">
+      @if (conversation().length === 0) {
+        <section
+          class="flex flex-col justify-center items-center gap-6 py-8 animate-fade-in"
+        >
+          <!-- Avatar Section -->
+          <figure class="relative">
+            <div
+              class="bg-gradient-to-br from-primary-500 to-primary-600 size-24 rounded-full flex justify-center items-center shadow-lg"
+            >
+              <i class="fas fa-robot text-white text-5xl"></i>
+            </div>
+            <div
+              class="absolute -bottom-1 -right-1 bg-green-500 size-6 rounded-full border-4 border-white flex items-center justify-center shadow-sm"
+            >
+              <div class="size-2 bg-white rounded-full animate-pulse"></div>
+            </div>
+          </figure>
+
+          <!-- Welcome Text -->
+          <div class="text-center space-y-2">
+            <h2
+              class="text-2xl font-bold text-surface-900 flex items-center justify-center gap-2"
+            >
+              Xin chào! 👋🏼
+            </h2>
+            <p class="text-lg text-surface-600 font-medium">
+              Tôi là trợ lý AI của Vietmap
+            </p>
+            <p class="text-surface-500">
+              Tôi có thể giúp bạn với các câu hỏi về dịch vụ và sản phẩm
+            </p>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="w-full max-w-md">
+            <div
+              class="bg-surface rounded-2xl p-6 shadow-xl border border-surface-100"
+            >
+              <h4
+                class="font-semibold text-surface-900 mb-4 text-center flex items-center justify-center gap-2"
+              >
+                <i class="fas fa-bolt text-primary-500"></i>
+                Bắt đầu nhanh
+              </h4>
+              <div class="grid grid-cols-2 gap-3">
+                @for (action of quickActions(); track action.title) {
+                  <button
+                    (click)="onQuickActionClick(action)"
+                    class="p-4 rounded-xl font-medium transition-all flex flex-col items-center gap-2 cursor-pointer"
+                    [class]="action.bgColorClass"
+                  >
+                    <i
+                      class="text-lg"
+                      [class]="action.icon + ' ' + action.iconColorClass"
+                    ></i>
+                    <span class="text-sm" [class]="action.iconColorClass">{{
+                      action.title
+                    }}</span>
+                  </button>
+                }
+              </div>
+            </div>
+
+            <!-- Suggestions -->
+            <div class="mt-4 space-y-2">
+              <p class="text-sm text-surface-500 text-center">
+                Câu hỏi phổ biến:
+              </p>
+              <div class="flex flex-wrap gap-2 justify-center">
+                @for (example of quickExamples(); track example) {
+                  <button
+                    (click)="onExampleClick(example)"
+                    class="suggestion-pill bg-surface-100 hover:bg-surface-200 text-surface-700 px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer"
+                  >
+                    "{{ example }}"
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        </section>
+      }
+
+      <!-- Chat Messages -->
+      @for (message of conversation(); track message.message) {
+        <div class="animate-slide-in">
+          @if (message.role === "assistant" && message.message.length > 0) {
+            <div class="flex items-start gap-2 mb-4">
+              <!-- Bot Avatar -->
+              <figure
+                class="bg-gradient-to-br from-primary-500 to-primary-600 size-8 rounded-full flex justify-center items-center shadow-md"
+              >
+                <i class="fas fa-robot text-white text-sm"></i>
+              </figure>
+              <!-- Bot Message -->
+              <article class="group flex-1 max-w-10/12">
+                <div
+                  class="bg-surface rounded-2xl rounded-tl px-3 py-2 shadow-sm border border-surface-100"
+                >
+                  <p
+                    class="text-surface-900 leading-relaxed whitespace-pre-wrap"
+                    [innerHTML]="message.message"
+                  ></p>
+                </div>
+                <div class="flex gap-2 p-1 h-8">
+                  <button
+                    (click)="onCopy(message.message)"
+                    class="w-4 text-surface-400 hover:text-surface-600 cursor-pointer group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+                  >
+                    <i class="fas fa-copy text-sm"></i>
+                  </button>
+
+                  <button
+                    (click)="onForceRepeat(message)"
+                    class="w-4 text-surface-400 hover:text-surface-600 cursor-pointer group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+                  >
+                    <i class="fas fa-redo text-sm"></i>
+                  </button>
+                </div>
+              </article>
+            </div>
+          }
+
+          @if (message.role === "user") {
+            <div class="flex gap-2 mb-4 justify-end items-start">
+              <!-- User Message -->
+              <article class="group max-w-10/12">
+                <div
+                  class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-3 py-1 rounded-2xl rounded-tr shadow-md"
+                >
+                  <p class="leading-relaxed whitespace-pre-wrap">
+                    {{ message.message }}
+                  </p>
+                </div>
+                <div class="flex justify-end gap-2 p-1 h-8">
+                  <button
+                    (click)="onCopy(message.message)"
+                    class="w-4 text-surface-400 hover:text-surface-600 cursor-pointer group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+                  >
+                    <i class="fas fa-copy text-sm"></i>
+                  </button>
+
+                  <button
+                    (click)="onRepeat(message.message)"
+                    class="w-4 text-surface-400 hover:text-surface-600 cursor-pointer group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+                  >
+                    <i class="fas fa-repeat text-sm"></i>
+                  </button>
+                </div>
+              </article>
+              <!-- User Avatar -->
+              <figure
+                class="bg-surface-300 size-8 rounded-full flex justify-center items-center flex-shrink-0"
+              >
+                <i class="fas fa-user text-surface-600 text-sm"></i>
+              </figure>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Loading State -->
+      @if (isLoading()) {
+        <div class="flex items-start gap-3 mb-4 animate-slide-in">
+          <!-- Bot Avatar -->
+          <figure
+            class="bg-gradient-to-br from-primary-500 to-primary-600 size-8 rounded-full flex justify-center items-center shadow-md"
+          >
+            <i class="fas fa-robot text-white text-sm"></i>
+          </figure>
+          <!-- Typing Indicator -->
+          <article class="max-w-10/12 flex-1">
+            <div
+              class="bg-surface rounded-2xl rounded-tl-md px-3 py-2 shadow-sm border border-surface-100"
+            >
+              <div class="loader"></div>
+            </div>
+          </article>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section
+    class="flex flex-col py-2 md:py-4 xl:py-8 px-2 md:px-8 xl:px-16 2xl:px-64"
+  >
+    <div
+      class="flex items-end gap-3 bg-surface rounded-2xl border border-surface-100 p-2 shadow-sm focus-within:ring-1 focus-within:ring-primary-500 focus-within:border-primary-500 transition-all duration-200"
+    >
+      <textarea
+        [pAutoFocus]="true"
+        #messageInput
+        name="messageInput"
+        [(ngModel)]="inputMessage"
+        (keydown.enter)="onEnter($event)"
+        class="w-full h-full resize-none border-0 outline-none px-3 py-2 text-surface-900 placeholder-surface-500 bg-transparent max-h-32"
+        placeholder="Nhập tin nhắn..."
+        rows="1"
+        style="field-sizing: content"
+      ></textarea>
+      @if (isLoading() || isTyping()) {
+        <button
+          (click)="stopStream()"
+          class="cursor-pointer flex-shrink-0 bg-red-500 hover:bg-red-600 text-white size-10 rounded-xl flex items-center justify-center transition-colors duration-200 shadow-sm hover:shadow-md"
+        >
+          <i class="fas fa-stop text-sm"></i>
+        </button>
+      } @else {
+        <button
+          (click)="sendMessage()"
+          class="cursor-pointer flex-shrink-0 bg-primary-500 hover:bg-primary-600 text-white size-10 rounded-xl flex items-center justify-center transition-colors duration-200 shadow-sm hover:shadow-md"
+        >
+          <i class="fas fa-paper-plane text-sm"></i>
+        </button>
+      }
+    </div>
+    <div class="flex items-center justify-between mt-2 px-2">
+      <div class="flex items-center gap-2">
+        <button type="button" (click)="op.toggle($event)">
+          <i class="fas fa-link text-surface-500 text-sm cursor-pointer"></i>
+        </button>
+
+        <p class="text-xs text-surface-500">
+          Nhấn
+          <span class="border border-surface-100 px-1 rounded font-medium"
+            >Enter</span
+          >
+          để gửi,
+          <span class="border border-surface-100 px-1 rounded font-medium"
+            >Shift + Enter</span
+          >
+          để xuống dòng
+        </p>
+      </div>
+
+      <p class="text-xs text-surface-500">
+        {{ inputMessage().length || 0 }} ký tự
+      </p>
+    </div>
+  </section>
+</div>
+
+<p-popover #op>
+  <div class="p-4">
+    <p-floatlabel variant="on">
+      <input
+        pInputText
+        id="on_label"
+        [(ngModel)]="baseUrl"
+        autocomplete="off"
+        class="w-100"
+      />
+      <label for="on_label">Base URL</label>
+    </p-floatlabel>
+  </div>
+</p-popover>
+
+<style>
+  .loader {
+    width: fit-content;
+    clip-path: inset(0 1ch 0 0);
+    animation: l4 1s steps(4) infinite;
+  }
+
+  .loader:before {
+    content: "Đang soạn tin...";
+  }
+
+  @keyframes l4 {
+    to {
+      clip-path: inset(0 -1ch 0 0);
+    }
+  }
+</style>

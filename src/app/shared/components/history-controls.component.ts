@@ -1,10 +1,4 @@
-import {
-  Component,
-  input,
-  model,
-  OnDestroy,
-  signal
-} from '@angular/core';
+import { Component, input, model, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -15,7 +9,76 @@ import { concatMap, delay, finalize, from, of, take, takeWhile } from 'rxjs';
 @Component({
   selector: 'app-history-controls',
   imports: [ButtonModule, SliderModule, SelectModule, FormsModule],
-  templateUrl: './history-controls.component.html',
+  template: `
+    <div
+      class="flex items-center gap-3 h-9"
+      [class.hidden]="!historyLength() || historyLength() === 0"
+    >
+      <div class="flex items-center gap-1">
+        @let icon =
+          currentPlayingIndex() === historyLength()! - 1
+            ? 'fas fa-rotate-left'
+            : isHistoryPlaying()
+              ? 'fas fa-pause'
+              : 'fas fa-play';
+        <p-button
+          (click)="toggleHistoryReplay()"
+          [icon]="icon"
+          rounded
+          size="small"
+          [disabled]="historyLength() === 0"
+        />
+        <button
+          pButton
+          (click)="clickStep(-1)"
+          icon="fas fa-backward-step"
+          rounded
+          severity="secondary"
+          outlined
+          size="small"
+          (mousedown)="stepHoldStart(-1)"
+          (mouseup)="stepHoldEnd()"
+          (mouseleave)="stepHoldEnd()"
+          [disabled]="historyLength() === 0"
+        ></button>
+        <button
+          pButton
+          (click)="clickStep(1)"
+          icon="fas fa-forward-step"
+          rounded
+          severity="secondary"
+          outlined
+          size="small"
+          (mousedown)="stepHoldStart(1)"
+          (mouseup)="stepHoldEnd()"
+          (mouseleave)="stepHoldEnd()"
+          [disabled]="historyLength() === 0"
+        ></button>
+      </div>
+      <div class="flex-1 h-full flex-center" (wheel)="scrollSlider($event)">
+        @let maxSliderValue = historyLength()! > 0 ? historyLength()! - 1 : 100;
+        <p-slider
+          class="w-full"
+          [min]="0"
+          [max]="maxSliderValue"
+          [(ngModel)]="currentPlayingIndex"
+          (onChange)="slideSlider()"
+          class="!h-1.5"
+          [disabled]="historyLength() === 0"
+        />
+      </div>
+      <p-select
+        appendTo="body"
+        [options]="playingSpeedOption"
+        [(ngModel)]="selectedPlayingSpeed"
+        optionLabel="label"
+        optionValue="timeout"
+        class="min-w-24"
+        size="small"
+        (wheel)="scrollPlayingSpeed($event)"
+      />
+    </div>
+  `,
 })
 export class HistoryControlsComponent implements OnDestroy {
   historyLength = input.required<number | undefined>();
@@ -48,14 +111,17 @@ export class HistoryControlsComponent implements OnDestroy {
         this.currentPlayingIndex.set(0);
       }
 
-      const remainingSteps = this.historyLength()! - this.currentPlayingIndex() - 1;
+      const remainingSteps =
+        this.historyLength()! - this.currentPlayingIndex() - 1;
 
       from(Array.from({ length: remainingSteps }, (_, i) => i))
         .pipe(
-          concatMap((route) => of(route).pipe(delay(this.selectedPlayingSpeed()))),
+          concatMap((route) =>
+            of(route).pipe(delay(this.selectedPlayingSpeed())),
+          ),
           takeWhile(() => this.isHistoryPlaying()),
           take(remainingSteps),
-          finalize(() => this.isHistoryPlaying.set(false))
+          finalize(() => this.isHistoryPlaying.set(false)),
         )
         .subscribe(() => {
           this.currentPlayingIndex.update((prev) => prev + 1);
@@ -67,7 +133,8 @@ export class HistoryControlsComponent implements OnDestroy {
     if (!this.historyLength()) return;
 
     this.isHistoryPlaying.set(false);
-    if (step === 1 && this.currentPlayingIndex() === this.historyLength()! - 1) return;
+    if (step === 1 && this.currentPlayingIndex() === this.historyLength()! - 1)
+      return;
 
     if (step === -1 && this.currentPlayingIndex() === 0) return;
 
@@ -92,7 +159,7 @@ export class HistoryControlsComponent implements OnDestroy {
   protected scrollPlayingSpeed(event: WheelEvent): void {
     event.preventDefault();
     const currentIndex = this.playingSpeedOption.findIndex(
-      (option) => option.timeout === this.selectedPlayingSpeed()
+      (option) => option.timeout === this.selectedPlayingSpeed(),
     );
 
     let newIndex = currentIndex;

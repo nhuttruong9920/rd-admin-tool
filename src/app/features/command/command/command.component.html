@@ -1,0 +1,105 @@
+@let commandHistory = commandHistory$ | async;
+
+<div class="flex flex-col gap-2 h-full p-2">
+  <app-toolbar
+    class="pr-10 md:pr-0"
+    heading="Danh sách gửi lệnh"
+    [amount]="commandHistory?.data?.length ?? 0"
+  >
+    <ng-template #leftContent>
+      <p-button
+        [icon]="
+          commandHistory?.loading
+            ? 'fas fa-arrows-rotate fa-spin'
+            : 'fas fa-arrows-rotate'
+        "
+        [rounded]="true"
+        [text]="true"
+        (click)="onRefreshCommandHistory()"
+        [disabled]="commandHistory?.loading"
+        [pTooltip]="'Làm mới'"
+        size="small"
+      />
+    </ng-template>
+    <ng-template #rightContent>
+      <div class="flex items-center gap-2">
+        <app-display-setting
+          (fontSizeChange)="onFontSizeChange($event)"
+          (showInfoMethodChange)="onShowInfoMethodChange($event)"
+        />
+      </div>
+    </ng-template>
+  </app-toolbar>
+  <app-send-command-input
+    [selectedConnection]="selectedConnection()"
+    (doneSending)="onRefreshCommandHistory()"
+  />
+  <section
+    #commandHistoryContainer
+    class="flex-1 h-1 overflow-y-auto px-0 md:px-1"
+  >
+    <div class="space-y-3">
+      @if (!selectedConnection()) {
+        <app-data-state
+          state="pleaseSelect"
+          title="Chưa chọn IMEI"
+          description="Vui lòng chọn một số IMEI bên phải để hiển thị lệnh"
+        />
+      }
+
+      @if (commandHistory?.loading && !commandHistory?.data) {
+        @for (i of [].constructor(10); track $index) {
+          <p-skeleton height="8rem" styleClass="mb-2" />
+        }
+      }
+
+      @if (commandHistory?.error && !commandHistory?.data) {
+        <app-data-state state="error" />
+      }
+
+      @if (commandHistory?.data) {
+        @if (commandHistory?.data?.length === 0) {
+          <app-data-state state="empty" />
+        } @else {
+          @for (command of commandHistory?.data; track command.t) {
+            @if (command.p !== 1) {
+              <div class="group">
+                <div class="pr-10">
+                  <div
+                    class="bg-theme-100 relative w-fit rounded-t-3xl rounded-bl-sm rounded-br-3xl px-3 py-2 break-all"
+                    [style.fontSize.px]="packageFontSizePx()"
+                    [innerHTML]="command.v | safeHtml"
+                  >
+                    <!-- <p-button tooltipPosition="top" pTooltip="Sao chép" icon="fas fa-copy" severity="secondary" rounded
+              size="small" variant="outlined" (click)="onCopyResponseCommand(command.v)"
+              class="absolute -right-9 top-1/2 -translate-y-1/2 inline md:hidden group-hover:md:inline" /> -->
+                  </div>
+                </div>
+                <p class="text-theme-500 text-xs">
+                  {{ command.d }} - {{ command.d | relativeTime }}
+                </p>
+              </div>
+            } @else {
+              <div class="flex items-end flex-col group">
+                <div class="flex items-center gap-1 pl-10">
+                  <p
+                    class="bg-primary text-theme relative w-fit rounded-t-3xl rounded-bl-3xl rounded-br-sm px-3 py-2 break-all"
+                    [style.fontSize.px]="packageFontSizePx()"
+                  >
+                    {{ command.v }}
+                    <!-- <p-button tooltipPosition="top" pTooltip="Gửi lại" icon="fas fa-arrows-rotate" severity="secondary" rounded
+              size="small" variant="outlined" (click)="onSendCommand(command.command)"
+              class="absolute -left-9 top-1/2 -translate-y-1/2 inline md:hidden group-hover:md:inline" /> -->
+                  </p>
+                </div>
+                <p class="text-theme-500 text-xs">
+                  {{ command.d }} - {{ command.d | relativeTime }}
+                </p>
+              </div>
+            }
+          }
+        }
+      }
+    </div>
+  </section>
+</div>

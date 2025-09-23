@@ -1,26 +1,23 @@
 import { KeyValuePipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   input,
-  output,
+  output
 } from '@angular/core';
 
 import { ButtonModule } from 'primeng/button';
 
 import { ToDatePipe } from '@shared/pipes';
-import { ReverseProxyConfigDto } from '@shared/types';
+import { ReverseProxyDto } from '@shared/types';
 
 @Component({
   selector: 'app-reverse-proxy-card',
   imports: [ToDatePipe, ButtonModule, KeyValuePipe],
   templateUrl: './reverse-proxy-card.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReverseProxyCardComponent {
-  reverseProxy = input.required<ReverseProxyConfigDto>();
+  reverseProxy = input.required<ReverseProxyDto>();
   update = output<string>();
   delete = output<string>();
   closeDialog = output<void>();
@@ -69,10 +66,4 @@ export class ReverseProxyCardComponent {
       value: this.reverseProxy().cluster.loadBalancingPolicy,
     },
   ]);
-
-  constructor() {
-    effect(() => {
-      console.log(this.reverseProxy());
-    });
-  }
 }

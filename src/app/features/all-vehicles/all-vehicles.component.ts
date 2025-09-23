@@ -1,4 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
+
 import { SplitPanelComponent } from '@shared/components';
 import { DeviceStore } from '@shared/stores';
 import { AllVehiclesMapComponent } from './all-vehicles-map/all-vehicles-map.component';
@@ -29,12 +30,7 @@ export class AllVehiclesComponent implements OnInit {
       ?.find((device) => device.id === this.selectedDeviceId()),
   );
 
-  constructor() {
-    // effect(() => {
-    //   console.log('selectedDeviceId', this.selectedDeviceId());
-    // });
-  }
   ngOnInit(): void {
-    this.deviceStore.ensureDevices();
+    this.deviceStore.ensureData();
   }
 }

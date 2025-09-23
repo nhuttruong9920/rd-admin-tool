@@ -1,4 +1,6 @@
+export * from './data-state.component';
 export * from './date-time-picker.component';
+export * from './history-controls.component';
 export * from './input-search.component';
 export * from './logo.component';
 export * from './navigation.component';

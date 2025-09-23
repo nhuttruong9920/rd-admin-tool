@@ -1,11 +1,14 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
-import { ThemeService } from '@core/services';
-import { NavItem } from '@shared/types';
+
 import { ButtonModule } from 'primeng/button';
-import { LayoutService } from '@core/services';
-import { NavigationComponent } from '@shared/components';
-import { ScrollContainerComponent } from '@shared/components/scroll-container.component';
-import { LogoComponent } from '@shared/components/logo.component';
+
+import { AuthService, LayoutService, ThemeService } from '@core/services';
+import {
+  NavigationComponent,
+  ScrollContainerComponent,
+  LogoComponent,
+} from '@shared/components';
+import { NavItem } from '@shared/types';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,6 +23,7 @@ import { LogoComponent } from '@shared/components/logo.component';
 export class SidebarComponent {
   #layoutService = inject(LayoutService);
   #themeService = inject(ThemeService);
+  #authService = inject(AuthService);
 
   navStyle = computed(() => this.#layoutService.navStyle());
   isDarkMode = computed(() => this.#themeService.isDarkMode());
@@ -45,9 +49,15 @@ export class SidebarComponent {
         {
           label: 'Gửi lệnh',
           icon: 'far fa-rectangle-terminal',
-          routerLink: '/monitor/send-command',
+          routerLink: '/monitor/command',
           command: (): void => this.closeOverlayNav(),
         },
+        // {
+        //   label: 'Xem trực tiếp',
+        //   icon: 'far fa-camera-movie',
+        //   routerLink: '/monitor/livestream',
+        //   command: (): void => this.closeOverlayNav(),
+        // },
       ],
     },
     {
@@ -67,29 +77,23 @@ export class SidebarComponent {
         },
       ],
     },
-    {
-      label: 'MDVR',
-      children: [
-        {
-          label: 'Xem trực tiếp',
-          icon: 'far fa-camera-movie',
-          routerLink: '/mdvr/livestream',
-          command: (): void => this.closeOverlayNav(),
-        },
-        {
-          label: 'Live server',
-          icon: 'far fa-signal-stream',
-          routerLink: '/mdvr/live-server',
-          command: (): void => this.closeOverlayNav(),
-        },
-        {
-          label: 'Phát lại liên tục',
-          icon: 'far fa-clapperboard-play',
-          routerLink: '/mdvr/continuous-playback',
-          command: (): void => this.closeOverlayNav(),
-        },
-      ],
-    },
+    // {
+    //   label: 'MDVR',
+    //   children: [
+    //     {
+    //       label: 'Live server',
+    //       icon: 'far fa-signal-stream',
+    //       routerLink: '/mdvr/live-server',
+    //       command: (): void => this.closeOverlayNav(),
+    //     },
+    //     {
+    //       label: 'Phát lại liên tục',
+    //       icon: 'far fa-clapperboard-play',
+    //       routerLink: '/mdvr/continuous-playback',
+    //       command: (): void => this.closeOverlayNav(),
+    //     },
+    //   ],
+    // },
     {
       label: 'Khác',
       children: [
@@ -113,6 +117,10 @@ export class SidebarComponent {
 
   protected toggleDarkMode(): void {
     this.#themeService.toggleDarkMode();
+  }
+
+  protected logout(): void {
+    this.#authService.logout();
   }
 
   private closeOverlayNav(): void {

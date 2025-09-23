@@ -1,13 +1,11 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
-  input,
+  input
 } from '@angular/core';
 
-import {} from 'echarts/core';
-import { use as useEcharts, EChartsCoreOption } from 'echarts/core';
+import { EChartsCoreOption, use as useEcharts } from 'echarts/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
 import { ThemeService } from '@core/services';
@@ -40,7 +38,6 @@ useEcharts([
   selector: 'app-traffic-summary',
   imports: [NgxEchartsDirective],
   templateUrl: './traffic-summary.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrafficSummaryComponent {
   readonly #themeService = inject(ThemeService);

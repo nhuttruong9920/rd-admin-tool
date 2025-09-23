@@ -1,0 +1,58 @@
+<div class="border-b border-surface-300 flex relative">
+  <div
+    class="w-1.5 flex-center group"
+    [class]="getBackgroundColorClass(package().formatted.type.color)"
+    [pTooltip]="package().formatted.type.label"
+
+  ></div>
+
+  <div class="flex-1 flex gap-1 md:gap-2 p-1 md:p-3 flex-col md:flex-row">
+    <div class="text-left md:text-right">
+      <p class="text-surface-600 text-sm">{{ package().d }}</p>
+      <p class="text-surface-600 text-sm">{{ package().d | relativeTime }}</p>
+    </div>
+    <div
+      (copy)="onCopy()"
+      [innerHTML]="package().v | safeHtml"
+      class="break-all flex-1"
+      [style.font-size.px]="dataFontSizePx()"
+    ></div>
+  </div>
+
+  <!-- <span
+    class="absolute top-2 right-2 flex size-3"
+    ><span
+      class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"
+    ></span
+    ><span class="relative inline-flex size-3 rounded-full bg-red-500"></span
+  ></span> -->
+</div>
+
+<p-toast position="bottom-right">
+  <ng-template let-message #message>
+    <div class="flex flex-col gap-2 flex-1">
+      <p class="text-xs line-clamp-5">{{ packageCopiedData() }}</p>
+      <p-button
+        icon="fas fa-info-circle"
+        label="Xem thông tin"
+        (click)="onSeeInfo()"
+        size="small"
+      />
+    </div>
+  </ng-template>
+</p-toast>
+
+<p-dialog
+  header="Xem thông tin"
+  [modal]="true"
+  [(visible)]="infoDialogVisible"
+  maximizable
+  dismissableMask
+  styleClass="w-[98vw] md:w-8/12 h-[90%]"
+>
+  <app-package-info
+    [packageCopiedData]="packageCopiedData()"
+    [packageCopiedType]="packageCopiedType()"
+    [dataFontSizePx]="dataFontSizePx()"
+  />
+</p-dialog>

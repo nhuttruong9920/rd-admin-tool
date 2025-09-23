@@ -1,0 +1,40 @@
+<div class="flex flex-col md:flex-row gap-2 md:gap-4">
+  <div>
+    <div class="sticky top-0 pt-2">
+      <p-floatlabel variant="on" class="flex-1">
+        <p-inputnumber
+          class="w-full"
+          [(ngModel)]="packageCopiedType"
+          inputId="deviceType"
+        />
+        <label for="deviceType">Loại thiết bị</label>
+      </p-floatlabel>
+      <p-floatlabel variant="on" class="flex-1 mt-4">
+        <textarea
+          id="packageCopiedValue"
+          rows="21"
+          cols="50"
+          pTextarea
+          [(ngModel)]="packageCopiedData"
+        ></textarea>
+        <label for="packageCopiedValue">Dữ liệu</label>
+      </p-floatlabel>
+    </div>
+  </div>
+  <div class="min-w-100 min-h-100 flex-1 overflow-auto">
+    @let info = info$ | async;
+    <!-- @if (info?.error) {
+      <app-data-state state="error" />
+    }
+    @if (info?.loading) {
+      <p-skeleton height="100%" width="100%" />
+    } -->
+    @if (info?.data) {
+      <div
+        [innerHTML]="info?.data! | safeHtml"
+        class="break-all"
+        [style.font-size.px]="dataFontSizePx()"
+      ></div>
+    }
+  </div>
+</div>

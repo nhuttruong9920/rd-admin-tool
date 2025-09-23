@@ -1,12 +1,12 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, inject, output } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 
 import { ToDatePipe } from '@shared/pipes';
 import { ReverseProxyStore } from '@shared/stores';
-import { ReverseProxyConfigDto } from '@shared/types';
+import { ReverseProxyDto } from '@shared/types';
 
 @Component({
   selector: 'app-reverse-proxy-table',
@@ -18,9 +18,5 @@ export class ReverseProxyTableComponent {
 
   updateReverseProxy = output<string>();
   deleteReverseProxy = output<string>();
-  detailReverseProxy = output<ReverseProxyConfigDto>();
-
-  reverseProxyConfigs = computed(() =>
-    this.reverseProxyStore.filteredData().map((proxy) => proxy.configs),
-  );
+  detailReverseProxy = output<ReverseProxyDto>();
 }

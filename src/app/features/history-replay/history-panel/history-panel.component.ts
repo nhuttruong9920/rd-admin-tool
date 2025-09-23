@@ -27,7 +27,7 @@ import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { HistoryStore } from '@shared/stores';
 import { HistoryCardComponent } from './history-card/history-card.component';
-import { HistoryControlsComponent } from '@shared/components/history-controls/history-controls.component';
+import { HistoryControlsComponent } from '@shared/components/history-controls.component';
 import { cdkScrollWhileHidden } from '@shared/utils';
 
 @Component({

@@ -84,27 +84,27 @@
         <div class="border border-surface-200 rounded-lg h-100 overflow-y-auto">
           @let reverseProxyRoutes = reverseProxyStore.data();
           @if (reverseProxyRoutes && reverseProxyRoutes!.length > 0) {
-            @for (route of reverseProxyRoutes; track route.configs.id) {
+            @for (route of reverseProxyRoutes; track route.id) {
               @let shouldShowUpdate =
                 selectedApplyType() === "update" &&
-                !route.configs.state &&
-                !route.configs.isDeleted;
+                !route.state &&
+                !route.isDeleted;
               @let shouldShowDelete =
                 selectedApplyType() === "delete" &&
-                !route.configs.state &&
-                route.configs.isDeleted;
+                !route.state &&
+                route.isDeleted;
               <div
                 class="items-center p-3 border-b last:border-b-0 border-surface-100 hover:bg-surface-50 hidden"
                 [class.!flex]="shouldShowUpdate || shouldShowDelete"
               >
                 <p-checkbox
-                  [inputId]="route.configs.id"
+                  [inputId]="route.id"
                   [value]="route"
                   name="group"
                   [(ngModel)]="selectedRoutes"
                 />
-                <label [for]="route.configs.id" class="ml-2">
-                  {{ route.configs.id }}
+                <label [for]="route.id" class="ml-2">
+                  {{ route.id }}
                 </label>
               </div>
             }

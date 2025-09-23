@@ -1,0 +1,90 @@
+<div class="w-dvwz h-dvh relative">
+  <div id="login-map" class="w-full h-full"></div>
+  <div
+    class="absolute top-0 left-0 w-full h-full z-1000 bg-black/50 backdrop-blur-[1px]"
+  ></div>
+
+  <div
+    class="rounded glass-effect shadow p-8 space-y-16 w-[98vw] md:w-110 z-1100 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+  >
+    <h1 class="text-white text-4xl font-bold text-center">RD ADMIN TOOL</h1>
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+      class="flex flex-col gap-6"
+    >
+      <div>
+        <label for="username" class="block text-sm font-medium text-white mb-1"
+          >Tên đăng nhập</label
+        >
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+            <i class="fas fa-user text-white"></i>
+          </div>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            class="input-field w-full pl-10 pr-4 py-3 !bg-white/20 text-white rounded-lg focus:outline-none focus:!ring-2 !ring-white"
+            formControlName="username"
+          />
+        </div>
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium text-white mb-1"
+          >Password</label
+        >
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+            <i class="fas fa-lock text-white"></i>
+          </div>
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            id="password"
+            name="password"
+            required
+            class="input-field w-full pl-10 pr-4 py-3 bg-white/20 text-white rounded-lg focus:outline-none focus:!ring-2 !ring-white"
+            formControlName="password"
+          />
+          <div
+            class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+            id="togglePassword"
+          >
+            <i
+              class="fas text-white"
+              [class]="showPassword() ? 'fa-eye-slash' : 'fa-eye'"
+              (click)="onTogglePassword()"
+              (keydown.enter)="onTogglePassword()"
+              tabindex="0"
+            ></i>
+          </div>
+        </div>
+      </div>
+      <p-button
+        label="Đăng nhập"
+        type="submit"
+        styleClass="!w-full !rounded-full !bg-primary-500 !text-white"
+        size="large"
+        [disabled]="loginForm.invalid"
+      />
+    </form>
+  </div>
+</div>
+
+<style>
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s !important;
+    -webkit-text-fill-color: white !important;
+  }
+</style>

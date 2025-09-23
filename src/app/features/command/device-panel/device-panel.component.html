@@ -1,0 +1,60 @@
+<div class="flex flex-col gap-1 p-2 h-full">
+  <p-selectbutton
+    [options]="tabs()"
+    [(ngModel)]="selectedTabIdx"
+    optionLabel="label"
+    optionValue="value"
+    class="w-full"
+    styleClass="flex-1"
+    [allowEmpty]="false"
+    size="small"
+  />
+  <app-toolbar headerTitle="Danh sách thiết bị" [amount]="deviceStore.count()">
+    <ng-template #rightContent>
+      <app-input-search
+        (textChanged)="deviceStore.setSearchTerm($event)"
+        placeholder="Tìm kiếm IMEI"
+        size="small"
+      />
+      <div></div>
+    </ng-template>
+  </app-toolbar>
+
+  <section class="flex-1 h-1 overflow-y-auto">
+    @if (deviceStore.isFetching()) {
+      @for (i of [].constructor(10); track $index) {
+        <p-skeleton height="2rem" class="mb-2" />
+      }
+    }
+    @if (deviceStore.isError()) {
+      <app-data-state
+        state="error"
+        [showActionButton]="true"
+        (actionButtonClick)="deviceStore.refresh()"
+      />
+    }
+
+    @if (deviceStore.filteredData()) {
+      <cdk-virtual-scroll-viewport #cdkViewport itemSize="40" class="h-full">
+        <div
+          *cdkVirtualFor="
+            let device of deviceStore.filteredData();
+            let idx = index
+          "
+        >
+          <button
+            class="w-full flex items-center gap-1 p-2 hover:bg-surface-100 cursor-pointer transition-colors duration-300 rounded"
+            [class.!bg-primary-100]="selectedDeviceId() === device.id"
+            (click)="selectedDeviceId.set(device.id)"
+          >
+            <app-vehicle-icon
+              [iconClass]="'bg-car_' + device.formatted.state"
+              [isSmall]="true"
+            />
+            <div>{{ device.id }}</div>
+          </button>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    }
+  </section>
+</div>

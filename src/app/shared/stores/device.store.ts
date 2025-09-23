@@ -43,10 +43,11 @@ const initialState: CommonStoreInitialState<DeviceStatus[]> & {
 
 export const DeviceStore = signalStore(
   withState(initialState),
-  withComputed(({ data, _loading, searchTerm }) => ({
+  withComputed(({ data, _loading, searchTerm, error }) => ({
     count: computed(() => data()?.length ?? 0),
     isFetching: computed(() => _loading() && !data()),
     isLoading: computed(() => _loading() && data() !== null),
+    isError: computed(() => !_loading() && !data() && error()),
     firstTimeHasData: computed(() => data() !== null),
     filteredData: computed(() => {
       const allDevices = data();
@@ -126,7 +127,7 @@ export const DeviceStore = signalStore(
     );
 
     const methods = {
-      ensureDevices: (): void => {
+      ensureData: (): void => {
         if (!store.data()) {
           methods.startAutoRefresh();
         }

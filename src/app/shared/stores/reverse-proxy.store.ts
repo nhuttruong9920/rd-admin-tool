@@ -40,7 +40,7 @@ export const ReverseProxyStore = signalStore(
       }
 
       return allProxies.filter((proxy) =>
-        proxy.configs.id.toLowerCase().includes(search),
+        proxy.id.toLowerCase().includes(search),
       );
     }),
   })),

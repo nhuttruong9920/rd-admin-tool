@@ -22,6 +22,7 @@ export type MapOption = {
   layerControl?: boolean;
   mapOverlays?: MapOverlay[];
   fitBoundsButton?: boolean;
+  myLocationButton?: boolean;
 };
 
 export type Coordinate = {
@@ -100,6 +101,7 @@ export class MapInstanceService implements OnDestroy {
       zoomControl: true,
       layerControl: true,
       fitBoundsButton: true,
+      myLocationButton: true,
       ...mapOption,
     };
 
@@ -135,29 +137,31 @@ export class MapInstanceService implements OnDestroy {
     }
 
     //! my location button
-    this.#mapService.addCustomButtonToMap(map, {
-      position: LeafletControlPosition.TopRight,
-      states: [
-        {
-          stateName: 'start-updating',
-          icon: '<i class="fas fa-location-crosshairs"></i>',
-          titleKey: 'Vị trí hiện tại',
-          onClick: (btn): void => {
-            btn.state('updating');
-            this.startUpdatingMyLocation(map, btn);
+    if (mapOption.myLocationButton) {
+      this.#mapService.addCustomButtonToMap(map, {
+        position: LeafletControlPosition.TopRight,
+        states: [
+          {
+            stateName: 'start-updating',
+            icon: '<i class="fas fa-location-crosshairs"></i>',
+            titleKey: 'Vị trí hiện tại',
+            onClick: (btn): void => {
+              btn.state('updating');
+              this.startUpdatingMyLocation(map, btn);
+            },
           },
-        },
-        {
-          stateName: 'updating',
-          icon: '<i class="fas fa-location-crosshairs fa-beat" style="color: #4285f4;"></i>',
-          titleKey: 'Dừng tìm vị trí',
-          onClick: (btn): void => {
-            btn.state('start-updating');
-            this.stopUpdatingMyLocation(map);
+          {
+            stateName: 'updating',
+            icon: '<i class="fas fa-location-crosshairs fa-beat" style="color: #4285f4;"></i>',
+            titleKey: 'Dừng tìm vị trí',
+            onClick: (btn): void => {
+              btn.state('start-updating');
+              this.stopUpdatingMyLocation(map);
+            },
           },
-        },
-      ],
-    });
+        ],
+      });
+    }
 
     //! overlays
     const overlays: Record<string, L.Layer> = {};

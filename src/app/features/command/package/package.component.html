@@ -1,0 +1,45 @@
+<div class="h-full p-2 flex flex-col gap-2">
+  <app-toolbar class="pr-10 md:pr-0" headerTitle="Dữ liệu gói tin" [amount]="packageStore.count()">
+    <ng-template #leftContent>
+      <p-button
+        [icon]="
+          packageStore.isLoading()
+            ? 'fas fa-arrows-rotate fa-spin'
+            : 'fas fa-arrows-rotate'
+        "
+        [rounded]="true"
+        [text]="true"
+        (click)="packageStore.refresh()"
+        [disabled]="packageStore.isLoading() || packageStore.isFetching()"
+        size="small"
+      />
+    </ng-template>
+    <ng-template #rightContent>
+      <div class="flex items-center gap-2">
+        <p-selectbutton
+          [options]="displayOption()"
+          [(ngModel)]="selectedPackageDisplay"
+          optionLabel="label"
+          [allowEmpty]="false"
+          optionValue="value"
+          aria-labelledby="basic"
+        />
+        <app-display-setting
+          (fontSizeChange)="onFontSizeChange($event)"
+          (showInfoMethodChange)="onShowInfoMethodChange($event)"
+        />
+      </div>
+    </ng-template>
+  </app-toolbar>
+
+  <div class="flex-1 overflow-y-auto">
+    @for (package of packageStore.data(); track package.t) {
+      <app-package-card
+        [package]="package"
+        [dataFontSizePx]="dataFontSizePx()"
+        [showInfoMethod]="showInfoMethod()"
+        [selectedConnection]="selectedConnection()"
+      />
+    }
+  </div>
+</div>

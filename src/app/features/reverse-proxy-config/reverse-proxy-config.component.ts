@@ -90,7 +90,7 @@ export class ReverseProxyConfigComponent {
 
   confirmConfig(event: Event): void {
     const environment = this.selectedEnvironment();
-    const routeIds = this.selectedRoutes().map((route) => route.configs.id);
+    const routeIds = this.selectedRoutes().map((route) => route.id);
     const type = this.selectedApplyType();
 
     if (!environment) {

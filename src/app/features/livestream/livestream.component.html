@@ -1,0 +1,40 @@
+<app-split-panel>
+  <ng-template #leftContent>
+    <div
+      id="videoContainer"
+      class="w-full h-full grid gap-0.25 bg-theme-300 dark:bg-theme-100"
+      [style.grid-template-columns]="
+        'repeat(' + gridTemplates().gridCols + ', minmax(0, 1fr))'
+      "
+      [style.grid-template-rows]="
+        'repeat(' + gridTemplates().gridRows + ', minmax(0, 1fr))'
+      "
+    >
+      @for (
+        request of livestreamRequests();
+        track request.imei + request.channel
+      ) {
+        <app-livestream-video
+          [livestreamRequest]="request"
+          (destroy)="onDestroyLivestream(request)"
+        />
+      }
+      @if (livestreamRequests().length === 0) {
+        <app-data-state
+          state="pleaseSelect"
+          title="Chưa chọn kênh"
+          description="Chọn kênh bên phải để bắt đầu xem trực tiếp!"
+        />
+      }
+    </div>
+  </ng-template>
+  <ng-template #rightContent>
+    <!-- <app-livestream-list
+      [connections]="connections"
+      [relativeRightWidth]="relativeRightWidth()"
+      (refreshConnections)="onRefreshConnections()"
+      [(livestreamRequests)]="livestreamRequests"
+      [(selectedImei)]="selectedImei"
+    /> -->
+  </ng-template>
+</app-split-panel>
