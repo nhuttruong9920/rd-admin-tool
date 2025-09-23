@@ -1,0 +1,130 @@
+<div class="h-full p-2">
+  <p-table
+    [value]="reverseProxyConfigs()"
+    size="small"
+    scrollHeight="flex"
+    scrollable
+    virtualScroll
+    [virtualScrollItemSize]="53"
+    [loading]="reverseProxyStore.isLoading()"
+  >
+    <ng-template #header>
+      <tr>
+        <th></th>
+        <th pSortableColumn="id">Id <p-sortIcon field="id" /></th>
+        <th pSortableColumn="environment">
+          Môi trường <p-sortIcon field="environment" />
+        </th>
+        <th>Id Cluster → Prefix Path → Address</th>
+        <th>Ngày</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-reverseProxy>
+      @let isDeleted = reverseProxy.isDeleted;
+      <tr>
+        <td>
+          <div class="flex" [class.hidden]="isDeleted">
+            <p-button
+              icon="fas fa-eye"
+              rounded
+              text
+              size="small"
+              severity="secondary"
+              (click)="detailReverseProxy.emit(reverseProxy)"
+            />
+            <p-button
+              icon="fas fa-pencil"
+              rounded
+              text
+              size="small"
+              (click)="updateReverseProxy.emit(reverseProxy.id)"
+            />
+            <p-button
+              icon="fas fa-trash-alt"
+              rounded
+              text
+              severity="danger"
+              size="small"
+              (click)="deleteReverseProxy.emit(reverseProxy.id)"
+            />
+          </div>
+        </td>
+        <td
+          class="whitespace-nowrap font-bold"
+          [class.line-through]="isDeleted"
+        >
+          {{ reverseProxy.id }}
+        </td>
+        <td>
+          <span
+            class="inline-flex items-center font-medium whitespace-nowrap px-2 rounded-full text-sm"
+            [ngClass]="{
+              'text-orange-700 dark:text-orange-500 bg-orange-500/20':
+                reverseProxy.environment === 'production',
+              'text-blue-700 dark:text-blue-500 bg-blue-500/20':
+                reverseProxy.environment === 'staging',
+              'text-cyan-700 dark:text-cyan-500 bg-cyan-500/20':
+                reverseProxy.environment === 'development',
+            }"
+          >
+            {{ reverseProxy.environment }}
+          </span>
+        </td>
+        <td>
+          @let clusterId = reverseProxy.route.clusterId;
+          @let prefixPath =
+            reverseProxy.cluster?.destinations?.destination1?.swaggers?.[0]
+              ?.prefixPath ?? "";
+          @let address =
+            reverseProxy.cluster?.destinations?.destination1?.address ?? "";
+
+          <div class="flex gap-1">
+            <span
+              class="border border-dashed border-surface-300 px-2 rounded text-sm flex-center whitespace-nowrap"
+              >{{ clusterId }}</span
+            >
+            →
+            <span
+              class="border border-dashed border-surface-300 px-2 rounded text-sm flex-center whitespace-nowrap"
+              >{{ prefixPath }}</span
+            >
+            →
+            <span
+              class="border border-dashed border-surface-300 px-2 rounded text-sm flex-center whitespace-nowrap"
+              >{{ address }}</span
+            >
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center gap-1 col-span-4" title="Thời gian tạo">
+            <figure
+              class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full"
+            >
+              <i
+                class="text-xs far fa-clock text-yellow-400 dark:text-yellow-500"
+              ></i>
+            </figure>
+
+            <span class="text-xs text-surface-800 truncate">
+              {{ reverseProxy.createdAt | toDate }}
+            </span>
+          </div>
+
+          <div class="flex items-center gap-1 col-span-4" title="Thời gian sửa">
+            <figure
+              class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full"
+            >
+              <i
+                class="text-xs far fa-rotate text-blue-400 dark:text-blue-500"
+              ></i>
+            </figure>
+
+            <span class="text-xs text-surface-800 truncate">
+              {{ reverseProxy.lastModified | toDate }}
+            </span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

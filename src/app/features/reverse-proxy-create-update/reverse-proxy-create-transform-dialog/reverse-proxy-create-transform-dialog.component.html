@@ -1,0 +1,76 @@
+<div class="p-4 h-100 w-90">
+  <form
+    [formGroup]="createTransformForm"
+    (ngSubmit)="onSubmit()"
+    class="h-full flex flex-col gap-2"
+  >
+    <p class="text-sm font-semibold text-surface-700">Transform</p>
+    <div class="flex-1 space-y-2 overflow-y-auto">
+      @for (
+        transformGroup of transformsFormArray.controls;
+        track transformGroup.value;
+        let i = $index
+      ) {
+        <div class="flex flex-col gap-2 mt-1">
+          <div class="flex gap-2 items-center">
+            <p-floatlabel variant="on" class="flex-1">
+              <input
+                pInputText
+                [id]="'transform-key-' + i"
+                autocomplete="off"
+                [formControl]="$any(transformGroup).controls.key"
+                fluid
+                pSize="small"
+              />
+              <label [for]="'transform-key-' + i">Key {{ i + 1 }}</label>
+            </p-floatlabel>
+
+            <p-floatlabel variant="on" class="flex-1">
+              <input
+                pInputText
+                [id]="'transform-value-' + i"
+                autocomplete="off"
+                [formControl]="$any(transformGroup).controls.value"
+                fluid
+                pSize="small"
+              />
+              <label [for]="'transform-value-' + i">Value {{ i + 1 }}</label>
+            </p-floatlabel>
+
+            <p-button
+              icon="fas fa-trash-alt"
+              size="small"
+              text
+              severity="danger"
+              type="button"
+              (click)="onRemoveTransformEntry(i)"
+              [ariaLabel]="'Remove transform entry ' + (i + 1)"
+            />
+          </div>
+        </div>
+      }
+
+      <p-button
+        icon="fas fa-plus"
+        size="small"
+        text
+        fluid
+        type="button"
+        label="Thêm Key Value"
+        (click)="onAddTransformEntry()"
+      />
+    </div>
+
+    <div class="flex justify-end gap-2">
+      <p-button
+        label="Hủy"
+        type="button"
+        size="small"
+        text
+        (click)="onClosePopover()"
+      />
+
+      <p-button [label]="submitLabel()" type="submit" size="small" />
+    </div>
+  </form>
+</div>

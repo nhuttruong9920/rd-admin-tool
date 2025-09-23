@@ -52,7 +52,6 @@ export class SidebarComponent {
     },
     {
       label: 'Proxy',
-      routerLink: '/reverse-proxy/reverse-proxy',
       children: [
         {
           label: 'Reverse Proxy',
@@ -64,6 +63,29 @@ export class SidebarComponent {
           label: 'Traffic',
           icon: 'far fa-chart-line',
           routerLink: '/reverse-proxy/traffic',
+          command: (): void => this.closeOverlayNav(),
+        },
+      ],
+    },
+    {
+      label: 'MDVR',
+      children: [
+        {
+          label: 'Xem trực tiếp',
+          icon: 'far fa-camera-movie',
+          routerLink: '/mdvr/livestream',
+          command: (): void => this.closeOverlayNav(),
+        },
+        {
+          label: 'Live server',
+          icon: 'far fa-signal-stream',
+          routerLink: '/mdvr/live-server',
+          command: (): void => this.closeOverlayNav(),
+        },
+        {
+          label: 'Phát lại liên tục',
+          icon: 'far fa-clapperboard-play',
+          routerLink: '/mdvr/continuous-playback',
           command: (): void => this.closeOverlayNav(),
         },
       ],

@@ -1,0 +1,109 @@
+<div class="p-4 h-100 w-90">
+  <form
+    [formGroup]="createSwaggerForm"
+    (ngSubmit)="onSubmit()"
+    class="h-full flex flex-col gap-2"
+  >
+    <p class="text-sm font-semibold text-surface-700">Swagger</p>
+    <div class="flex-1 space-y-2 overflow-y-auto">
+      <p-floatlabel variant="on" class="mt-1">
+        <input
+          pInputText
+          id="metadataPath"
+          formControlName="metadataPath"
+          autocomplete="off"
+          fluid
+          pSize="small"
+        />
+        <label for="metadataPath">Metadata path</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="prefixPath"
+          formControlName="prefixPath"
+          autocomplete="off"
+          fluid
+          pSize="small"
+        />
+        <label for="prefixPath">Prefix path</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="pathFilterRegexPattern"
+          formControlName="pathFilterRegexPattern"
+          autocomplete="off"
+          fluid
+          pSize="small"
+        />
+        <label for="pathFilterRegexPattern">Path filter regex pattern</label>
+      </p-floatlabel>
+
+      <div class="flex items-center gap-2">
+        <p-toggleswitch
+          formControlName="addOnlyPublishedPaths"
+          styleClass="!block"
+        />
+        <label for="addOnlyPublishedPaths">Add only published paths</label>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <h3 class="font-medium text-sm m-0">Paths</h3>
+
+        @if (pathsArray.length > 0) {
+          <div formArrayName="paths" class="flex flex-col gap-2">
+            @for (pathControl of pathsArray.controls; track $index) {
+              <div class="flex items-center gap-2">
+                <p-floatlabel variant="on" class="flex-1">
+                  <input
+                    pInputText
+                    [id]="'path-' + $index"
+                    [formControlName]="$index"
+                    autocomplete="off"
+                    fluid
+                    pSize="small"
+                  />
+                  <label [for]="'path-' + $index">Path {{ $index + 1 }}</label>
+                </p-floatlabel>
+                <p-button
+                  icon="fas fa-trash-alt"
+                  severity="danger"
+                  size="small"
+                  (click)="onRemovePath($index)"
+                  type="button"
+                  text
+                  [disabled]="pathsArray.length === 0"
+                />
+              </div>
+            }
+          </div>
+        }
+
+        <p-button
+          icon="fas fa-plus"
+          size="small"
+          text
+          type="button"
+          fluid
+          label="Thêm Path"
+          (click)="onAddPath()"
+        />
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-2">
+      <p-button
+        label="Hủy"
+        type="button"
+        size="small"
+        text
+        (click)="onClosePopover()"
+      />
+
+      <p-button [label]="submitLabel()" type="submit" size="small" />
+    </div>
+  </form>
+</div>

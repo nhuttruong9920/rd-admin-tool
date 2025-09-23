@@ -1,1 +1,79 @@
-<p>reverse-proxy works!</p>
+<div class="h-full-main-layout p-2 md:p-4 md:px-16 flex flex-col gap-4">
+  <!-- toolbar -->
+  <section>
+    <app-toolbar
+      headerTitle="Reverse Proxy"
+      [amount]="reverseProxyStore.count()"
+    >
+      <ng-template #leftContent>
+        <p-button
+          [icon]="
+            reverseProxyStore.isLoading()
+              ? 'fas fa-arrows-rotate fa-spin'
+              : 'fas fa-arrows-rotate'
+          "
+          [rounded]="true"
+          [text]="true"
+          (click)="reverseProxyStore.refresh()"
+          [disabled]="
+            reverseProxyStore.isLoading() || reverseProxyStore.isFetching()
+          "
+          size="small"
+        />
+      </ng-template>
+      <ng-template #rightContent>
+        <app-input-search
+          (textChanged)="reverseProxyStore.setSearchTerm($event)"
+          placeholder="Tìm kiếm theo Id"
+          size="small"
+          class="w-full"
+          [value]="reverseProxyStore.searchTerm()"
+        />
+        <p-button
+          icon="fas fa-plus"
+          size="small"
+          label="Thêm mới"
+          (click)="navigateToCreateUpdateReverseProxy()"
+          [disabled]="
+            reverseProxyStore.isLoading() || reverseProxyStore.isFetching()
+          "
+        />
+        <p-button
+          icon="fas fa-cog"
+          size="small"
+          label="Cấu hình"
+          (click)="navigateToReverseProxyConfig()"
+          [disabled]="
+            reverseProxyStore.isLoading() || reverseProxyStore.isFetching()
+          "
+        />
+      </ng-template>
+    </app-toolbar>
+  </section>
+
+  <!-- content -->
+  <section class="flex-1 overflow-hidden shadow-lg rounded-lg bg-surface">
+    <app-reverse-proxy-table
+      (updateReverseProxy)="navigateToCreateUpdateReverseProxy($event)"
+      (deleteReverseProxy)="confirmDeleteReverseProxy($event)"
+      (detailReverseProxy)="detailReverseProxy($event)"
+    />
+  </section>
+</div>
+
+<p-confirmdialog />
+
+<p-dialog
+  header="Chi tiết"
+  [modal]="true"
+  [(visible)]="reverseProxyDetailDialogVisible"
+  styleClass="w-[98vw] md:w-200 h-[90%]"
+>
+  @if (reverseProxyDetail()) {
+    <app-reverse-proxy-card
+      [reverseProxy]="reverseProxyDetail()!"
+      (update)="navigateToCreateUpdateReverseProxy($event)"
+      (delete)="confirmDeleteReverseProxy($event)"
+    />
+  }
+</p-dialog>

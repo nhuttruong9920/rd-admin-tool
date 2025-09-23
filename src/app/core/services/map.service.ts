@@ -276,7 +276,7 @@ export class MapService {
   createTooltipContent(data: KeyValue<unknown>): string {
     const content = Object.entries(data)
       .map(([key, value]) => {
-        return `<tr><td class="p-0.5 whitespace-nowrap text-theme-500">${key}</td><td class="p-0.5">${value}</td></tr>`;
+        return `<tr><td class="p-0.5 whitespace-nowrap text-surface-500">${key}</td><td class="p-0.5">${value}</td></tr>`;
       })
       .join('');
 

@@ -22,7 +22,7 @@ import { FloatLabel } from 'primeng/floatlabel';
   template: `
     <div class="p-4">
       <div class="flex items-center justify-between mb-2">
-        <h3 class="text-xl text-theme-700 font-bold ">Quản lý lệnh</h3>
+        <h3 class="text-xl text-surface-700 font-bold ">Quản lý lệnh</h3>
         <p-button
           icon="fas fa-times"
           [rounded]="true"

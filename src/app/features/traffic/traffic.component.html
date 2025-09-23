@@ -1,1 +1,4 @@
-<p>traffic works!</p>
+<div class="px-6 flex flex-col gap-16 h-full overflow-y-auto">
+  <app-traffic-summary [trafficSummary]="trafficStore.data()?.summary" />
+  <app-traffic-by-route [trafficByRoute]="trafficStore.data()?.byRoute" />
+</div>

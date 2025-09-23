@@ -1,0 +1,423 @@
+<div class="p-2 md:p-4 md:px-16 relative">
+  <section class="flex items-center gap-2 mb-2">
+    <p-button
+      icon="fas fa-arrow-left"
+      severity="secondary"
+      (click)="backToReverseProxy()"
+    />
+    <h1 class="font-bold text-xl text-surface-700 truncate">
+      {{ isUpdating ? "Cập nhật" : "Tạo" }} Reverse Proxy
+    </h1>
+  </section>
+
+  <section class="flex flex-col md:flex-row gap-4">
+    <div class="flex-1 bg-surface rounded-lg shadow-md p-6">
+      <form [formGroup]="createForm" (ngSubmit)="onSubmit()">
+        <p-floatlabel variant="on" class="mt-1 mb-2">
+          <input
+            pInputText
+            id="id"
+            formControlName="id"
+            autocomplete="off"
+            fluid
+            pSize="small"
+            [readonly]="isUpdating"
+          />
+          <label for="id">Id <span class="text-red-500">*</span></label>
+        </p-floatlabel>
+
+        <!-- routes -->
+
+        <div class="flex items-center gap-2 mt-6 mb-2">
+          <h3 class="font-medium text-lg text-orange-500">
+            <i class="fas fa-route"></i> Routes
+          </h3>
+          <div class="flex-1">
+            <div
+              class="border-t h-[1px] border-dashed border-surface-400 my-2"
+            ></div>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2 mt-2">
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="path"
+              formControlName="path"
+              autocomplete="off"
+              fluid
+              pSize="small"
+            />
+            <label for="path">Path <span class="text-red-500">*</span></label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <p-inputnumber
+              id="order"
+              formControlName="order"
+              fluid
+              size="small"
+            />
+            <label for="order">Order</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="authorizationPolicy"
+              formControlName="authorizationPolicy"
+              autocomplete="off"
+              fluid
+              pSize="small"
+            />
+            <label for="authorizationPolicy">Authorization policy</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="rateLimiterPolicy"
+              formControlName="rateLimiterPolicy"
+              autocomplete="off"
+              fluid
+              pSize="small"
+            />
+            <label for="rateLimiterPolicy">Rate limiter policy</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="outputCachePolicy"
+              formControlName="outputCachePolicy"
+              autocomplete="off"
+              fluid
+              pSize="small"
+            />
+            <label for="outputCachePolicy">Output cache policy</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="timeoutPolicy"
+              formControlName="timeoutPolicy"
+              autocomplete="off"
+              fluid
+              pSize="small"
+            />
+            <label for="timeoutPolicy">Timeout policy</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="corsPolicy"
+              formControlName="corsPolicy"
+              autocomplete="off"
+              fluid
+              pSize="small"
+            />
+            <label for="corsPolicy">CORS policy</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="timeout"
+              formControlName="timeout"
+              autocomplete="off"
+              fluid
+              pSize="small"
+            />
+            <label for="timeout">Timeout</label>
+          </p-floatlabel>
+
+          <div class="flex flex-col gap-2 mt-4">
+            <h3 class="font-medium text-sm m-0">Metadata</h3>
+
+            @for (
+              metadataGroup of metadataFormArray.controls;
+              track metadataGroup.value;
+              let i = $index
+            ) {
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2 items-center">
+                  <p-floatlabel variant="on" class="flex-1">
+                    <input
+                      pInputText
+                      [id]="'metadata-key-' + i"
+                      autocomplete="off"
+                      [formControl]="$any(metadataGroup).controls.key"
+                      fluid
+                      pSize="small"
+                    />
+                    <label [for]="'metadata-key-' + i">Key {{ i + 1 }}</label>
+                  </p-floatlabel>
+
+                  <p-floatlabel variant="on" class="flex-1">
+                    <input
+                      pInputText
+                      [id]="'metadata-value-' + i"
+                      autocomplete="off"
+                      [formControl]="$any(metadataGroup).controls.value"
+                      fluid
+                      pSize="small"
+                    />
+                    <label [for]="'metadata-value-' + i"
+                      >Value {{ i + 1 }}</label
+                    >
+                  </p-floatlabel>
+
+                  <p-button
+                    icon="fas fa-trash-alt"
+                    size="small"
+                    text
+                    severity="danger"
+                    type="button"
+                    (click)="onRemoveMetadataEntry(i)"
+                    [ariaLabel]="'Remove metadata entry ' + (i + 1)"
+                  />
+                </div>
+              </div>
+            }
+
+            <p-button
+              icon="fas fa-plus"
+              size="small"
+              text
+              type="button"
+              fluid
+              label="Thêm metadata"
+              (click)="onAddMetadataEntry()"
+            />
+          </div>
+
+          <div class="flex flex-col gap-2 mt-4">
+            <h3 class="font-medium text-sm m-0">Transforms</h3>
+
+            @for (
+              transform of createForm.value.transforms;
+              track $index;
+              let i = $index
+            ) {
+              <div
+                class="p-2 rounded border border-dashed border-surface-300 flex justify-between"
+              >
+                <div>
+                  @for (item of transform | keyvalue; track item.key) {
+                    <p>{{ item.key }}: {{ item.value }}</p>
+                  }
+                </div>
+
+                <div>
+                  <p-button
+                    icon="fas fa-pencil-alt"
+                    size="small"
+                    text
+                    severity="info"
+                    type="button"
+                    (click)="
+                      onStartUpdateTransform(i);
+                      addTransformPopover.show($event)
+                    "
+                    [ariaLabel]="'Edit transform ' + (i + 1)"
+                  />
+                  <p-button
+                    icon="fas fa-trash-alt"
+                    size="small"
+                    text
+                    severity="danger"
+                    type="button"
+                    (click)="onRemoveTransform(i)"
+                    [ariaLabel]="'Remove transform ' + (i + 1)"
+                  />
+                </div>
+              </div>
+            }
+
+            <p-button
+              icon="fas fa-plus"
+              size="small"
+              text
+              fluid
+              type="button"
+              label="Thêm transform"
+              (click)="addTransformPopover.show($event)"
+            />
+          </div>
+        </div>
+
+        <!-- cluster -->
+        <div class="flex items-center gap-2 mt-6 mb-2">
+          <h3 class="font-medium text-lg text-violet-500">
+            <i class="fas fa-server"></i> Cluster
+          </h3>
+          <div class="flex-1">
+            <div
+              class="border-t h-[1px] border-dashed border-surface-400 my-2"
+            ></div>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2 mt-2">
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="destinationAddress"
+              formControlName="destinationAddress"
+              autocomplete="off"
+              fluid
+              pSize="small"
+            />
+            <label for="destinationAddress"
+              >Destination address <span class="text-red-500">*</span></label
+            >
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <p-inputnumber
+              id="timeoutSeconds"
+              formControlName="timeoutSeconds"
+              fluid
+              size="small"
+            />
+            <label for="timeoutSeconds">Timeout (seconds)</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <p-select
+              appendTo="body"
+              formControlName="loadBalancingPolicy"
+              inputId="loadBalancingPolicy"
+              [options]="proxyLoadBalancingPolicyStore.filteredData()"
+              optionLabel="label"
+              optionValue="field"
+              fluid
+              size="small"
+            />
+            <label for="loadBalancingPolicy">Load balancing policy</label>
+          </p-floatlabel>
+
+          <div class="flex flex-col gap-2">
+            <h3 class="font-medium text-sm m-0">
+              Swaggers <span class="text-red-500">*</span>
+            </h3>
+
+            @for (
+              swagger of createForm.value.swaggers;
+              track swagger.metadataPath + $index;
+              let i = $index
+            ) {
+              <div
+                class="p-2 rounded-md border border-dashed border-surface-300 flex justify-between"
+              >
+                <div>
+                  <p>Metadata Path: {{ swagger.metadataPath }}</p>
+                  <p>Prefix Path: {{ swagger.prefixPath }}</p>
+                  <p>
+                    Path Filter Regex Pattern:
+                    {{ swagger.pathFilterRegexPattern }}
+                  </p>
+                  <p>Paths: {{ swagger.paths.join(", ") }}</p>
+                  <p>
+                    Add Only Published Paths:
+                    <i
+                      class="far"
+                      [class]="
+                        swagger.addOnlyPublishedPaths
+                          ? 'fa-circle-check text-green-500'
+                          : 'fa-circle-xmark text-red-500'
+                      "
+                    ></i>
+                  </p>
+                </div>
+
+                <div>
+                  <p-button
+                    icon="fas fa-pencil-alt"
+                    size="small"
+                    text
+                    severity="info"
+                    type="button"
+                    (click)="onEditSwagger(i); addSwaggersPopover.show($event)"
+                    [ariaLabel]="'Edit swagger ' + (i + 1)"
+                  />
+                  <p-button
+                    icon="fas fa-trash-alt"
+                    size="small"
+                    text
+                    severity="danger"
+                    type="button"
+                    (click)="onRemoveSwagger(i)"
+                    [ariaLabel]="'Remove swagger ' + (i + 1)"
+                  />
+                </div>
+              </div>
+            }
+
+            <p-button
+              icon="fas fa-plus"
+              size="small"
+              text
+              fluid
+              type="button"
+              label="Thêm swagger"
+              (click)="addSwaggersPopover.show($event)"
+            />
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 mb-4 md:mb-0">
+          <p-button
+            label="Hủy"
+            type="button"
+            text
+            (click)="backToReverseProxy()"
+          />
+
+          <p-button [label]="isUpdating ? 'Cập nhật' : 'Tạo'" type="submit" />
+        </div>
+      </form>
+    </div>
+
+    <div class="flex-1 bg-surface rounded-lg shadow-md p-6">
+      <div class="mb-2 flex justify-between items-center">
+        <h4 class="text-lg font-bold">JSON request body</h4>
+        <p-button
+          label="Copy"
+          variant="text"
+          severity="secondary"
+          size="small"
+          (click)="copyRequestJSON()"
+        />
+      </div>
+      <textarea
+        readonly
+        [value]="resultJSON()"
+        class="w-full h-full min-h-100 text-xs font-mono resize-none focus-visible:outline-none"
+        placeholder="Hiển thị JSON request body"
+      ></textarea>
+    </div>
+  </section>
+</div>
+
+<p-popover #addTransformPopover (onHide)="onHideAddTransformPopover()">
+  <app-reverse-proxy-create-transform-dialog
+    #reverseProxyCreateTransformDialog
+    (closePopover)="addTransformPopover.hide()"
+    (addTransform)="onAddTransform($event)"
+    (updateTransform)="onUpdateTransform($event)"
+    [(updatingTransform)]="updatingTransform"
+  />
+</p-popover>
+
+<p-popover #addSwaggersPopover (onHide)="onHideAddSwaggerPopover()">
+  <app-reverse-proxy-create-swagger-dialog
+    (closePopover)="addSwaggersPopover.hide()"
+    (addSwagger)="onAddSwagger($event)"
+    (updateSwagger)="onUpdateSwagger($event)"
+    [(updatingSwagger)]="updatingSwagger"
+  />
+</p-popover>

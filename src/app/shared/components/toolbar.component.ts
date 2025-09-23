@@ -10,7 +10,7 @@ import {
   output,
   signal,
   TemplateRef,
-  viewChild
+  viewChild,
 } from '@angular/core';
 
 import { BadgeModule } from 'primeng/badge';
@@ -35,7 +35,7 @@ import { WidthBreakpoint } from '@shared/types';
           </div>
         }
         <button
-          class="font-bold text-xl text-theme-700 truncate"
+          class="font-bold text-xl text-surface-700 truncate"
           (click)="titleClick.emit()"
         >
           {{ headerTitle() }}

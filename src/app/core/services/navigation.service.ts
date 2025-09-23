@@ -15,37 +15,51 @@ export class NavigationService {
     this.#router.navigate(['/auth/login']);
   }
 
-  toAllVehicles(params: Params): void {
+  toAllVehicles(params: Params = {}): void {
     this.#router.navigate(['/monitor/all-vehicles'], {
       queryParams: params,
     });
   }
 
-  toReplayHistory(params: Params): void {
+  toReplayHistory(params: Params = {}): void {
     this.#router.navigate(['/monitor/history-replay'], {
       queryParams: params,
     });
   }
 
-  toSendCommand(params: Params): void {
+  toSendCommand(params: Params = {}): void {
     this.#router.navigate(['/monitor/send-command'], {
       queryParams: params,
     });
   }
 
-  toReverseProxy(params: Params): void {
+  toReverseProxy(params: Params = {}): void {
     this.#router.navigate(['/reverse-proxy/reverse-proxy'], {
       queryParams: params,
     });
   }
 
-  toTraffic(params: Params): void {
+  toCreateUpdateReverseProxy(id?: string): void {
+    if (id) {
+      this.#router.navigate(['/reverse-proxy', id, 'update']);
+    } else {
+      this.#router.navigate(['/reverse-proxy/create']);
+    }
+  }
+
+  toReverseProxyConfig(params: Params = {}): void {
+    this.#router.navigate(['/reverse-proxy/config'], {
+      queryParams: params,
+    });
+  }
+
+  toTraffic(params: Params = {}): void {
     this.#router.navigate(['/reverse-proxy/traffic'], {
       queryParams: params,
     });
   }
 
-  toChatbot(params: Params): void {
+  toChatbot(params: Params = {}): void {
     this.#router.navigate(['/others/chatbot'], {
       queryParams: params,
     });

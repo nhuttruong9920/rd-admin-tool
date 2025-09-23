@@ -94,6 +94,7 @@ import { filter, Subscription } from 'rxjs';
         [class.w-[calc(100%-32px)]]="isCompact"
         [class.left-4]="isCompact"
         [style.top.px]="activeOffsetTop()"
+        [class.hidden]="!activeOffsetTop()"
       >
         <div
           class="w-1.5 h-full bg-primary-500"

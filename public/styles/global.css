@@ -10,3 +10,18 @@ body {
 body {
   background-color: var(--surface-100);
 }
+
+::-webkit-scrollbar {
+  @apply size-2 rounded-lg bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-surface-300 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-surface-400;
+}
+
+::-webkit-scrollbar-corner {
+  @apply bg-surface;
+}

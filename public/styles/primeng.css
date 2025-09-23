@@ -30,3 +30,8 @@
     content: unset !important;
   }
 }
+
+/* button */
+.p-button-label {
+  white-space: nowrap;
+}

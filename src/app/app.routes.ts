@@ -1,7 +1,9 @@
 import { Routes } from '@angular/router';
+
 import { LayoutComponent } from '@core/layout/layout.component';
-import { DeviceStore, HistoryStore } from '@shared/stores';
+import { DeviceStore, HistoryStore, ReverseProxyStore } from '@shared/stores';
 import { createWrapperComponent } from '@shared/utils';
+
 export const routes: Routes = [
   {
     path: '',
@@ -44,6 +46,7 @@ export const routes: Routes = [
       },
       {
         path: 'reverse-proxy',
+        component: createWrapperComponent([ReverseProxyStore]),
         children: [
           {
             path: 'reverse-proxy',
@@ -51,6 +54,27 @@ export const routes: Routes = [
               import('./features/reverse-proxy/reverse-proxy.component').then(
                 (m) => m.ReverseProxyComponent,
               ),
+          },
+          {
+            path: 'create',
+            loadComponent: () =>
+              import(
+                './features/reverse-proxy-create-update/reverse-proxy-create-update.component'
+              ).then((m) => m.ReverseProxyCreateUpdateComponent),
+          },
+          {
+            path: ':id/update',
+            loadComponent: () =>
+              import(
+                './features/reverse-proxy-create-update/reverse-proxy-create-update.component'
+              ).then((m) => m.ReverseProxyCreateUpdateComponent),
+          },
+          {
+            path: 'config',
+            loadComponent: () =>
+              import(
+                './features/reverse-proxy-config/reverse-proxy-config.component'
+              ).then((m) => m.ReverseProxyConfigComponent),
           },
           {
             path: 'traffic',

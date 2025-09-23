@@ -1,0 +1,189 @@
+@let deleted = reverseProxy().isDeleted;
+<div class="rounded bg-surface">
+  <section class="p-3">
+    <div class="flex justify-between gap-1 flex-wrap">
+      <p class="flex items-center gap-2">
+        <span
+          class="bg-primary text-white px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
+          >{{ reverseProxy().environment ?? "--" }}</span
+        >
+        <span
+          class="text-surface-600 text-xl font-semibold"
+          [class.line-through]="deleted"
+          >{{ reverseProxy().id }}</span
+        >
+      </p>
+
+      <div class="flex">
+        <p-button
+          icon="fas fa-pencil"
+          rounded
+          text
+          size="small"
+          (click)="update.emit(reverseProxy().id)"
+        />
+        <p-button
+          icon="fas fa-trash-alt"
+          rounded
+          text
+          severity="danger"
+          size="small"
+          (click)="delete.emit(reverseProxy().id)"
+        />
+      </div>
+    </div>
+    <div>
+      <p class="flex items-center gap-1 text-surface-500 text-sm">
+        <i class="w-4 text-center far fa-clock"></i>
+        <span class="line-clamp-1">
+          Ngày tạo: {{ reverseProxy().createdAt | toDate }}
+        </span>
+      </p>
+
+      <p class="flex items-center gap-1 text-surface-500 text-sm">
+        <i class="w-4 text-center far fa-rotate"></i>
+        <span class="line-clamp-1">
+          Ngày sửa: {{ reverseProxy().lastModified | toDate }}
+        </span>
+      </p>
+
+      @let prefixPath =
+        reverseProxy().cluster.destinations?.destination1?.swaggers?.[0]
+          ?.prefixPath ?? "";
+      @let address =
+        reverseProxy().cluster.destinations?.destination1?.address ?? "";
+
+      <p class="flex items-center gap-1 text-surface-500 text-sm">
+        <i class="w-4 text-center far fa-circle-info"></i>
+        <span class="line-clamp-1">
+          {{ reverseProxy().route.clusterId }} ⟹ {{ prefixPath }} ⟹
+          {{ address }}
+        </span>
+      </p>
+    </div>
+  </section>
+
+  <hr class="border-surface-200" />
+
+  <section class="p-3 space-y-2">
+    <div class="flex items-center gap-2">
+      <i class="fas fa-route text-sm text-orange-500 dark:text-orange-400"></i>
+      <p class="text-sm font-semibold text-surface-700">Route</p>
+    </div>
+
+    <div class="bg-surface-50 p-2 rounded-md">
+      @for (item of routeGeneral(); track item.label) {
+        <p [class.hidden]="!item.value">
+          <span class="text-xs text-surface-700">{{ item.label }}:</span>
+          {{ item.value }}
+        </p>
+      }
+    </div>
+
+    <div class="bg-surface-50 p-2 rounded-md">
+      <p class="text-sm font-semibold text-surface-700">Match</p>
+      @for (key of reverseProxy().route.match | keyvalue; track key.key) {
+        <p class="pl-2" [class.hidden]="!key.value">
+          <span class="text-xs text-surface-700">{{ key.key }}:</span>
+          {{ key.value }}
+        </p>
+      }
+    </div>
+
+    <div
+      class="bg-surface-50 p-2 rounded-md"
+      [class.hidden]="!reverseProxy().route.metadata"
+    >
+      <p class="text-sm font-semibold text-surface-700">Metadata</p>
+      @for (key of reverseProxy().route.metadata | keyvalue; track key.key) {
+        <p class="pl-2">
+          <span class="text-xs text-surface-700">{{ key.key }}:</span>
+          {{ key.value }}
+        </p>
+      }
+    </div>
+
+    <div
+      class="bg-surface-50 p-2 rounded-md"
+      [class.hidden]="
+        !reverseProxy().route.transforms ||
+        reverseProxy().route.transforms.length === 0
+      "
+    >
+      <p class="text-sm font-semibold text-surface-700">Transforms</p>
+      @if (
+        reverseProxy().route.transforms &&
+        reverseProxy().route.transforms.length > 0
+      ) {
+        @for (transform of reverseProxy().route.transforms; track $index) {
+          <div
+            class="border rounded p-2 border-dashed border-surface-300 mb-2 last:mb-2"
+          >
+            @for (item of transform | keyvalue; track item.key) {
+              <p>
+                <span class="text-xs text-surface-700">{{ item.key }}:</span>
+                {{ item.value }}
+              </p>
+            }
+          </div>
+        }
+      }
+    </div>
+  </section>
+
+  <section class="p-3 space-y-2">
+    <div class="flex items-center gap-2">
+      <i class="fas fa-server text-sm text-violet-500 dark:text-violet-400"></i>
+      <p class="text-sm font-semibold text-surface-700">Cluster</p>
+    </div>
+
+    <div class="bg-surface-50 p-2 rounded-md">
+      @for (item of clusterGeneral(); track item.label) {
+        <p>
+          <span class="text-xs text-surface-700">{{ item.label }}:</span>
+          {{ item.value }}
+        </p>
+      }
+    </div>
+
+    <div class="bg-surface-50 p-2 rounded-md">
+      <p class="text-sm font-semibold text-surface-700">Destinations</p>
+      <p
+        [class.hidden]="
+          !reverseProxy().cluster.destinations?.destination1?.address
+        "
+      >
+        <span class="text-xs text-surface-700">Address:</span>
+        {{ reverseProxy().cluster.destinations?.destination1?.address }}
+      </p>
+      <p
+        [class.hidden]="
+          !reverseProxy().cluster.destinations?.destination1?.metadata
+        "
+      >
+        <span class="text-xs text-surface-700">Metadata:</span>
+        {{ reverseProxy().cluster.destinations?.destination1?.metadata }}
+      </p>
+
+      <div class="bg-surface-50 rounded-md">
+        <p class="text-xs text-surface-700 mb-1">Swaggers:</p>
+        @for (
+          swagger of reverseProxy().cluster.destinations?.destination1
+            ?.swaggers;
+          track $index
+        ) {
+          <div
+            class="border border-dashed rounded p-2 border-surface-300 mb-2 last:mb-0"
+          >
+            @for (key of swagger | keyvalue; track key.key) {
+              <p [class.hidden]="!key.value">
+                <span class="text-xs text-surface-700">{{ key.key }}:</span>
+                {{ key.value }}
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+</div>
