@@ -8,6 +8,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { SplitPanelComponent } from '@shared/components';
 import { DevicePanelComponent } from './device-panel/device-panel.component';
 import { PackageComponent } from './package/package.component';
+import { SendCommandComponent } from './send-command/send-command.component';
 
 export type PackageDisplay = 'raw' | 'parsed' | 'content';
 
@@ -21,6 +22,7 @@ export type PackageDisplay = 'raw' | 'parsed' | 'content';
     SplitPanelComponent,
     DevicePanelComponent,
     PackageComponent,
+    SendCommandComponent,
   ],
   templateUrl: './command.component.html',
   providers: [],
@@ -31,7 +33,7 @@ export class CommandComponent {
 
   // !package display
   selectedPackageDisplay = signal<PackageDisplay>('parsed');
-  packageFontSizePx = signal<number>(12);
+  dataFontSizePx = signal<number>(12);
 
   constructor() {
     effect(() => {

@@ -2,23 +2,17 @@
   <app-split-panel>
     <ng-template #leftContent>
       @switch (selectedTabIdx()) {
-        @case (0) {
-          <app-package
-            [selectedDeviceId]="selectedDeviceId()"
-            [(selectedPackageDisplay)]="selectedPackageDisplay"
-            [(dataFontSizePx)]="packageFontSizePx"
-          />
-        }
-        @case (1) {
-          <!-- <app-send-command [selectedConnection]="selectedConnection()" /> -->
-        }
+      @case (0) {
+      <app-package [selectedDeviceId]="selectedDeviceId()" [(selectedPackageDisplay)]="selectedPackageDisplay"
+        [(dataFontSizePx)]="dataFontSizePx" />
+      }
+      @case (1) {
+      <app-send-command [selectedDeviceId]="selectedDeviceId()" [(dataFontSizePx)]="dataFontSizePx" />
+      }
       }
     </ng-template>
     <ng-template #rightContent>
-      <app-device-panel
-        [(selectedTabIdx)]="selectedTabIdx"
-        [(selectedDeviceId)]="selectedDeviceId"
-      />
+      <app-device-panel [(selectedTabIdx)]="selectedTabIdx" [(selectedDeviceId)]="selectedDeviceId" />
     </ng-template>
   </app-split-panel>
 </div>
