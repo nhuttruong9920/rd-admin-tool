@@ -58,12 +58,11 @@ import { concatMap, delay, finalize, from, of, take, takeWhile } from 'rxjs';
       <div class="flex-1 h-full flex-center" (wheel)="scrollSlider($event)">
         @let maxSliderValue = historyLength()! > 0 ? historyLength()! - 1 : 100;
         <p-slider
-          class="w-full"
           [min]="0"
           [max]="maxSliderValue"
           [(ngModel)]="currentPlayingIndex"
           (onChange)="slideSlider()"
-          class="!h-1.5"
+          class="!h-1.5 w-full"
           [disabled]="historyLength() === 0"
         />
       </div>

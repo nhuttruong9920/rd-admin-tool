@@ -1,5 +1,5 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { Component, inject, model, signal } from '@angular/core';
+import { Component, effect, inject, model, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -45,5 +45,9 @@ export class DevicePanelComponent {
 
   constructor() {
     this.deviceStore.ensureData();
+
+    effect(() => {
+      console.log('selectedDeviceId', this.selectedDeviceId());
+    });
   }
 }

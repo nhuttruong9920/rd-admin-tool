@@ -12,6 +12,7 @@
       <tr>
         <th></th>
         <th pSortableColumn="name">Tên <p-sortIcon field="name" /></th>
+        <th>Trạng thái</th>
         <th pSortableColumn="baseUrl">
           Base URL <p-sortIcon field="baseUrl" />
         </th>
@@ -46,6 +47,18 @@
           [class.line-through]="isDeleted"
         >
           {{ gatewayServer.name }}
+        </td>
+        <td>
+          <span class="text-surface-800 truncate">
+            <i
+              [class]="
+                gatewayServer.isHealthy
+                  ? 'fas fa-heart-pulse text-green-500'
+                  : 'fas fa-heart-crack text-red-500'
+              "
+            ></i>
+            {{ gatewayServer.checkedAt | toDate }}
+          </span>
         </td>
         <td>
           <a

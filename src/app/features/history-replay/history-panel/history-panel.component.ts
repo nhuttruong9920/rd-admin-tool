@@ -14,13 +14,14 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { DateService, ToastService } from '@core/services';
+import { DateService, ExportService, ToastService } from '@core/services';
 import {
+  DataStateComponent,
   DateTimePickerComponent,
   ToolbarComponent,
   VehicleIconComponent,
 } from '@shared/components';
-import { DeviceStatus, GetDeviceHistoryReq } from '@shared/types';
+import { DeviceState, DeviceStatus, GetDeviceHistoryReq } from '@shared/types';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { MenuModule } from 'primeng/menu';
@@ -29,6 +30,7 @@ import { HistoryStore } from '@shared/stores';
 import { HistoryCardComponent } from './history-card/history-card.component';
 import { HistoryControlsComponent } from '@shared/components/history-controls.component';
 import { cdkScrollWhileHidden } from '@shared/utils';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-history-panel',
@@ -43,6 +45,8 @@ import { cdkScrollWhileHidden } from '@shared/utils';
     MenuModule,
     HistoryCardComponent,
     HistoryControlsComponent,
+    DataStateComponent,
+    SkeletonModule,
   ],
   templateUrl: './history-panel.component.html',
 })
@@ -50,6 +54,7 @@ export class HistoryPanelComponent {
   #activatedRoute = inject(ActivatedRoute);
   #dateService = inject(DateService);
   #toastService = inject(ToastService);
+  #exportService = inject(ExportService);
   historyStore = inject(HistoryStore);
 
   readonly cdkViewport = viewChild<CdkVirtualScrollViewport>('cdkViewport');
@@ -123,5 +128,62 @@ export class HistoryPanelComponent {
   protected selectWaypoint(index: number): void {
     this.isHistoryPlaying.set(false);
     this.currentPlayingIndex.set(index);
+  }
+
+  protected downloadExcel(): void {
+    if (!this.historyStore.data() || !this.historyStore.data()?.length) {
+      this.#toastService.showError('Không có dữ liệu để xuất excel');
+      return;
+    }
+
+    const fileName = `Xem lại lộ trình\n${this.selectedDeviceId()}\n${this.#dateService.getFormattedDate(this.historyFromDate())} - ${this.#dateService.getFormattedDate(this.historyToDate())}`;
+
+    const dataToExport = this.historyStore.data()!.map((item, index) => {
+      return {
+        ['#']: index + 1,
+        ['Thời gian']: item.formatted.gpsTime,
+        ['Trạng thái']: this.getLocaleState(item.formatted.state),
+        ['Tốc độ (km/h)']: item.formatted.gpsSpeed.value,
+        ['Hướng']: item.formatted.heading,
+        ['Vệ tinh']: item.satellite,
+        ['Động cơ']: item.status === 1 ? 'Bật' : 'Tắt',
+        ['Điện áp (V)']: item.voltage / 100,
+        ['Địa chỉ']: item.info,
+        ['Toạ độ (lat, long)']: `${item.formatted.lat}, ${item.formatted.long}`,
+        ['Thời gian odo']: item.formatted.odoTime.value,
+        ['Chế độ']: item.formatted.mode?.value,
+        ['Pin (%)']: item.formatted.battery.value,
+        ['QĐ còn lại (km)']: item.formatted.range.value,
+        ['Tốc độ xe (km/h)']: item.formatted.vehicleSpeed.value,
+        ['Điện áp pin (V)']: item.formatted.voltage.value,
+      };
+    });
+
+    this.#exportService.exportDataToExcel(
+      [
+        {
+          sheetName: 'Xem lại lộ trình',
+          items: dataToExport,
+          sheetTopHeader: fileName,
+        },
+      ],
+      fileName,
+    );
+  }
+
+  private getLocaleState(state: DeviceState): string {
+    switch (state) {
+      case 'disconnected':
+      case 'offline':
+        return 'Mất kết nối';
+      case 'stop':
+        return 'Đang dừng';
+      case 'running':
+        return 'Đang chạy';
+      case 'overspeed':
+        return 'Vượt tốc độ';
+      default:
+        return 'Không xác định';
+    }
   }
 }

@@ -1,5 +1,9 @@
 <div class="h-full p-2 flex flex-col gap-2">
-  <app-toolbar class="pr-10 md:pr-0" headerTitle="Dữ liệu gói tin" [amount]="packageStore.count()">
+  <app-toolbar
+    class="pr-10 md:pr-0"
+    headerTitle="Dữ liệu gói tin"
+    [amount]="packageStore.count()"
+  >
     <ng-template #leftContent>
       <p-button
         [icon]="
@@ -33,13 +37,33 @@
   </app-toolbar>
 
   <div class="flex-1 overflow-y-auto">
-    @for (package of packageStore.data(); track package.t) {
-      <app-package-card
-        [package]="package"
-        [dataFontSizePx]="dataFontSizePx()"
-        [showInfoMethod]="showInfoMethod()"
-        [selectedConnection]="selectedConnection()"
+    @if (!selectedDeviceId()) {
+      <app-data-state
+        state="pleaseSelect"
+        title="Chưa chọn IMEI"
+        description="Vui lòng chọn một số IMEI bên phải để hiển thị lệnh"
       />
+    } @else {
+      @if (packageStore.isError()) {
+        <app-data-state state="error" />
+      }
+
+      @if (packageStore.data()) {
+        @let data = packageStore.data()!;
+
+        @if (data.length === 0) {
+          <app-data-state state="empty" />
+        }
+
+        @for (package of data; track package.t) {
+          <app-package-card
+            [package]="package"
+            [dataFontSizePx]="dataFontSizePx()"
+            [showInfoMethod]="showInfoMethod()"
+            [selectedConnection]="selectedConnection()"
+          />
+        }
+      }
     }
   </div>
 </div>

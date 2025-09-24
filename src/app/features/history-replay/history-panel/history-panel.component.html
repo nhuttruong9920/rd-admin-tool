@@ -70,6 +70,7 @@
             icon="fas fa-file-excel"
             size="small"
             label="Xuất file"
+            (click)="downloadExcel()"
           />
         </div>
       </ng-template>
@@ -88,18 +89,52 @@
 
   <!-- vehicle list -->
   <section class="flex-1 overflow-y-auto">
-    <cdk-virtual-scroll-viewport #cdkViewport itemSize="129" class="h-full">
-      <div
-        *cdkVirtualFor="let waypoint of historyStore.data(); let idx = index"
-      >
-        <app-history-card
-          [id]="idx"
-          [waypoint]="waypoint"
-          [isSelected]="currentPlayingIndex() === idx"
-          (click)="selectWaypoint(idx)"
-        ></app-history-card>
-      </div>
-    </cdk-virtual-scroll-viewport>
+    @if (!selectedDeviceId()) {
+      <app-data-state
+        state="pleaseSelect"
+        title="Chưa chọn IMEI"
+        description="Vui lòng chọn một số IMEI bên trên để xem lại lộ trình"
+      />
+    } @else {
+      @if (historyStore.isFetching()) {
+        <div>
+          @for (i of [].constructor(10); track idx; let idx = $index) {
+            <p-skeleton height="80px" width="100%" styleClass="mb-2" />
+          }
+        </div>
+      }
+
+      @if (historyStore.isError()) {
+        <app-data-state state="error" />
+      }
+
+      @if (historyStore.data()) {
+        @let data = historyStore.data()!;
+        @if (data.length === 0) {
+          <app-data-state state="empty" />
+        } @else {
+          <cdk-virtual-scroll-viewport
+            #cdkViewport
+            itemSize="129"
+            class="h-full"
+          >
+            <div
+              *cdkVirtualFor="
+                let waypoint of historyStore.data();
+                let idx = index
+              "
+            >
+              <app-history-card
+                [id]="idx"
+                [waypoint]="waypoint"
+                [isSelected]="currentPlayingIndex() === idx"
+                (click)="selectWaypoint(idx)"
+              ></app-history-card>
+            </div>
+          </cdk-virtual-scroll-viewport>
+        }
+      }
+    }
   </section>
 </div>
 

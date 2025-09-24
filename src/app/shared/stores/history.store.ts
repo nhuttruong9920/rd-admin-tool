@@ -32,15 +32,14 @@ const initialState: CommonStoreInitialState<HistoryWaypoint[]> = {
 export const HistoryStore = signalStore(
   withState(initialState),
 
-  withComputed(({ data, _loading }) => {
+  withComputed(({ data, _loading, error }) => {
     const dateService = inject(DateService);
     return {
       waypointCount: computed(() => data()?.length ?? 0),
       isFetching: computed(() => _loading() && !data()),
       isLoading: computed(() => _loading() && data() !== null),
-      stopRanges: computed(() =>
-        getHistoryStopRanges(data(), dateService),
-      ),
+      isError: computed(() => !_loading() && !data() && error()),
+      stopRanges: computed(() => getHistoryStopRanges(data(), dateService)),
     };
   }),
   withMethods((store) => {
@@ -53,6 +52,7 @@ export const HistoryStore = signalStore(
           patchState(store, {
             _loading: true,
             error: null,
+            data: null,
           });
 
           return connectionApiService.fetchDeviceHistory(request).pipe(
@@ -75,6 +75,7 @@ export const HistoryStore = signalStore(
               patchState(store, {
                 _loading: false,
                 error: error.message || 'Lỗi khi tải dữ liệu lịch sử',
+                data: null,
               });
               return of(null);
             }),

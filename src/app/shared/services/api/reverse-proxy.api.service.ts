@@ -60,31 +60,36 @@ export class ReverseProxyApiService {
     );
   }
 
-  getConfigYarp(environment: string): Observable<any> {
+  getConfigYarp(gatewayServerId: string): Observable<any> {
     return this.#restService.getCustom<string>(
       this.#baseUrl,
       `/api/reverse-proxy/config-yarp`,
-      { environment },
+      { gatewayServerId },
     );
   }
 
   applyConfigYarp(
-    environment: string,
-    type: 'update' | 'delete',
+    gatewayServerId: string,
+    type: 'update' | 'delete' | 'unapply',
     req: ReverseProxyApplyConfigReq,
   ): Observable<ReverseProxyAppliedDto> {
-    const requestEndpoint = `/api/reverse-proxy/apply-config?environment=${environment}&type=${type}`;
+    const requestEndpoint = `/api/reverse-proxy/apply-config?gatewayServerId=${gatewayServerId}&type=${type}`;
     return this.#restService.postCustom<
       ReverseProxyApplyConfigReq,
       ReverseProxyAppliedDto
     >(this.#baseUrl, requestEndpoint, req);
   }
 
-  getProxyEnvironments(): Observable<ReverseProxyOptionDto[]> {
-    return this.#restService.getCustom<ReverseProxyOptionDto[]>(
-      this.#baseUrl,
-      `/api/reverse-proxy/environments`,
-    );
+  getPreviewConfigYarp(
+    gatewayServerId: string,
+    type: 'update' | 'delete' | 'unapply',
+    req: ReverseProxyApplyConfigReq,
+  ): Observable<ReverseProxyAppliedDto> {
+    const requestEndpoint = `/api/reverse-proxy/preview-config?gatewayServerId=${gatewayServerId}&type=${type}`;
+    return this.#restService.postCustom<
+      ReverseProxyApplyConfigReq,
+      ReverseProxyAppliedDto
+    >(this.#baseUrl, requestEndpoint, req);
   }
 
   getProxyLoadBalancingPolicies(): Observable<ReverseProxyOptionDto[]> {

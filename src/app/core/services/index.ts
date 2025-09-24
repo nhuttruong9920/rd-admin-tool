@@ -1,5 +1,6 @@
 export * from './auth.service';
 export * from './date.service';
+export * from './export.service';
 export * from './layout.service';
 export * from './map.service';
 export * from './navigation.service';

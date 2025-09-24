@@ -8,19 +8,27 @@ import {
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 
+import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectModule } from 'primeng/select';
-import { BehaviorSubject, combineLatest, finalize, of, switchMap } from 'rxjs';
-import { ConfirmationService } from 'primeng/api';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  finalize,
+  of,
+  switchMap,
+} from 'rxjs';
 
 import { NavigationService, ToastService } from '@core/services';
 import { ReverseProxyApiService } from '@shared/services';
-import { ProxyEnvironmentStore, ReverseProxyStore } from '@shared/stores';
+import { ProxyGatewayServerStore, ReverseProxyStore } from '@shared/stores';
 import { ReverseProxyDto } from '@shared/types';
+import { generateFullJsonComparison } from '@shared/utils';
 
 @Component({
   selector: 'app-reverse-proxy-config',
@@ -34,41 +42,60 @@ import { ReverseProxyDto } from '@shared/types';
     ConfirmDialogModule,
   ],
   templateUrl: './reverse-proxy-config.component.html',
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, ProxyGatewayServerStore],
 })
 export class ReverseProxyConfigComponent {
   reverseProxyStore = inject(ReverseProxyStore);
-  proxyEnvironmentStore = inject(ProxyEnvironmentStore);
+  proxyGatewayServerStore = inject(ProxyGatewayServerStore);
 
-  #ReverseProxyApiService = inject(ReverseProxyApiService);
+  #reverseProxyApiService = inject(ReverseProxyApiService);
   #navigationService = inject(NavigationService);
   #confirmationService = inject(ConfirmationService);
   #toastService = inject(ToastService);
 
-  selectedEnvironment = signal<string>('');
+  selectedGatewayServerId = signal<string>('');
+
+  // preview config
+  previewConfigYarp = signal<Record<string, unknown>>({});
+  previewConfigYarpJSON = computed(() =>
+    JSON.stringify(this.previewConfigYarp(), null, 2),
+  );
 
   // curent config
   refreshConfig$ = new BehaviorSubject<void>(undefined);
   configYarp$ = combineLatest([
-    toObservable(this.selectedEnvironment),
+    toObservable(this.selectedGatewayServerId),
     this.refreshConfig$,
   ]).pipe(
-    switchMap(([selectedEnvironment]) => {
-      if (!selectedEnvironment) {
-        return of('Chưa chọn môi trường');
+    switchMap(([selectedGatewayServerId]) => {
+      if (!selectedGatewayServerId) {
+        return of({});
       }
-      return this.#ReverseProxyApiService.getConfigYarp(selectedEnvironment);
+      return this.#reverseProxyApiService
+        .getConfigYarp(selectedGatewayServerId)
+        .pipe(
+          catchError((error) => {
+            const errorMessage = error?.error?.message ?? {};
+            this.#toastService.showError(errorMessage);
+            return of({});
+          }),
+        );
     }),
   );
   configYarp = toSignal(this.configYarp$);
   configYarpJSON = computed(() => JSON.stringify(this.configYarp(), null, 2));
 
+  comparisonResult = computed(() =>
+    generateFullJsonComparison(this.configYarp(), this.previewConfigYarp()),
+  );
+
   // apply
   applyTypeOptions = [
     { label: 'Cập nhật/Thêm', value: 'update' },
+    { label: 'Gỡ áp dụng', value: 'unapply' },
     { label: 'Xoá', value: 'delete' },
   ];
-  selectedApplyType = signal<'update' | 'delete'>('update');
+  selectedApplyType = signal<'update' | 'delete' | 'unapply'>('update');
 
   selectedRoutes = linkedSignal<ReverseProxyDto[]>(() => {
     void this.selectedApplyType();
@@ -76,7 +103,7 @@ export class ReverseProxyConfigComponent {
   });
 
   constructor() {
-    this.proxyEnvironmentStore.ensureData();
+    this.proxyGatewayServerStore.ensureData();
     this.reverseProxyStore.ensureData();
   }
 
@@ -88,13 +115,17 @@ export class ReverseProxyConfigComponent {
     navigator.clipboard.writeText(this.configYarpJSON());
   }
 
+  copyPreviewJSON(): void {
+    navigator.clipboard.writeText(this.previewConfigYarpJSON());
+  }
+
   confirmConfig(event: Event): void {
-    const environment = this.selectedEnvironment();
+    const gatewayServerId = this.selectedGatewayServerId();
     const routeIds = this.selectedRoutes().map((route) => route.id);
     const type = this.selectedApplyType();
 
-    if (!environment) {
-      this.#toastService.showError('Vui lòng chọn môi trường!');
+    if (!gatewayServerId) {
+      this.#toastService.showError('Vui lòng chọn 1 gateway server!');
       return;
     }
 
@@ -111,7 +142,7 @@ export class ReverseProxyConfigComponent {
     this.#confirmationService.confirm({
       target: event.target as EventTarget,
       message: `
-<strong>Môi trường:</strong> ${environment} <br />
+<strong>Gateway Server:</strong> ${gatewayServerId} <br />
 <strong>Loại áp dụng:</strong> ${methodLabel} <br />
 <strong>Số lượng routes:</strong> ${routeIds.length} <br />
 <strong>Routes đã chọn:</strong> ${routeIds.join(', ')} <br />`,
@@ -127,7 +158,7 @@ export class ReverseProxyConfigComponent {
         text: true,
       },
       accept: () => {
-        this.executeApplyConfig(environment, routeIds, type);
+        this.executeApplyConfig(gatewayServerId, routeIds, type);
       },
     });
   }
@@ -135,9 +166,9 @@ export class ReverseProxyConfigComponent {
   private executeApplyConfig(
     environment: string,
     routeIds: string[],
-    type: 'update' | 'delete',
+    type: 'update' | 'delete' | 'unapply',
   ): void {
-    this.#ReverseProxyApiService
+    this.#reverseProxyApiService
       .applyConfigYarp(environment, type, { routeIds })
       .pipe(finalize(() => console.log('finalize')))
       .subscribe({
@@ -153,6 +184,36 @@ export class ReverseProxyConfigComponent {
           this.#toastService.showError(
             'Có lỗi xảy ra khi áp dụng cấu hình: ' +
               (error.message || 'Unknown error'),
+          );
+        },
+      });
+  }
+
+  getPreviewConfig(): void {
+    if (!this.selectedGatewayServerId()) {
+      this.#toastService.showError('Vui lòng chọn 1 gateway server!');
+      return;
+    }
+
+    if (this.selectedRoutes().length === 0) {
+      this.#toastService.showError('Vui lòng chọn ít nhất một route!');
+      return;
+    }
+
+    this.#reverseProxyApiService
+      .getPreviewConfigYarp(
+        this.selectedGatewayServerId(),
+        this.selectedApplyType(),
+        { routeIds: this.selectedRoutes().map((route) => route.id) },
+      )
+      .subscribe({
+        next: (data) => {
+          this.previewConfigYarp.set(data);
+        },
+        error: (error) => {
+          this.previewConfigYarp.set({});
+          this.#toastService.showError(
+            error?.error?.message ?? 'Lỗi lấy dữ liệu',
           );
         },
       });

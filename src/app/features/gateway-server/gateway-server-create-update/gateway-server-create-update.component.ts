@@ -17,7 +17,6 @@ import { PopoverModule } from 'primeng/popover';
 import { SelectModule } from 'primeng/select';
 import { take } from 'rxjs/operators';
 
-import { KeyValuePipe } from '@angular/common';
 import { NavigationService, ToastService } from '@core/services';
 import { GatewayServerApiService } from '@shared/services';
 import { GatewayServerStore } from '@shared/stores';
@@ -34,7 +33,6 @@ import { CreateGatewayServerReq, GatewayServerDto } from '@shared/types';
     PopoverModule,
     FieldsetModule,
     SelectModule,
-    KeyValuePipe,
   ],
   templateUrl: './gateway-server-create-update.component.html',
 })

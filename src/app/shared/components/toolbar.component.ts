@@ -11,6 +11,7 @@ import {
   signal,
   TemplateRef,
   viewChild,
+  effect,
 } from '@angular/core';
 
 import { BadgeModule } from 'primeng/badge';
@@ -72,10 +73,6 @@ import { WidthBreakpoint } from '@shared/types';
         [style.maxHeight.px]="collapseMenuHeight()"
         class="hidden ease overflow-hidden"
         [class.!block]="isToolbarSmall()"
-        flex
-        flex-col
-        gap-2
-        mt-1
         [class.transition-all]="hasAnimation()"
         [class.duration-300]="hasAnimation()"
       >
@@ -123,6 +120,14 @@ export class ToolbarComponent {
       requestAnimationFrame(() => {
         this.hasAnimation.set(true);
       });
+    });
+
+    effect(() => {
+      console.log(this.toolbarContainer().nativeElement.clientWidth);
+    });
+
+    effect(() => {
+      console.log(this.isToolbarSmall());
     });
   }
 

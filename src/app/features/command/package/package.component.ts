@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 
-import { ToolbarComponent } from '@shared/components';
+import { DataStateComponent, ToolbarComponent } from '@shared/components';
 import { ConnectionStore, PackageStore } from '@shared/stores';
 import { DisplayOption, GetRawPackageReq, LabelValue } from '@shared/types';
 import { PackageDisplay } from '../command.component';
@@ -31,6 +31,7 @@ import { PackageCardComponent } from './package-card/package-card.component';
     DisplaySettingComponent,
     FormsModule,
     PackageCardComponent,
+    DataStateComponent,
   ],
   templateUrl: './package.component.html',
   providers: [PackageStore],

@@ -3,7 +3,7 @@ export * from './device.store';
 export * from './gateway-server.store';
 export * from './history.store';
 export * from './package.store';
-export * from './proxy-environment.store';
+export * from './proxy-gateway-server.store';
 export * from './proxy-load-balancing-policy.store';
 export * from './reverse-proxy.store';
 export * from './send-command.store';

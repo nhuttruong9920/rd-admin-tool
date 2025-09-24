@@ -20,10 +20,7 @@ const initialState: CommonStoreInitialState<GatewayServerDto[]> = {
   searchTerm: '',
 };
 
-export const ProxyEnvironmentStore = signalStore(
-  {
-    providedIn: 'root',
-  },
+export const ProxyGatewayServerStore = signalStore(
   withState(initialState),
   withComputed(({ data, _loading, searchTerm }) => ({
     count: computed(() => data()?.length ?? 0),
@@ -40,9 +37,7 @@ export const ProxyEnvironmentStore = signalStore(
         return allData;
       }
 
-      return allData.filter((data) =>
-        data.name.toLowerCase().includes(search),
-      );
+      return allData.filter((data) => data.name.toLowerCase().includes(search));
     }),
   })),
   withMethods((store) => {
