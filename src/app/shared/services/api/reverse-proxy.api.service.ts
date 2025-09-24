@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { RestService } from '@core/services';
 import {
   CreateUpdateReverseProxyReq,
+  GatewayServerDto,
   ReverseProxyAppliedDto,
   ReverseProxyApplyConfigReq,
   ReverseProxyCtaDto,
@@ -90,6 +91,13 @@ export class ReverseProxyApiService {
     return this.#restService.getCustom<ReverseProxyOptionDto[]>(
       this.#baseUrl,
       `/api/reverse-proxy/load-balancing-policies`,
+    );
+  }
+
+  getProxyGatewayServers(): Observable<GatewayServerDto[]> {
+    return this.#restService.getCustom<GatewayServerDto[]>(
+      this.#baseUrl,
+      `/api/reverse-proxy/gateway-servers`,
     );
   }
 }

@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { Component, inject, output } from '@angular/core';
 
 import { ButtonModule } from 'primeng/button';
@@ -10,13 +9,13 @@ import { ReverseProxyDto } from '@shared/types';
 
 @Component({
   selector: 'app-reverse-proxy-table',
-  imports: [TableModule, NgClass, ToDatePipe, ButtonModule],
+  imports: [TableModule, ToDatePipe, ButtonModule],
   templateUrl: './reverse-proxy-table.component.html',
 })
 export class ReverseProxyTableComponent {
   reverseProxyStore = inject(ReverseProxyStore);
 
-  updateReverseProxy = output<string>();
-  deleteReverseProxy = output<string>();
-  detailReverseProxy = output<ReverseProxyDto>();
+  update = output<string>();
+  delete = output<string>();
+  detail = output<ReverseProxyDto>();
 }

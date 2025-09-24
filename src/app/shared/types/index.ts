@@ -1,6 +1,7 @@
 export * from './common.type';
 export * from './connection.type';
 export * from './continuous-playback.type';
+export * from './gateway-server.type';
 export * from './layout.type';
 export * from './live-server.type';
 export * from './livestream.type';

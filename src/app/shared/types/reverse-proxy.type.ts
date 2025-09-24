@@ -49,6 +49,7 @@ type ReverseProxyDto = {
   cluster: Cluster;
   createdAt: string; // ISO 8601 datetime string
   state: boolean;
+  gatewayServerId: string | null;
   environment: string | null;
   lastAppliedAt: string | null;
   id: string;

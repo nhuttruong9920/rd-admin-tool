@@ -1,0 +1,50 @@
+<div class="h-full-main-layout p-2 md:p-4 md:px-16 flex flex-col gap-4">
+  <!-- toolbar -->
+  <section>
+    @let isDisabled =
+      gatewayServerStore.isLoading() || gatewayServerStore.isFetching();
+    <app-toolbar
+      headerTitle="Gateway Server"
+      [amount]="gatewayServerStore.count()"
+    >
+      <ng-template #leftContent>
+        <p-button
+          [icon]="
+            isDisabled ? 'fas fa-arrows-rotate fa-spin' : 'fas fa-arrows-rotate'
+          "
+          [rounded]="true"
+          [text]="true"
+          (click)="gatewayServerStore.refresh()"
+          [disabled]="isDisabled"
+          size="small"
+        />
+      </ng-template>
+      <ng-template #rightContent>
+        <app-input-search
+          (textChanged)="gatewayServerStore.setSearchTerm($event)"
+          placeholder="Tìm kiếm theo Id hoặc tên"
+          size="small"
+          class="w-full"
+          [value]="gatewayServerStore.searchTerm()"
+        />
+        <p-button
+          icon="fas fa-plus"
+          size="small"
+          label="Thêm mới"
+          (click)="navigateToCreateUpdateGatewayServer()"
+          [disabled]="isDisabled"
+        />
+      </ng-template>
+    </app-toolbar>
+  </section>
+
+  <!-- content -->
+  <section class="flex-1 overflow-hidden shadow-lg rounded-lg bg-surface">
+    <app-gateway-server-table
+      (update)="navigateToCreateUpdateGatewayServer($event)"
+      (delete)="confirmDeleteGatewayServer($event)"
+    />
+  </section>
+</div>
+
+<p-confirmdialog />

@@ -61,18 +61,24 @@ export class SidebarComponent {
       ],
     },
     {
-      label: 'Proxy',
+      label: 'Network',
       children: [
+        {
+          label: 'Gateway Server',
+          icon: 'far fa-server',
+          routerLink: '/network/gateway-server',
+          command: (): void => this.closeOverlayNav(),
+        },
         {
           label: 'Reverse Proxy',
           icon: 'far fa-exchange-alt',
-          routerLink: '/reverse-proxy/reverse-proxy',
+          routerLink: '/network/reverse-proxy',
           command: (): void => this.closeOverlayNav(),
         },
         {
           label: 'Traffic',
           icon: 'far fa-chart-line',
-          routerLink: '/reverse-proxy/traffic',
+          routerLink: '/network/traffic',
           command: (): void => this.closeOverlayNav(),
         },
       ],

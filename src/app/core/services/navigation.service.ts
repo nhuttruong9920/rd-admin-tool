@@ -34,27 +34,41 @@ export class NavigationService {
   }
 
   toReverseProxy(params: Params = {}): void {
-    this.#router.navigate(['/reverse-proxy/reverse-proxy'], {
+    this.#router.navigate(['network', 'reverse-proxy'], {
       queryParams: params,
     });
   }
 
   toCreateUpdateReverseProxy(id?: string): void {
     if (id) {
-      this.#router.navigate(['/reverse-proxy', id, 'update']);
+      this.#router.navigate(['network', 'reverse-proxy', id, 'update']);
     } else {
-      this.#router.navigate(['/reverse-proxy/create']);
+      this.#router.navigate(['network', 'reverse-proxy', 'create']);
     }
   }
 
   toReverseProxyConfig(params: Params = {}): void {
-    this.#router.navigate(['/reverse-proxy/config'], {
+    this.#router.navigate(['network', 'reverse-proxy', 'config'], {
       queryParams: params,
     });
   }
 
+  toGatewayServer(params: Params = {}): void {
+    this.#router.navigate(['network', 'gateway-server'], {
+      queryParams: params,
+    });
+  }
+
+  toCreateUpdateGatewayServer(id?: string): void {
+    if (id) {
+      this.#router.navigate(['network', 'gateway-server', id, 'update']);
+    } else {
+      this.#router.navigate(['network', 'gateway-server', 'create']);
+    }
+  }
+
   toTraffic(params: Params = {}): void {
-    this.#router.navigate(['/reverse-proxy/traffic'], {
+    this.#router.navigate(['network', 'traffic'], {
       queryParams: params,
     });
   }

@@ -54,9 +54,9 @@
   <!-- content -->
   <section class="flex-1 overflow-hidden shadow-lg rounded-lg bg-surface">
     <app-reverse-proxy-table
-      (updateReverseProxy)="navigateToCreateUpdateReverseProxy($event)"
-      (deleteReverseProxy)="confirmDeleteReverseProxy($event)"
-      (detailReverseProxy)="detailReverseProxy($event)"
+      (update)="navigateToCreateUpdateReverseProxy($event)"
+      (delete)="confirmDeleteReverseProxy($event)"
+      (detail)="detailReverseProxy($event)"
     />
   </section>
 </div>

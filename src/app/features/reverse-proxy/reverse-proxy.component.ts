@@ -31,7 +31,7 @@ export class ReverseProxyComponent {
   reverseProxyStore = inject(ReverseProxyStore);
   #navigationService = inject(NavigationService);
   #confirmationService = inject(ConfirmationService);
-  #ReverseProxyApiService = inject(ReverseProxyApiService);
+  #reverseProxyApiService = inject(ReverseProxyApiService);
   #toastService = inject(ToastService);
 
   reverseProxyDetailDialogVisible = signal<boolean>(false);
@@ -75,7 +75,7 @@ export class ReverseProxyComponent {
   }
 
   private deleteReverseProxy(id: string): void {
-    this.#ReverseProxyApiService.deleteReverseProxy(id).subscribe({
+    this.#reverseProxyApiService.deleteReverseProxy(id).subscribe({
       next: () => {
         this.reverseProxyDetailDialogVisible.set(false);
         this.reverseProxyStore.refresh();

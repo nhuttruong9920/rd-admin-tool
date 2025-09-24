@@ -3,7 +3,12 @@ import { AuthGuard } from '@core/auth/guards/auth.guard';
 import { ReturnGuard } from '@core/auth/guards/return.guard';
 
 import { LayoutComponent } from '@core/layout/layout.component';
-import { DeviceStore, HistoryStore, ReverseProxyStore } from '@shared/stores';
+import {
+  DeviceStore,
+  GatewayServerStore,
+  HistoryStore,
+  ReverseProxyStore,
+} from '@shared/stores';
 import { createWrapperComponent } from '@shared/utils';
 
 export const routes: Routes = [
@@ -61,9 +66,33 @@ export const routes: Routes = [
         ],
       },
       {
-        path: 'reverse-proxy',
-        component: createWrapperComponent([ReverseProxyStore]),
+        path: 'network',
+        component: createWrapperComponent([
+          ReverseProxyStore,
+          GatewayServerStore,
+        ]),
         children: [
+          {
+            path: 'gateway-server',
+            loadComponent: () =>
+              import('./features/gateway-server/gateway-server.component').then(
+                (m) => m.GatewayServerComponent,
+              ),
+          },
+          {
+            path: 'gateway-server/create',
+            loadComponent: () =>
+              import(
+                './features/gateway-server/gateway-server-create-update/gateway-server-create-update.component'
+              ).then((m) => m.GatewayServerCreateUpdateComponent),
+          },
+          {
+            path: 'gateway-server/:id/update',
+            loadComponent: () =>
+              import(
+                './features/gateway-server/gateway-server-create-update/gateway-server-create-update.component'
+              ).then((m) => m.GatewayServerCreateUpdateComponent),
+          },
           {
             path: 'reverse-proxy',
             loadComponent: () =>
@@ -72,24 +101,24 @@ export const routes: Routes = [
               ),
           },
           {
-            path: 'create',
+            path: 'reverse-proxy/create',
             loadComponent: () =>
               import(
-                './features/reverse-proxy-create-update/reverse-proxy-create-update.component'
+                './features/reverse-proxy/reverse-proxy-create-update/reverse-proxy-create-update.component'
               ).then((m) => m.ReverseProxyCreateUpdateComponent),
           },
           {
-            path: ':id/update',
+            path: 'reverse-proxy/:id/update',
             loadComponent: () =>
               import(
-                './features/reverse-proxy-create-update/reverse-proxy-create-update.component'
+                './features/reverse-proxy/reverse-proxy-create-update/reverse-proxy-create-update.component'
               ).then((m) => m.ReverseProxyCreateUpdateComponent),
           },
           {
-            path: 'config',
+            path: 'reverse-proxy/config',
             loadComponent: () =>
               import(
-                './features/reverse-proxy-config/reverse-proxy-config.component'
+                './features/reverse-proxy/reverse-proxy-config/reverse-proxy-config.component'
               ).then((m) => m.ReverseProxyConfigComponent),
           },
           {

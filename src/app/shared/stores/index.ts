@@ -1,5 +1,6 @@
 export * from './connection.store';
 export * from './device.store';
+export * from './gateway-server.store';
 export * from './history.store';
 export * from './package.store';
 export * from './proxy-environment.store';

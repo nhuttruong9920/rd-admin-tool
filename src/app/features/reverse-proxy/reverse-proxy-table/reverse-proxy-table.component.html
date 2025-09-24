@@ -12,8 +12,8 @@
       <tr>
         <th></th>
         <th pSortableColumn="id">Id <p-sortIcon field="id" /></th>
-        <th pSortableColumn="environment">
-          Môi trường <p-sortIcon field="environment" />
+        <th pSortableColumn="gatewayServerId">
+          Gateway Server ID <p-sortIcon field="gatewayServerId" />
         </th>
         <th>Id Cluster → Prefix Path → Address</th>
         <th>Ngày</th>
@@ -30,14 +30,14 @@
               text
               size="small"
               severity="secondary"
-              (click)="detailReverseProxy.emit(reverseProxy)"
+              (click)="detail.emit(reverseProxy)"
             />
             <p-button
               icon="fas fa-pencil"
               rounded
               text
               size="small"
-              (click)="updateReverseProxy.emit(reverseProxy.id)"
+              (click)="update.emit(reverseProxy.id)"
             />
             <p-button
               icon="fas fa-trash-alt"
@@ -45,7 +45,7 @@
               text
               severity="danger"
               size="small"
-              (click)="deleteReverseProxy.emit(reverseProxy.id)"
+              (click)="delete.emit(reverseProxy.id)"
             />
           </div>
         </td>
@@ -56,19 +56,7 @@
           {{ reverseProxy.id }}
         </td>
         <td>
-          <span
-            class="inline-flex items-center font-medium whitespace-nowrap px-2 rounded-full text-sm"
-            [ngClass]="{
-              'text-orange-700 dark:text-orange-500 bg-orange-500/20':
-                reverseProxy.environment === 'production',
-              'text-blue-700 dark:text-blue-500 bg-blue-500/20':
-                reverseProxy.environment === 'staging',
-              'text-cyan-700 dark:text-cyan-500 bg-cyan-500/20':
-                reverseProxy.environment === 'development',
-            }"
-          >
-            {{ reverseProxy.environment }}
-          </span>
+          {{ reverseProxy.gatewayServerId }}
         </td>
         <td>
           @let clusterId = reverseProxy.route.clusterId;

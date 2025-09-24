@@ -1,0 +1,118 @@
+<div class="h-full p-2">
+  <p-table
+    [value]="gatewayServerStore.filteredData()"
+    size="small"
+    scrollHeight="flex"
+    scrollable
+    virtualScroll
+    [virtualScrollItemSize]="53"
+    [loading]="gatewayServerStore.isLoading()"
+  >
+    <ng-template #header>
+      <tr>
+        <th></th>
+        <th pSortableColumn="name">Tên <p-sortIcon field="name" /></th>
+        <th pSortableColumn="baseUrl">
+          Base URL <p-sortIcon field="baseUrl" />
+        </th>
+        <th>Metadata</th>
+        <th>Ngày</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-gatewayServer>
+      @let isDeleted = gatewayServer.isDeleted;
+      <tr>
+        <td>
+          <div class="flex" [class.hidden]="isDeleted">
+            <p-button
+              icon="fas fa-pencil"
+              rounded
+              text
+              size="small"
+              (click)="update.emit(gatewayServer.id)"
+            />
+            <p-button
+              icon="fas fa-trash-alt"
+              rounded
+              text
+              severity="danger"
+              size="small"
+              (click)="delete.emit(gatewayServer.id)"
+            />
+          </div>
+        </td>
+        <td
+          class="whitespace-nowrap font-bold"
+          [class.line-through]="isDeleted"
+        >
+          {{ gatewayServer.name }}
+        </td>
+        <td>
+          <a
+            [href]="gatewayServer.baseUrl"
+            target="_blank"
+            class="text-blue-500 cursor-pointer hover:underline hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500"
+          >
+            {{ gatewayServer.baseUrl }}
+          </a>
+        </td>
+        <td>
+          @if (gatewayServer.metadata) {
+            <button
+              class="flex items-center gap-1 py-1 px-2 rounded-md cursor-pointer bg-surface-100 hover:bg-surface-200"
+              (click)="displayMetadata($event, gatewayServer.metadata)"
+            >
+              <span class="text-sm text-surface-800 truncate"
+                >{{ (gatewayServer.metadata | keyvalue).length }} thuộc
+                tính</span
+              >
+              <i class="fas fa-chevron-down text-xs text-surface-800"></i>
+            </button>
+          }
+        </td>
+        <td>
+          <div class="flex items-center gap-1 col-span-4" title="Thời gian tạo">
+            <figure
+              class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full"
+            >
+              <i
+                class="text-xs far fa-clock text-yellow-400 dark:text-yellow-500"
+              ></i>
+            </figure>
+
+            <span class="text-xs text-surface-800 truncate">
+              {{ gatewayServer.createdAt | toDate }}
+            </span>
+          </div>
+
+          <div class="flex items-center gap-1 col-span-4" title="Thời gian sửa">
+            <figure
+              class="size-5 flex-shrink-0 flex-center shadow-icon rounded-full"
+            >
+              <i
+                class="text-xs far fa-rotate text-blue-400 dark:text-blue-500"
+              ></i>
+            </figure>
+
+            <span class="text-xs text-surface-800 truncate">
+              {{ gatewayServer.lastModified | toDate }}
+            </span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-popover #metadataPopover (onHide)="selectedMetadata.set(null)">
+  <div class="p-2">
+    <p class="text-sm font-semibold text-surface-700">Metadata</p>
+    <div class="p-2 space-y-2">
+      @for (key of selectedMetadata() | keyvalue; track key.key) {
+        <p class="text-sm py-1 px-2 bg-surface-100 rounded">
+          {{ key.key }}: {{ key.value }}
+        </p>
+      }
+    </div>
+  </div>
+</p-popover>
