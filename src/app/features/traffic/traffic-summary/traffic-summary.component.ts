@@ -1,15 +1,11 @@
-import {
-  Component,
-  computed,
-  inject,
-  input
-} from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 
 import { EChartsCoreOption, use as useEcharts } from 'echarts/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
 import { ThemeService } from '@core/services';
-import { TrafficSummaryDto } from '@shared/types';
+import { AbsoluteNumberPipe } from '@shared/pipes';
+import { TrafficDto } from '@shared/types';
 import { BarChart, LineChart, PieChart } from 'echarts/charts';
 import {
   DataZoomComponent,
@@ -36,58 +32,77 @@ useEcharts([
 
 @Component({
   selector: 'app-traffic-summary',
-  imports: [NgxEchartsDirective],
+  imports: [NgxEchartsDirective, AbsoluteNumberPipe],
   templateUrl: './traffic-summary.component.html',
 })
 export class TrafficSummaryComponent {
-  readonly #themeService = inject(ThemeService);
+  #themeService = inject(ThemeService);
   isDarkMode = computed(() => this.#themeService.isDarkMode());
-  trafficSummary = input.required<TrafficSummaryDto | undefined>();
+  trafficData = input.required<TrafficDto>();
 
   summaryCards = computed(() => {
-    const data = this.trafficSummary() as TrafficSummaryDto;
+    const data = this.trafficData().overview.summary;
+    const deltas = this.trafficData().deltas.summary;
+    const mode = this.trafficData().deltas.window.mode;
+
     if (!data) return [];
 
     return [
       {
         label: 'Total Requests',
-        value: data.totalRequests,
+        value: data.totalRequests.toLocaleString(),
+        percentChange: deltas.totalRequests.percentChange,
+        valueChange: deltas.totalRequests.valueChange,
+        deltaLabel: this.getDeltaLabel(deltas.totalRequests.valueChange, mode),
         icon: {
-          iconClass: 'fas fa-server',
-          bgClass: 'bg-blue-500',
+          iconClass: 'fad fa-server text-blue-600 dark:text-blue-400',
+          bgClass: 'bg-blue-500/10',
         },
       },
       {
         label: 'Total RPS',
         value: data.overallRps.toFixed(2),
+        percentChange: deltas.overallRps.percentChange,
+        valueChange: deltas.overallRps.valueChange,
+        deltaLabel: this.getDeltaLabel(deltas.overallRps.valueChange, mode),
         icon: {
-          iconClass: 'fas fa-tachometer-alt',
-          bgClass: 'bg-amber-500',
+          iconClass: 'fad fa-tachometer-alt text-amber-600 dark:text-amber-400',
+          bgClass: 'bg-amber-500/10',
         },
       },
       {
         label: 'Error Rate',
         value: data.overallErrorRate.toFixed(2),
         unit: '%',
+        percentChange: deltas.overallErrorRate.percentChange,
+        valueChange: deltas.overallErrorRate.valueChange,
+        deltaLabel: this.getDeltaLabel(
+          deltas.overallErrorRate.valueChange,
+          mode,
+        ),
         icon: {
-          iconClass: 'fas fa-exclamation-triangle',
-          bgClass: 'bg-red-500',
+          iconClass:
+            'fad fa-exclamation-triangle text-red-600 dark:text-red-400',
+          bgClass: 'bg-red-500/10',
         },
       },
       {
         label: 'P95 Latency',
         value: data.overallLatency.toFixed(2),
         unit: 'ms',
+        percentChange: deltas.overallLatency.percentChange,
+        valueChange: deltas.overallLatency.valueChange,
+        deltaLabel: this.getDeltaLabel(deltas.overallLatency.valueChange, mode),
         icon: {
-          iconClass: 'fas fa-clock',
-          bgClass: 'bg-green-500',
+          iconClass: 'fad fa-clock text-green-600 dark:text-green-400',
+          bgClass: 'bg-green-500/10',
         },
       },
     ];
   });
 
   statusCodeChart = computed<EChartsCoreOption>(() => {
-    const data = this.trafficSummary() as TrafficSummaryDto;
+    const data = this.trafficData().overview.summary;
     if (!data?.overallStatusPercentages || !data?.byStatus) return {};
 
     const statusData = Object.entries(data.overallStatusPercentages)
@@ -177,7 +192,8 @@ export class TrafficSummaryComponent {
   });
 
   methodChart = computed<EChartsCoreOption>(() => {
-    const data = this.trafficSummary() as TrafficSummaryDto;
+    const data = this.trafficData().overview.summary;
+
     if (!data?.byMethod) return {};
 
     const methodData = Object.entries(data.byMethod)
@@ -269,4 +285,34 @@ export class TrafficSummaryComponent {
       ],
     };
   });
+
+  private getDeltaLabel(valueChange: number, mode: string): string {
+    let trendLabel = '';
+
+    if (valueChange > 0) {
+      trendLabel = 'Tăng';
+    } else if (valueChange < 0) {
+      trendLabel = 'Giảm';
+    } else {
+      trendLabel = 'Không đổi';
+    }
+
+    const unitMap = {
+      s:'giây',
+      m:'phút',
+      h:'giờ',
+      d: 'ngày',
+      mo: 'tháng',
+      y: 'năm',
+    };
+
+    // extract number + unit
+    const match = mode.match(/^(\d+)([dhms])$/);
+    if (!match) return mode;
+
+    const modeValue = match[1];
+    const modeUnit = match[2];
+
+    return `${trendLabel} so với ${modeValue} ${unitMap[modeUnit as keyof typeof unitMap]}  trước`;
+  }
 }

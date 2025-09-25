@@ -1,4 +1,7 @@
 <div class="px-6 flex flex-col gap-16 h-full overflow-y-auto">
-  <app-traffic-summary [trafficSummary]="trafficStore.data()?.summary" />
-  <app-traffic-by-route [trafficByRoute]="trafficStore.data()?.byRoute" />
+  <app-traffic-time-range (submitTimeRange)="onSubmitTimeRange($event)" />
+  @if (trafficStore.data(); as trafficData) {
+    <app-traffic-summary [trafficData]="trafficData" />
+    <app-traffic-by-route [trafficByRoute]="trafficData.overview.byRoute" />
+  }
 </div>

@@ -71,7 +71,7 @@ export class VehicleHistoryMapComponent implements AfterViewInit {
     });
 
     effect(() => {
-     console.log('formattedHistory', this.formattedHistory());
+      console.log('formattedHistory', this.formattedHistory());
     });
   }
 
@@ -144,7 +144,7 @@ export class VehicleHistoryMapComponent implements AfterViewInit {
         currentColor = color;
         currentLine = new L.Polyline([latLng], {
           color,
-          weight: 4,
+          weight: 6,
         });
 
         currentLine.on('click', (e: L.LeafletMouseEvent) =>

@@ -1,3 +1,14 @@
+type TrafficTimeRange = `${number}${'s' | 'm' | 'h' | 'd' | 'mo' | 'y'}`;
+
+type TrafficReq = {
+  timeRange?: TrafficTimeRange;
+  compareMode?: TrafficTimeRange;
+  routeId?: string;
+  top?: number;
+  metrics?: string;
+  pLatency?: number;
+};
+
 type TrafficByRouteDto = {
   routeId: string;
   totalRequest: number;
@@ -25,6 +36,31 @@ type TrafficSummaryDto = {
   byStatus: Record<string, number>;
 };
 
+type DeltaValueDto = {
+  currentValue: number;
+  compareValue: number;
+  valueChange: number;
+  percentChange: number;
+};
+
+type SummaryDeltaDto = {
+  totalRequests: DeltaValueDto;
+  overallRps: DeltaValueDto;
+  overallErrorRate: DeltaValueDto;
+  overallLatency: DeltaValueDto;
+  byMethod: Record<string, DeltaValueDto>;
+  byStatus: Record<string, DeltaValueDto>;
+};
+
+type ByRouteDeltaDto = {
+  totalRequest: DeltaValueDto;
+  routeRps: DeltaValueDto;
+  routeErrorRate: DeltaValueDto;
+  routeLatency: DeltaValueDto;
+  byMethod: Record<string, DeltaValueDto>;
+  byStatus: Record<string, DeltaValueDto>;
+};
+
 type TrafficDto = {
   presetWindowTotals: {
     last1s: number;
@@ -32,8 +68,28 @@ type TrafficDto = {
     last1h: number;
     last1d: number;
   };
-  summary: TrafficSummaryDto;
-  byRoute: TrafficByRouteDto[];
+  overview: {
+    summary: TrafficSummaryDto;
+    byRoute: TrafficByRouteDto[];
+  };
+  deltas: {
+    window: {
+      mode: string;
+      currentTime: { from: string; to: string };
+    };
+    summary: SummaryDeltaDto;
+
+    byRoute: ByRouteDeltaDto[];
+  };
 };
 
-export type { TrafficDto, TrafficByRouteDto, TrafficSummaryDto };
+export type {
+  TrafficTimeRange,
+  TrafficReq,
+  TrafficDto,
+  TrafficByRouteDto,
+  TrafficSummaryDto,
+  DeltaValueDto,
+  SummaryDeltaDto,
+  ByRouteDeltaDto,
+};

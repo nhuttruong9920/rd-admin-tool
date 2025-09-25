@@ -20,6 +20,13 @@
     </ng-template>
   </app-toolbar>
 
+  <section>
+    <app-send-command-input
+      [selectedDeviceId]="selectedDeviceId()"
+      (sending)="onSendingCommand($event)"
+    />
+  </section>
+
   <section class="flex-1 h-1 overflow-y-auto">
     @if (deviceStore.isFetching()) {
       @for (i of [].constructor(10); track $index) {

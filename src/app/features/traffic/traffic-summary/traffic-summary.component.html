@@ -1,9 +1,9 @@
-<h1 class="text-2xl font-bold text-surface-800 mb-6">Tổng quan</h1>
-@if (trafficSummary(); as trafficData) {
+<h1 class="text-2xl font-bold text-surface-800 mb-6 mt-4">Tổng quan</h1>
+@if (trafficData(); as trafficData) {
   <div class="grid grid-cols-12 gap-6">
     @for (card of summaryCards(); track card.label) {
       <div
-        class="bg-surface p-4 rounded-lg shadow col-span-12 sm:col-span-6 lg:col-span-3"
+        class="bg-surface p-4 md:p-6 rounded-lg shadow col-span-12 sm:col-span-6 xl:col-span-3"
       >
         <div class="flex justify-between">
           <div>
@@ -17,12 +17,36 @@
               }
             </p>
           </div>
-          <div
+          <figure
             [class]="card.icon.bgClass"
-            class="flex-center size-10 rounded-full"
+            class="flex-center size-15 rounded-2xl"
           >
-            <i [class]="card.icon.iconClass" class="text-white text-lg"></i>
-          </div>
+            <i [class]="card.icon.iconClass" class="text-3xl"></i>
+          </figure>
+        </div>
+
+        <div>
+          @let isDownTrend = card.valueChange < 0;
+          <p
+            class="text-sm font-medium text-surface-600 mt-4"
+            [class.hidden]="!card.valueChange"
+          >
+            <span
+              class="font-bold"
+              [class]="isDownTrend ? 'text-red-500' : 'text-green-500'"
+            >
+              <i
+                [class]="
+                  isDownTrend
+                    ? 'fas fa-arrow-trend-down'
+                    : 'fas fa-arrow-trend-up'
+                "
+              >
+              </i>
+              {{ card.percentChange | absoluteNumber }}%
+            </span>
+            <span>{{ card.deltaLabel }}</span>
+          </p>
         </div>
       </div>
     }
@@ -52,7 +76,7 @@
       class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"
     ></div>
     <span class="ml-3 text-gray-600 dark:text-gray-400"
-      >Loading traffic data...</span
+      >Đang tải dữ liệu...</span
     >
   </div>
 }

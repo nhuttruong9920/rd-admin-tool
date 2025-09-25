@@ -8,6 +8,7 @@ export * from './quick-command-manager.component';
 export * from './scroll-container.component';
 export * from './split-panel.component';
 export * from './toolbar.component';
+export * from './traffic-time-range.component';
 export * from './vehicle-history-map.component';
 export * from './vehicle-icon.component';
 export * from './vehicle-marker-popup.component';

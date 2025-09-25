@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { RestService } from '@core/services';
+import { GatewayAdminRestService } from '@core/services';
 import {
   CreateUpdateReverseProxyReq,
   GatewayServerDto,
@@ -17,55 +17,42 @@ import {
   providedIn: 'root',
 })
 export class ReverseProxyApiService {
-  #restService = inject(RestService);
-
-  #baseUrl = 'https://vietmap.nangphanvan.software';
+  #restService = inject(GatewayAdminRestService);
 
   getAllReverseProxies(): Observable<ReverseProxyDto[]> {
-    return this.#restService.getCustom<ReverseProxyDto[]>(
-      this.#baseUrl,
-      '/api/reverse-proxy/get-all',
-    );
+    return this.#restService.get<ReverseProxyDto[]>('/reverse-proxy/get-all');
   }
 
   getReverseProxyById(id: string): Observable<ReverseProxyDto> {
-    return this.#restService.getCustom<ReverseProxyDto>(
-      this.#baseUrl,
-      `/api/reverse-proxy/${id}`,
-    );
+    return this.#restService.get<ReverseProxyDto>(`/reverse-proxy/${id}`);
   }
 
   createReverseProxy(
     request: CreateUpdateReverseProxyReq,
   ): Observable<ReverseProxyCtaDto> {
-    return this.#restService.postCustom<
+    return this.#restService.post<
       CreateUpdateReverseProxyReq,
       ReverseProxyCtaDto
-    >(this.#baseUrl, '/api/reverse-proxy/create', request);
+    >('/reverse-proxy/create', request);
   }
 
   updateReverseProxy(
     request: CreateUpdateReverseProxyReq,
   ): Observable<ReverseProxyCtaDto> {
-    return this.#restService.putCustom<
+    return this.#restService.put<
       CreateUpdateReverseProxyReq,
       ReverseProxyCtaDto
-    >(this.#baseUrl, `/api/reverse-proxy/edit`, request);
+    >('/reverse-proxy/edit', request);
   }
 
   deleteReverseProxy(id: string): Observable<ReverseProxyCtaDto> {
-    return this.#restService.deleteCustom<ReverseProxyCtaDto>(
-      this.#baseUrl,
-      `/api/reverse-proxy/${id}`,
-    );
+    return this.#restService.delete<ReverseProxyCtaDto>(`/reverse-proxy/${id}`);
   }
 
   getConfigYarp(gatewayServerId: string): Observable<any> {
-    return this.#restService.getCustom<string>(
-      this.#baseUrl,
-      `/api/reverse-proxy/config-yarp`,
-      { gatewayServerId },
-    );
+    return this.#restService.get<string>(`/reverse-proxy/config-yarp`, {
+      gatewayServerId,
+    });
   }
 
   applyConfigYarp(
@@ -73,11 +60,11 @@ export class ReverseProxyApiService {
     type: 'update' | 'delete' | 'unapply',
     req: ReverseProxyApplyConfigReq,
   ): Observable<ReverseProxyAppliedDto> {
-    const requestEndpoint = `/api/reverse-proxy/apply-config?gatewayServerId=${gatewayServerId}&type=${type}`;
-    return this.#restService.postCustom<
+    const requestEndpoint = `/reverse-proxy/apply-config?gatewayServerId=${gatewayServerId}&type=${type}`;
+    return this.#restService.post<
       ReverseProxyApplyConfigReq,
       ReverseProxyAppliedDto
-    >(this.#baseUrl, requestEndpoint, req);
+    >(requestEndpoint, req);
   }
 
   getPreviewConfigYarp(
@@ -85,24 +72,22 @@ export class ReverseProxyApiService {
     type: 'update' | 'delete' | 'unapply',
     req: ReverseProxyApplyConfigReq,
   ): Observable<ReverseProxyAppliedDto> {
-    const requestEndpoint = `/api/reverse-proxy/preview-config?gatewayServerId=${gatewayServerId}&type=${type}`;
-    return this.#restService.postCustom<
+    const requestEndpoint = `/reverse-proxy/preview-config?gatewayServerId=${gatewayServerId}&type=${type}`;
+    return this.#restService.post<
       ReverseProxyApplyConfigReq,
       ReverseProxyAppliedDto
-    >(this.#baseUrl, requestEndpoint, req);
+    >(requestEndpoint, req);
   }
 
   getProxyLoadBalancingPolicies(): Observable<ReverseProxyOptionDto[]> {
-    return this.#restService.getCustom<ReverseProxyOptionDto[]>(
-      this.#baseUrl,
-      `/api/reverse-proxy/load-balancing-policies`,
+    return this.#restService.get<ReverseProxyOptionDto[]>(
+      `/reverse-proxy/load-balancing-policies`,
     );
   }
 
   getProxyGatewayServers(): Observable<GatewayServerDto[]> {
-    return this.#restService.getCustom<GatewayServerDto[]>(
-      this.#baseUrl,
-      `/api/reverse-proxy/gateway-servers`,
+    return this.#restService.get<GatewayServerDto[]>(
+      `/reverse-proxy/gateway-servers`,
     );
   }
 }

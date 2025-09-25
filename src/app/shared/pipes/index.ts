@@ -1,3 +1,4 @@
+export * from './absolute-number.pipe';
 export * from './duration.pipe';
 export * from './relative-time.pipe';
 export * from './safe-html.pipe';

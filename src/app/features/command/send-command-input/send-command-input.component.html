@@ -1,0 +1,58 @@
+<form
+  novalidate
+  class="flex flex-wrap gap-0.5 md:gap-2"
+  [formGroup]="sendCommandForm"
+  (ngSubmit)="onSendCommand(0)"
+>
+  <div class="flex gap-1">
+    <p-inputgroup>
+      <p-floatlabel variant="on" class="flex-1">
+        <input
+          class="w-full"
+          id="command"
+          pInputText
+          formControlName="command"
+          type="text"
+          pSize="small"
+        />
+        <label for="command">Lệnh</label>
+      </p-floatlabel>
+      <p-floatlabel variant="on" class="flex-1">
+        <input
+          class="w-full"
+          id="label"
+          pInputText
+          formControlName="label"
+          type="text"
+          pSize="small"
+        />
+        <label for="label">Nhãn</label>
+      </p-floatlabel>
+    </p-inputgroup>
+
+    <p-splitbutton
+      #splitButton
+      label="Gửi"
+      icon="fas fa-rocket-launch"
+      (onClick)="onSendCommand(0)"
+      [model]="splitButtonMenus()"
+      appendTo="body"
+      size="small"
+    />
+  </div>
+</form>
+
+<p-dialog
+  header="Edit Profile"
+  [modal]="true"
+  [appendTo]="'body'"
+  [(visible)]="quickCommandDialogVisible"
+  [style]="{ width: '25rem' }"
+  (onHide)="onQuickCommandDialogClose()"
+>
+  <ng-template #headless>
+    <app-quick-command-manager
+      (closeDialog)="quickCommandDialogVisible.set(false)"
+    />
+  </ng-template>
+</p-dialog>

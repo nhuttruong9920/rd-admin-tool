@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { map, Observable } from 'rxjs';
 
-import { RestService } from '@core/services';
+import { RdDevRestService } from '@core/services';
 import {
   Api,
   ConnectionDto,
@@ -21,11 +21,11 @@ import {
   providedIn: 'root',
 })
 export class ConnectionApiService {
-  #restService = inject(RestService);
+  #restService = inject(RdDevRestService);
 
   getAllConnectionByGroup(): Observable<Api<ConnectionDto[]>> {
     return this.#restService.get<Api<ConnectionDto[]>>(
-      '/rd-dev/connection/getallbygroup',
+      '/connection/getallbygroup',
     );
   }
 
@@ -33,14 +33,14 @@ export class ConnectionApiService {
     request: GetRawPackageReq,
   ): Observable<Api<PackageDto[]>> {
     return this.#restService.post<GetRawPackageReq, Api<PackageDto[]>>(
-      '/rd-dev/connection/GetRawPackage',
+      '/connection/GetRawPackage',
       request,
     );
   }
 
   fetchConnectionInfo(request: GetInfoReq): Observable<Api<string>> {
     return this.#restService.post<GetInfoReq, Api<string>>(
-      '/rd-dev/connection/GetInfo',
+      '/connection/GetInfo',
       request,
     );
   }
@@ -49,14 +49,14 @@ export class ConnectionApiService {
     request: GetSTDCommandReq,
   ): Observable<Api<PackageDto[]>> {
     return this.#restService.post<GetSTDCommandReq, Api<PackageDto[]>>(
-      '/rd-dev/connection/GetSTDCommand',
+      '/connection/GetSTDCommand',
       request,
     );
   }
 
   sendCommand(request: SendCommandReq): Observable<Api<null>> {
     return this.#restService.post<SendCommandReq, Api<null>>(
-      '/rd-dev/connection/SendCommand',
+      '/connection/SendCommand',
       request,
     );
   }
@@ -65,7 +65,7 @@ export class ConnectionApiService {
     request: GetDeviceStatusReq,
   ): Observable<Api<DeviceStatusDto[]>> {
     return this.#restService.post<GetDeviceStatusReq, Api<DeviceStatusDto[]>>(
-      '/rd-dev/connection/GetDeviceStatus',
+      '/connection/GetDeviceStatus',
       request,
     );
   }
@@ -77,7 +77,7 @@ export class ConnectionApiService {
       .post<
         GetDeviceHistoryReq,
         Api<string>
-      >('/rd-dev/history/GetWaypointRequest', request)
+      >('/history/GetWaypointRequest', request)
       .pipe(
         map((res) => {
           if (!res.isSucceeded) throw new Error(res.message ?? '');

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { RestService } from '@core/services';
+import { GatewayAdminRestService } from '@core/services';
 import {
   AllGatewayServerHealthDto,
   CreateGatewayServerReq,
@@ -18,60 +18,49 @@ import {
   providedIn: 'root',
 })
 export class GatewayServerApiService {
-  #restService = inject(RestService);
-
-  #baseUrl = 'https://vietmap.nangphanvan.software';
+  #restService = inject(GatewayAdminRestService);
 
   getAll(): Observable<GatewayServerDto[]> {
-    return this.#restService.getCustom<GatewayServerDto[]>(
-      this.#baseUrl,
-      '/api/gateway-servers/get-all',
+    return this.#restService.get<GatewayServerDto[]>(
+      '/gateway-servers/get-all',
     );
   }
 
   getById(id: string): Observable<GatewayServerDto> {
-    return this.#restService.getCustom<GatewayServerDto>(
-      this.#baseUrl,
-      `/api/gateway-servers/${id}`,
-    );
+    return this.#restService.get<GatewayServerDto>(`/gateway-servers/${id}`);
   }
 
   create(request: CreateGatewayServerReq): Observable<CreateGatewayServerRes> {
-    return this.#restService.postCustom<
+    return this.#restService.post<
       CreateGatewayServerReq,
       CreateGatewayServerRes
-    >(this.#baseUrl, '/api/gateway-servers', request);
+    >('/gateway-servers', request);
   }
 
   update(
     request: UpdateGatewayServerReq & { id: string },
   ): Observable<UpdateGatewayServerRes> {
-    return this.#restService.putCustom<
+    return this.#restService.put<
       UpdateGatewayServerReq,
       UpdateGatewayServerRes
-    >(this.#baseUrl, `/api/gateway-servers/${request.id}`, request);
+    >(`/gateway-servers/${request.id}`, request);
   }
 
   delete(id: string): Observable<CtaSuccessDto> {
-    return this.#restService.deleteCustom<CtaSuccessDto>(
-      this.#baseUrl,
-      `/api/gateway-servers/${id}`,
-    );
+    return this.#restService.delete<CtaSuccessDto>(`/gateway-servers/${id}`);
   }
 
   getHealth(
     id?: string,
   ): Observable<GatewayServerHealthDto | AllGatewayServerHealthDto> {
     if (id) {
-      return this.#restService.getCustom<GatewayServerHealthDto>(
-        this.#baseUrl,
-        `/api/gateway-servers/${id}/health`,
+      return this.#restService.get<GatewayServerHealthDto>(
+        `/gateway-servers/${id}/health`,
       );
     }
 
-    return this.#restService.getCustom<AllGatewayServerHealthDto>(
-      this.#baseUrl,
-      `/api/gateway-servers/health`,
+    return this.#restService.get<AllGatewayServerHealthDto>(
+      `/gateway-servers/health`,
     );
   }
 }
