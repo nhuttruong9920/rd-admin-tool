@@ -7,10 +7,18 @@ import { TableModule } from 'primeng/table';
 
 import { ToDatePipe } from '@shared/pipes';
 import { GatewayServerStore } from '@shared/stores';
+import { DataStateComponent } from '@shared/components';
 
 @Component({
   selector: 'app-gateway-server-table',
-  imports: [TableModule, ToDatePipe, ButtonModule, KeyValuePipe, PopoverModule],
+  imports: [
+    TableModule,
+    ToDatePipe,
+    ButtonModule,
+    KeyValuePipe,
+    PopoverModule,
+    DataStateComponent,
+  ],
   templateUrl: './gateway-server-table.component.html',
 })
 export class GatewayServerTableComponent {

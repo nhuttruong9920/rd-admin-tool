@@ -4,8 +4,11 @@
       <div class="h-full w-full absolute top-0 left-0">
         <app-vehicle-history-map
           [formattedHistory]="formattedHistory()"
+          [historyChargeRanges]="historyChargeRanges()"
+          [historyStopRanges]="historyStopRanges()"
           [(isHistoryPlaying)]="isHistoryPlaying"
           [(currentPlayingIndex)]="currentPlayingIndex"
+          [batteryPercentageInterval]="batteryPercentageInterval()"
         />
       </div>
       ''
@@ -18,6 +21,7 @@
         [(isHistoryPlaying)]="isHistoryPlaying"
         [(selectedPlayingSpeed)]="selectedPlayingSpeed"
         [(currentPlayingIndex)]="currentPlayingIndex"
+        [(batteryPercentageInterval)]="batteryPercentageInterval"
       />
     </ng-template>
   </app-split-panel>

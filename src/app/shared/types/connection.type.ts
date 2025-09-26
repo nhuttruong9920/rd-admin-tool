@@ -165,7 +165,8 @@ type DeviceState =
 
 type FormattedInfo = {
   title: string;
-  value: string;
+  value: string | number;
+  unit?: string | null;
   icon: string;
   iconClass: string;
 };
@@ -247,6 +248,7 @@ type HistoryStopRange = {
   lat: number;
   long: number;
   address: string;
+  durationSecs: number;
 };
 
 type OdoMeter = [

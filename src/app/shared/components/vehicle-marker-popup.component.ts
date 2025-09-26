@@ -114,6 +114,9 @@ import { VehicleIconComponent } from './vehicle-icon.component';
 
                     <span class="text-xs text-gray-700">
                       {{ info.value }}
+                      @if (info.unit) {
+                        {{ info.unit }}
+                      }
                     </span>
                   </div>
                 }

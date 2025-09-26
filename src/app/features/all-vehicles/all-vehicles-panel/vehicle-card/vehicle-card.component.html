@@ -74,6 +74,9 @@
 
         <span class="text-xs text-surface-800 truncate">
           {{ info.value }}
+          @if (info.unit) {
+            {{ info.unit }}
+          }
         </span>
       </div>
     }

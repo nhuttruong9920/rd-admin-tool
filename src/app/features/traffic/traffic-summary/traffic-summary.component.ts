@@ -1,11 +1,11 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 
 import { EChartsCoreOption, use as useEcharts } from 'echarts/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
 import { ThemeService } from '@core/services';
 import { AbsoluteNumberPipe } from '@shared/pipes';
-import { TrafficDto } from '@shared/types';
+import { TrafficDto, TrafficTimeRange } from '@shared/types';
 import { BarChart, LineChart, PieChart } from 'echarts/charts';
 import {
   DataZoomComponent,
@@ -16,6 +16,7 @@ import {
   TooltipComponent,
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
+import { TrafficTimeRangeComponent } from '@shared/components';
 
 useEcharts([
   BarChart,
@@ -32,13 +33,15 @@ useEcharts([
 
 @Component({
   selector: 'app-traffic-summary',
-  imports: [NgxEchartsDirective, AbsoluteNumberPipe],
+  imports: [NgxEchartsDirective, AbsoluteNumberPipe, TrafficTimeRangeComponent],
   templateUrl: './traffic-summary.component.html',
 })
 export class TrafficSummaryComponent {
   #themeService = inject(ThemeService);
   isDarkMode = computed(() => this.#themeService.isDarkMode());
   trafficData = input.required<TrafficDto>();
+
+  submitTimeRange = output<TrafficTimeRange>();
 
   summaryCards = computed(() => {
     const data = this.trafficData().overview.summary;
@@ -298,16 +301,17 @@ export class TrafficSummaryComponent {
     }
 
     const unitMap = {
-      s:'giây',
-      m:'phút',
-      h:'giờ',
+      s: 'giây',
+      m: 'phút',
+      h: 'giờ',
       d: 'ngày',
       mo: 'tháng',
       y: 'năm',
     };
 
     // extract number + unit
-    const match = mode.match(/^(\d+)([dhms])$/);
+    const match = mode.match(/^(\d+)(s|m|h|d|mo|y)$/);
+
     if (!match) return mode;
 
     const modeValue = match[1];

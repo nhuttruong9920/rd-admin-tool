@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { MapService } from '@core/services';
 import { MapInstanceService } from '@shared/services';
-import { FormattedWaypoint } from '@shared/types';
+import { FormattedWaypoint, HistoryStopRange } from '@shared/types';
 import * as L from 'leaflet';
 import 'leaflet-ant-path';
 
@@ -27,7 +27,9 @@ export class VehicleHistoryMapComponent implements AfterViewInit {
   formattedHistory = input.required<FormattedWaypoint[]>();
   isHistoryPlaying = model.required<boolean>();
   currentPlayingIndex = model.required<number>();
-  // selectedWaypoint = input.required<HistoryWaypoint | undefined>();
+  historyChargeRanges = input.required<HistoryStopRange[]>();
+  historyStopRanges = input.required<HistoryStopRange[]>();
+  batteryPercentageInterval = input.required<number>();
 
   // ! map instance
   map = signal<L.Map | undefined>(undefined);
@@ -71,7 +73,18 @@ export class VehicleHistoryMapComponent implements AfterViewInit {
     });
 
     effect(() => {
-      console.log('formattedHistory', this.formattedHistory());
+      this.renderBatteryPercentageMarker(
+        this.formattedHistory(),
+        this.batteryPercentageInterval(),
+      );
+    });
+
+    effect(() => {
+      this.renderChargingMarker(this.historyChargeRanges());
+    });
+
+    effect(() => {
+      this.renderPauseParkMarker(this.historyStopRanges());
     });
   }
 
@@ -79,10 +92,6 @@ export class VehicleHistoryMapComponent implements AfterViewInit {
     this.map.set(
       this.#mapInstanceService.createMap('vehicle-history-map', {
         mapOverlays: [
-          {
-            label: 'Điểm lộ trình',
-            layer: this.historyPointLayer,
-          },
           {
             label: 'Điểm dừng',
             layer: this.historyStopLayer,
@@ -213,118 +222,6 @@ export class VehicleHistoryMapComponent implements AfterViewInit {
     );
   }
 
-  // private renderPauseParkMarker(stopRanges: HistoryStopRange[]): void {
-  //   stopRanges.forEach((range) => {
-  //     const latLng = [range.y / 1e6, range.x / 1e6] as L.LatLngTuple;
-  //     const isParking = range.duration > 300;
-
-  //     const tooltipData = {
-  //       'Địa điểm': range.info,
-  //       'Thời gian': `${this.dateService.getFormattedDate(range.fromTime)} - ${this.dateService.getFormattedDate(range.toTime)}`,
-  //       'Khoảng TG': this.dateService.formatSecondsToDuration(
-  //         range.duration,
-  //         'verbose',
-  //       ),
-  //     };
-  //     const tooltipContent = this.mapService.createToolipContent(tooltipData);
-
-  //     L.marker(latLng, {
-  //       icon: L.icon({
-  //         iconUrl: `images/map/${isParking ? 'park' : 'pause'}-min.png`,
-  //         iconSize: [40, 40],
-  //         iconAnchor: [20, 40],
-  //       }),
-  //     })
-  //       .bindTooltip(tooltipContent, {
-  //         direction: 'top',
-  //         offset: [0, -40],
-  //       })
-  //       .addTo(this.historyStopLayer);
-  //   });
-  // }
-
-  // private renderChargingMarker(chargingRanges: HistoryStopRange[]): void {
-  //   chargingRanges.forEach((range) => {
-  //     const latLng = [range.y / 1e6, range.x / 1e6] as L.LatLngTuple;
-
-  //     const tooltipData = {
-  //       'Địa điểm': range.info,
-  //       'Thời gian': `${this.dateService.getFormattedDate(range.fromTime)} - ${this.dateService.getFormattedDate(range.toTime)}`,
-  //       'Khoảng TG': this.dateService.formatSecondsToDuration(
-  //         range.duration,
-  //         'verbose',
-  //       ),
-  //     };
-  //     const tooltipContent = this.mapService.createToolipContent(tooltipData);
-
-  //     L.marker(latLng, {
-  //       icon: L.icon({
-  //         iconUrl: `images/map/charging.png`,
-  //         iconSize: [40, 40],
-  //         iconAnchor: [20, 40],
-  //       }),
-  //     })
-  //       .bindTooltip(tooltipContent, {
-  //         direction: 'top',
-  //         offset: [0, -40],
-  //       })
-  //       .addTo(this.historyChargingLayer);
-  //   });
-  // }
-
-  // private renderBatteryPercentageMarker(
-  //   history: HistoryWaypoint[] | undefined,
-  //   batteryPercentageInterval: number,
-  // ): void {
-  //   if (!history || !history.length) return;
-  //   if (!history[0].parsedOdoMeter) return;
-
-  //   this.historyBatteryPercentageLayer?.clearLayers();
-
-  //   let previousBattery = history[0].parsedOdoMeter?.battery;
-  //   history.forEach((point, index) => {
-  //     const currentBattery = point.parsedOdoMeter!.battery;
-  //     const shouldRender =
-  //       Math.abs(currentBattery - previousBattery) >=
-  //         batteryPercentageInterval ||
-  //       index === 0 ||
-  //       index === history.length - 1;
-
-  //     if (shouldRender) {
-  //       const latLng = [point.y / 1e6, point.x / 1e6] as L.LatLngTuple;
-
-  //       const tooltipData = {
-  //         'Địa điểm': point.info,
-  //         'Thời gian': `${this.dateService.getFormattedDate(point.gpsTime)}`,
-  //       };
-  //       const tooltipContent = this.mapService.createToolipContent(tooltipData);
-
-  //       L.marker(latLng, {
-  //         icon: L.icon({
-  //           iconUrl: `images/map/orange-dot.svg`,
-  //           iconSize: [16, 16],
-  //           iconAnchor: [8, 8],
-  //         }),
-  //       })
-  //         .bindTooltip(point.parsedOdoMeter?.battery + '%', {
-  //           direction: 'bottom',
-  //           offset: [0, 8],
-  //           opacity: 0.9,
-  //           permanent: true,
-  //           className: '!p-1 !leading-none !text-[10px]',
-  //         })
-  //         .bindPopup(tooltipContent, {
-  //           offset: [0, 8],
-  //           closeButton: false,
-  //           className: '!p-1',
-  //         })
-  //         .addTo(this.historyBatteryPercentageLayer);
-
-  //       previousBattery = currentBattery;
-  //     }
-  //   });
-  // }
-
   private renderDeviceMarker(
     history: FormattedWaypoint[],
     index: number,
@@ -417,5 +314,113 @@ export class VehicleHistoryMapComponent implements AfterViewInit {
     const nearestIdx = this.#mapService.findNearestPoint(e.latlng, waypoints);
     this.currentPlayingIndex.set(nearestIdx);
     this.historyDeviceMarker.openPopup();
+  }
+
+  private renderChargingMarker(chargingRanges: HistoryStopRange[]): void {
+    chargingRanges.forEach((range) => {
+      const latLng = [range.lat, range.long] as L.LatLngTuple;
+
+      const tooltipData = {
+        'Địa điểm': range.address,
+        'Thời gian': `${range.fromTime} - ${range.toTime}`,
+        'Khoảng TG': range.duration,
+      };
+      const tooltipContent = this.#mapService.createTooltipContent(tooltipData);
+
+      L.marker(latLng, {
+        icon: L.icon({
+          iconUrl: `images/map/charging.png`,
+          iconSize: [40, 40],
+          iconAnchor: [20, 40],
+        }),
+      })
+        .bindTooltip(tooltipContent, {
+          direction: 'top',
+          offset: [0, -40],
+        })
+        .addTo(this.historyChargingLayer);
+    });
+  }
+
+  private renderPauseParkMarker(stopRanges: HistoryStopRange[]): void {
+    stopRanges.forEach((range) => {
+      const latLng = [range.lat, range.long] as L.LatLngTuple;
+      const isParking = range.durationSecs > 300;
+
+      const tooltipData = {
+        'Địa điểm': range.address,
+        'Thời gian': `${range.fromTime} - ${range.toTime}`,
+        'Khoảng TG': range.duration,
+      };
+      const tooltipContent = this.#mapService.createTooltipContent(tooltipData);
+
+      L.marker(latLng, {
+        icon: L.icon({
+          iconUrl: `images/map/${isParking ? 'park' : 'pause'}-min.png`,
+          iconSize: [40, 40],
+          iconAnchor: [20, 40],
+        }),
+      })
+        .bindTooltip(tooltipContent, {
+          direction: 'top',
+          offset: [0, -40],
+        })
+        .addTo(this.historyStopLayer);
+    });
+  }
+
+  private renderBatteryPercentageMarker(
+    history: FormattedWaypoint[] | undefined,
+    batteryPercentageInterval: number,
+  ): void {
+    if (!history || !history.length) return;
+    if (!history[0].battery) return;
+
+    this.historyBatteryPercentageLayer?.clearLayers();
+
+    let previousBattery = Number(history[0].battery.value);
+    history.forEach((point, index) => {
+      const currentBattery = Number(point.battery.value);
+      const shouldRender =
+        Math.abs(currentBattery - previousBattery) >=
+          batteryPercentageInterval ||
+        index === 0 ||
+        index === history.length - 1;
+
+      if (shouldRender) {
+        const latLng = [point.lat, point.long] as L.LatLngTuple;
+
+        const tooltipData = {
+          'Địa điểm': point.address,
+          'Thời gian': point.gpsTime,
+          Pin: point.battery.value + (point.battery.unit ?? ''),
+        };
+        const tooltipContent =
+          this.#mapService.createTooltipContent(tooltipData);
+
+        L.marker(latLng, {
+          icon: L.icon({
+            iconUrl: `images/map/orange-dot.svg`,
+            iconSize: [16, 16],
+            iconAnchor: [8, 8],
+          }),
+        })
+          .bindTooltip(point.battery.value + (point.battery.unit ?? ''), {
+            direction: 'bottom',
+            offset: [0, 8],
+            opacity: 0.9,
+            permanent: true,
+            className: '!p-1 !leading-none !text-[10px]',
+          })
+          .bindPopup(tooltipContent, {
+            offset: [0, 8],
+            closeButton: false,
+            className: '!p-1',
+          })
+          .addTo(this.historyBatteryPercentageLayer);
+
+        previousBattery = currentBattery;
+      }
+    });
   }
 }

@@ -81,7 +81,7 @@ export type ShowInfoMethod = 'showToast' | 'onCopy';
               ></p-button>
             </div>
             <span
-              class="absolute -top-4 left-1/2 -translate-x-1/2 font-semibold text-theme-600"
+              class="absolute -top-4 left-1/2 -translate-x-1/2 font-semibold text-surface-600"
               >{{ fontSize() }}</span
             >
           </div>

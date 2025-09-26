@@ -1,10 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import {
-  Component,
-  computed,
-  input,
-  output
-} from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 
 import { ButtonModule } from 'primeng/button';
 
@@ -42,7 +37,7 @@ type DataStateDisplay = {
     <h1 class="text-2xl font-bold">
       {{ stateDisplay().titleKey }}
     </h1>
-    <p class="text-pretty text-theme-600 text-center !m-0">
+    <p class="text-pretty text-surface-600 text-center !m-0">
       {{ stateDisplay().descriptionKey }}
     </p>
     @if (showActionButton()) {

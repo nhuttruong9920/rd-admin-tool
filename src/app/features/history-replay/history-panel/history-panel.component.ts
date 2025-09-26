@@ -31,6 +31,8 @@ import { HistoryCardComponent } from './history-card/history-card.component';
 import { HistoryControlsComponent } from '@shared/components/history-controls.component';
 import { cdkScrollWhileHidden } from '@shared/utils';
 import { SkeletonModule } from 'primeng/skeleton';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @Component({
   selector: 'app-history-panel',
@@ -47,6 +49,8 @@ import { SkeletonModule } from 'primeng/skeleton';
     HistoryControlsComponent,
     DataStateComponent,
     SkeletonModule,
+    FloatLabelModule,
+    InputNumberModule,
   ],
   templateUrl: './history-panel.component.html',
 })
@@ -64,6 +68,8 @@ export class HistoryPanelComponent {
   selectedPlayingSpeed = model.required<number>();
   currentPlayingIndex = model.required<number>();
   selectedDeviceId = signal<string | null>(null);
+
+  batteryPercentageInterval = model.required<number>();
 
   historyReq = output<GetDeviceHistoryReq>();
 

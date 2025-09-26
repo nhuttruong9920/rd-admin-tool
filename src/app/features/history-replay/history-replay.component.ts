@@ -30,7 +30,12 @@ export class HistoryReplayComponent implements OnInit {
     () => this.historyStore.data()?.map((item) => item.formatted) ?? [],
   );
 
+  historyChargeRanges = computed(() => this.historyStore.chargeRanges() ?? []);
+
+  historyStopRanges = computed(() => this.historyStore.stopRanges() ?? []);
+
   // playing
+  batteryPercentageInterval = signal<number>(5);
   isHistoryPlaying = linkedSignal(() => {
     void this.historyStore.data();
     return false;

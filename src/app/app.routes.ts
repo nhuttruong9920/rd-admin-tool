@@ -31,11 +31,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: '',
-        redirectTo: 'monitor/all-vehicles',
-        pathMatch: 'full',
-      },
-      {
         path: 'monitor',
         component: createWrapperComponent([DeviceStore, HistoryStore]),
         children: [
@@ -143,6 +138,10 @@ export const routes: Routes = [
             title: 'Chatbot',
           },
         ],
+      },
+      {
+        path: '**',
+        redirectTo: 'monitor/all-vehicles',
       },
     ],
   },

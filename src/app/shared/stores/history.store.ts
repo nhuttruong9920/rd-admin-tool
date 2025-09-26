@@ -40,6 +40,7 @@ export const HistoryStore = signalStore(
       isLoading: computed(() => _loading() && data() !== null),
       isError: computed(() => !_loading() && !data() && error()),
       stopRanges: computed(() => getHistoryStopRanges(data(), dateService)),
+      chargeRanges: computed(() => getHistoryChargeRanges(data(), dateService)),
     };
   }),
   withMethods((store) => {
@@ -239,7 +240,8 @@ function getBatteryInfo(
 
   return {
     title: 'Pin',
-    value: `${batteryValue}%`,
+    value: batteryValue,
+    unit: '%',
     icon: icon,
     iconClass: iconClass,
     isCharging,
@@ -259,7 +261,8 @@ function getRange(parsedOdoMeter: OdoMeter | null): FormattedInfo {
   const range = parsedOdoMeter[2];
   return {
     title: 'QĐ còn lại',
-    value: `${range} km`,
+    value: range,
+    unit: 'km',
     icon: 'fas fa-road',
     iconClass: 'text-teal-500 dark:text-teal-400',
   };
@@ -268,7 +271,8 @@ function getRange(parsedOdoMeter: OdoMeter | null): FormattedInfo {
 function getGpsSpeed(speed: number): FormattedInfo {
   return {
     title: 'Vận tốc GSP',
-    value: `${speed / 100} km/h`,
+    value: speed / 100,
+    unit: 'km/h',
     icon: 'fas fa-microchip',
     iconClass: 'text-violet-500 dark:text-violet-400',
   };
@@ -293,7 +297,8 @@ function getVehicleSpeed(parsedOdoMeter: OdoMeter | null): FormattedInfo {
   const vehicleSpeed = parsedOdoMeter[4];
   return {
     title: 'Vận tốc xe',
-    value: `${vehicleSpeed} km/h`,
+    value: vehicleSpeed,
+    unit: 'km/h',
     icon: 'fas fa-car',
     iconClass: 'text-fuchsia-500 dark:text-fuchsia-400',
   };
@@ -360,7 +365,8 @@ function getVoltage(parsedOdoMeter: OdoMeter | null): FormattedInfo {
 
   return {
     title: 'Điện áp',
-    value: `${voltage.toFixed(2)} V`,
+    value: voltage.toFixed(2),
+    unit: 'V',
     icon: 'fas fa-bolt',
     iconClass: 'text-orange-500 dark:text-orange-400',
   };
@@ -389,7 +395,8 @@ function getOdometer(parsedOdoMeter: OdoMeter | null): FormattedInfo {
 
   return {
     title: 'Odo',
-    value: `${odometer.toLocaleString()} km`,
+    value: odometer.toLocaleString(),
+    unit: 'km',
     icon: 'fas fa-meter',
     iconClass: 'text-lime-500 dark:text-lime-400',
   };
@@ -477,8 +484,78 @@ function getHistoryStopRanges(
     lat: stopRange.y / 1e6,
     long: stopRange.x / 1e6,
     address: stopRange.info?.trim() || 'Không xác định',
+    durationSecs: stopRange.duration,
     duration: dateService.formatSecondsToDuration(stopRange.duration),
     fromTime: dateService.getFormattedDate(stopRange.fromTime),
     toTime: dateService.getFormattedDate(stopRange.toTime),
+  }));
+}
+
+function getHistoryChargeRanges(
+  historyData: HistoryWaypoint[] | null,
+  dateService: DateService,
+): HistoryStopRange[] {
+  if (!historyData || !historyData.length) return [];
+  if (historyData[0].formatted.battery.isCharging) return [];
+
+  const byPassInterval = 10; // passing uncharged points between charging points
+
+  const chargingRanges = [];
+  let currentRange = null;
+  let nonChargingCount = 0; // counter for consecutive non-charging points
+
+  for (let i = 0; i < historyData.length; i++) {
+    const point = historyData[i];
+    const isCharging = point.formatted.battery.isCharging || false;
+
+    if (isCharging) {
+      nonChargingCount = 0;
+
+      if (!currentRange) {
+        currentRange = {
+          startIndex: i,
+          fromTime: point.gpsTime,
+          x: point.x,
+          y: point.y,
+          info: point.info,
+          endIndex: i,
+          duration: 0,
+          toTime: point.gpsTime,
+        };
+      } else {
+        currentRange.endIndex = i;
+        currentRange.toTime = point.gpsTime;
+        currentRange.duration = currentRange.toTime - currentRange.fromTime;
+      }
+    } else {
+      if (currentRange) {
+        nonChargingCount++;
+
+        if (nonChargingCount >= byPassInterval) {
+          currentRange.duration = currentRange.toTime - currentRange.fromTime;
+          chargingRanges.push(currentRange);
+
+          currentRange = null;
+          nonChargingCount = 0;
+        }
+      }
+    }
+  }
+
+  if (currentRange) {
+    currentRange.duration = currentRange.toTime - currentRange.fromTime;
+    chargingRanges.push(currentRange);
+  }
+
+  return chargingRanges.map((chargingRange) => ({
+    startIndex: chargingRange.startIndex,
+    endIndex: chargingRange.endIndex,
+    lat: chargingRange.y / 1e6,
+    long: chargingRange.x / 1e6,
+    durationSecs: chargingRange.duration,
+    address: chargingRange.info?.trim() || 'Không xác định',
+    duration: dateService.formatSecondsToDuration(chargingRange.duration),
+    fromTime: dateService.getFormattedDate(chargingRange.fromTime),
+    toTime: dateService.getFormattedDate(chargingRange.toTime),
   }));
 }

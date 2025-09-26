@@ -59,6 +59,19 @@
         </div>
 
         <div class="flex gap-1 justify-end">
+          <p-floatlabel variant="on" class="flex-1">
+            <p-inputnumber
+              [(ngModel)]="batteryPercentageInterval"
+              [showButtons]="true"
+              size="small"
+              [min]="0"
+              [max]="100"
+              suffix="%"
+              inputStyleClass="w-30"
+            />
+            <label for="batteryPercentageInterval">Khoảng pin</label>
+          </p-floatlabel>
+
           <p-button
             icon="fas fa-magnifying-glass"
             size="small"

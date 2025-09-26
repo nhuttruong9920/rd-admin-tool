@@ -1,4 +1,7 @@
-<h1 class="text-2xl font-bold text-surface-800 mb-6 mt-4">Tổng quan</h1>
+<div class="flex justify-between items-center">
+  <h1 class="text-2xl font-bold text-surface-800 mb-6 mt-4">Tổng quan</h1>
+  <app-traffic-time-range (submitTimeRange)="submitTimeRange.emit($event)" />
+</div>
 @if (trafficData(); as trafficData) {
   <div class="grid grid-cols-12 gap-6">
     @for (card of summaryCards(); track card.label) {

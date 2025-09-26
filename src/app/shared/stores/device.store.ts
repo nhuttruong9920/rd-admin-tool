@@ -235,12 +235,14 @@ function getOdoMeterMode(
     {
       title: 'Normal',
       value: 'Normal',
+      unit: '',
       icon: 'fas fa-steering-wheel',
       iconClass: 'text-surface-500 dark:text-surface-400',
     },
     {
       title: 'Eco',
       value: 'Eco',
+      unit: '',
       icon: 'fas fa-seedling',
       iconClass: 'text-green-500 dark:text-green-400',
     },
@@ -257,6 +259,7 @@ function getBatteryInfo(
     return {
       title: 'Pin',
       value: 'N/A',
+      unit: '',
       icon: 'fas fa-battery-exclamation',
       iconClass: 'text-surface-500 dark:text-surface-400',
       isCharging: false,
@@ -291,7 +294,8 @@ function getBatteryInfo(
 
   return {
     title: 'Pin',
-    value: `${batteryValue}%`,
+    value: batteryValue,
+    unit: '%',
     icon: icon,
     iconClass: iconClass,
     isCharging,
@@ -311,7 +315,8 @@ function getRange(parsedOdoMeter: OdoMeter | null): FormattedInfo {
   const range = parsedOdoMeter[2];
   return {
     title: 'QĐ còn lại',
-    value: `${range} km`,
+    value: range,
+    unit: 'km',
     icon: 'fas fa-road',
     iconClass: 'text-teal-500 dark:text-teal-400',
   };
@@ -320,7 +325,8 @@ function getRange(parsedOdoMeter: OdoMeter | null): FormattedInfo {
 function getGpsSpeed(speed: number): FormattedInfo {
   return {
     title: 'Vận tốc GSP',
-    value: `${speed / 100} km/h`,
+    value: speed / 100,
+    unit: 'km/h',
     icon: 'fas fa-microchip',
     iconClass: 'text-violet-500 dark:text-violet-400',
   };
@@ -345,7 +351,8 @@ function getVehicleSpeed(parsedOdoMeter: OdoMeter | null): FormattedInfo {
   const vehicleSpeed = parsedOdoMeter[4];
   return {
     title: 'Vận tốc xe',
-    value: `${vehicleSpeed} km/h`,
+    value: vehicleSpeed,
+    unit: 'km/h',
     icon: 'fas fa-car',
     iconClass: 'text-fuchsia-500 dark:text-fuchsia-400',
   };
@@ -356,6 +363,7 @@ function getOdoTime(parsedOdoMeter: OdoMeter | null): FormattedInfo {
     return {
       title: 'Thời gian',
       value: 'N/A',
+      unit: '',
       icon: 'fas fa-clock',
       iconClass: 'text-emerald-500 dark:text-emerald-400',
     };
@@ -412,7 +420,8 @@ function getVoltage(parsedOdoMeter: OdoMeter | null): FormattedInfo {
 
   return {
     title: 'Điện áp',
-    value: `${voltage.toFixed(2)} V`,
+    value: voltage.toFixed(2),
+    unit: 'V',
     icon: 'fas fa-bolt',
     iconClass: 'text-orange-500 dark:text-orange-400',
   };
@@ -423,6 +432,7 @@ function getOdometer(parsedOdoMeter: OdoMeter | null): FormattedInfo {
     return {
       title: 'Odo',
       value: 'N/A',
+      unit: '',
       icon: 'fas fa-meter',
       iconClass: 'text-lime-500 dark:text-lime-400',
     };
@@ -441,7 +451,8 @@ function getOdometer(parsedOdoMeter: OdoMeter | null): FormattedInfo {
 
   return {
     title: 'Odo',
-    value: `${odometer.toLocaleString()} km`,
+    value: odometer.toLocaleString(),
+    unit: 'km',
     icon: 'fas fa-meter',
     iconClass: 'text-lime-500 dark:text-lime-400',
   };
