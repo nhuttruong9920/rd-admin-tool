@@ -1,7 +1,6 @@
 import {
   Component,
   computed,
-  effect,
   inject,
   linkedSignal,
   OnInit,
@@ -9,9 +8,9 @@ import {
 } from '@angular/core';
 import { SplitPanelComponent } from '@shared/components';
 import { VehicleHistoryMapComponent } from '@shared/components/vehicle-history-map.component';
-import { DeviceStore, HistoryStore } from '@shared/stores';
-import { HistoryPanelComponent } from './history-panel/history-panel.component';
+import { ConnectionStore, HistoryStore } from '@shared/stores';
 import { GetDeviceHistoryReq } from '@shared/types';
+import { HistoryPanelComponent } from './history-panel/history-panel.component';
 
 @Component({
   selector: 'app-history-replay',
@@ -23,7 +22,7 @@ import { GetDeviceHistoryReq } from '@shared/types';
   templateUrl: './history-replay.component.html',
 })
 export class HistoryReplayComponent implements OnInit {
-  deviceStore = inject(DeviceStore);
+  connectionStore = inject(ConnectionStore);
   historyStore = inject(HistoryStore);
 
   formattedHistory = computed(
@@ -46,21 +45,15 @@ export class HistoryReplayComponent implements OnInit {
     return 0;
   });
   selectedWaypoint = computed(
-    () => this.historyStore.data()?.[this.currentPlayingIndex()],
+    () => this.historyStore.data()?.[this.currentPlayingIndex()]?.formatted,
   );
 
   isStepHolding = signal<boolean>(false);
   holdDelayTimeout: ReturnType<typeof setTimeout> | null = null;
   holdInterval: ReturnType<typeof setInterval> | null = null;
 
-  constructor() {
-    effect(() => {
-      console.log('historyStore.data()', this.historyStore.stopRanges());
-    });
-  }
-
   ngOnInit(): void {
-    this.deviceStore.ensureData();
+    this.connectionStore.ensureData();
   }
 
   fetchHistory(request: GetDeviceHistoryReq): void {

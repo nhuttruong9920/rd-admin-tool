@@ -7,7 +7,9 @@ import {
   DeviceStore,
   GatewayServerStore,
   HistoryStore,
+  PackageStore,
   ReverseProxyStore,
+  SendCommandStore,
 } from '@shared/stores';
 import { createWrapperComponent } from '@shared/utils';
 
@@ -58,6 +60,25 @@ export const routes: Routes = [
               ),
             title: 'Gửi lệnh',
           },
+          {
+            path: 'vehicle-detail',
+            component: createWrapperComponent([
+              DeviceStore,
+              HistoryStore,
+              PackageStore,
+              SendCommandStore,
+            ]),
+            children: [
+              {
+                path: '',
+                loadComponent: () =>
+                  import(
+                    './features/vehicle-detail/vehicle-detail.component'
+                  ).then((m) => m.VehicleDetailComponent),
+                title: 'Chi tiết xe',
+              },
+            ],
+          },
         ],
       },
       {
@@ -73,6 +94,7 @@ export const routes: Routes = [
               import('./features/gateway-server/gateway-server.component').then(
                 (m) => m.GatewayServerComponent,
               ),
+            title: 'Gateway Server',
           },
           {
             path: 'gateway-server/create',
@@ -80,6 +102,7 @@ export const routes: Routes = [
               import(
                 './features/gateway-server/gateway-server-create-update/gateway-server-create-update.component'
               ).then((m) => m.GatewayServerCreateUpdateComponent),
+            title: 'Gateway Server',
           },
           {
             path: 'gateway-server/:id/update',
@@ -87,6 +110,7 @@ export const routes: Routes = [
               import(
                 './features/gateway-server/gateway-server-create-update/gateway-server-create-update.component'
               ).then((m) => m.GatewayServerCreateUpdateComponent),
+            title: 'Gateway Server',
           },
           {
             path: 'reverse-proxy',
@@ -94,6 +118,7 @@ export const routes: Routes = [
               import('./features/reverse-proxy/reverse-proxy.component').then(
                 (m) => m.ReverseProxyComponent,
               ),
+            title: 'Reverse Proxy',
           },
           {
             path: 'reverse-proxy/create',
@@ -101,6 +126,7 @@ export const routes: Routes = [
               import(
                 './features/reverse-proxy/reverse-proxy-create-update/reverse-proxy-create-update.component'
               ).then((m) => m.ReverseProxyCreateUpdateComponent),
+            title: 'Reverse Proxy',
           },
           {
             path: 'reverse-proxy/:id/update',
@@ -108,6 +134,7 @@ export const routes: Routes = [
               import(
                 './features/reverse-proxy/reverse-proxy-create-update/reverse-proxy-create-update.component'
               ).then((m) => m.ReverseProxyCreateUpdateComponent),
+            title: 'Reverse Proxy',
           },
           {
             path: 'reverse-proxy/config',
@@ -115,6 +142,7 @@ export const routes: Routes = [
               import(
                 './features/reverse-proxy/reverse-proxy-config/reverse-proxy-config.component'
               ).then((m) => m.ReverseProxyConfigComponent),
+            title: 'Reverse Proxy',
           },
           {
             path: 'traffic',

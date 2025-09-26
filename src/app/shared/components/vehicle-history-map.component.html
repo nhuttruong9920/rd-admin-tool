@@ -1,1 +1,36 @@
 <div id="vehicle-history-map" class="splitter-map h-full w-full"></div>
+
+@if (selectedWaypoint() && selectedWaypoint()?.battery?.value !== "N/A") {
+  <div
+    class="absolute bottom-2 right-2 rounded z-500 bg-white duration-200"
+    [class]="isOdoChartExpanded() ? 'w-100 h-60' : 'w-8 h-8'"
+  >
+    <div
+      [class.hidden]="!isOdoChartExpanded()"
+      class="flex flex-col gap-1 p-2 h-full"
+    >
+      <div class="flex items-center justify-between gap-2">
+        <p class="font-bold">Biểu đồ odometer</p>
+        <button
+          class="size-6 cursor-pointer hover:bg-gray-100 rounded-full flex-center text-gray-500"
+          (click)="isOdoChartExpanded.set(!isOdoChartExpanded())"
+        >
+          <i class="fas fa-close"></i>
+        </button>
+      </div>
+      <div class="flex-1 w-full">
+        <app-history-odo-chart
+          [formattedWaypoints]="formattedHistory()"
+        />
+      </div>
+    </div>
+
+    <button
+      class="w-full h-full cursor-pointer flex-center"
+      (click)="isOdoChartExpanded.set(!isOdoChartExpanded())"
+      [class.!hidden]="isOdoChartExpanded()"
+    >
+      <i class="fas fa-chart-mixed"></i>
+    </button>
+  </div>
+}

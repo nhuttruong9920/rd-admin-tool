@@ -95,6 +95,9 @@ import { VehicleIconComponent } from './vehicle-icon.component';
 
                   <span class="text-xs text-gray-700">
                     {{ device().battery.value }}
+                    @if (device().battery.unit) {
+                      {{ device().battery.unit }}
+                    }
                   </span>
                 </div>
                 @for (info of waypointInfo(); track info.title) {

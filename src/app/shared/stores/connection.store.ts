@@ -25,11 +25,12 @@ export const ConnectionStore = signalStore(
     providedIn: 'root',
   },
   withState(initialState),
-  withComputed(({ data, _loading, searchTerm }) => ({
+  withComputed(({ data, _loading, searchTerm, error }) => ({
     count: computed(() => data()?.length ?? 0),
     isFetching: computed(() => _loading() && !data()),
     isLoading: computed(() => _loading() && data() !== null),
-    filteredConnections: computed(() => {
+    isError: computed(() => !_loading() && !data() && error()),
+    filteredData: computed(() => {
       const allConnections = data();
       const search = searchTerm().toLowerCase().trim();
 
@@ -46,7 +47,7 @@ export const ConnectionStore = signalStore(
     const connectionApiService = inject(ConnectionApiService);
 
     const methods = {
-      ensureConnections: (): void => {
+      ensureData: (): void => {
         if (!store.data()) {
           methods.load();
         }

@@ -1,4 +1,4 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -34,10 +34,4 @@ export class CommandComponent {
   // !package display
   selectedPackageDisplay = signal<PackageDisplay>('parsed');
   dataFontSizePx = signal<number>(12);
-
-  constructor() {
-    effect(() => {
-      console.log('selectedDeviceId', this.selectedDeviceId());
-    });
-  }
 }

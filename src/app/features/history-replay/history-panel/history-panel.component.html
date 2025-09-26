@@ -1,20 +1,23 @@
 <div class="h-full w-full p-2 flex flex-col gap-2">
   <!-- toolbar -->
   <section>
-    <app-toolbar headerTitle="Xem lại lộ trình">
+    <app-toolbar
+      headerTitle="Xem lại lộ trình"
+      [amount]="historyStore.data()?.length"
+    >
       <ng-template #rightContent>
         <p-select
-          [options]="deviceStatus()"
+          [options]="connection()"
           appendTo="body"
           [(ngModel)]="selectedDeviceId"
-          optionLabel="id"
-          optionValue="id"
+          optionLabel="imei"
+          optionValue="imei"
           placeholder="Chọn thiết bị"
           class="w-full"
           [filter]="true"
           size="small"
         >
-          <ng-template #selectedItem let-selectedOption>
+          <!-- <ng-template #selectedItem let-selectedOption>
             @if (selectedOption) {
               <div class="flex items-center gap-1">
                 <app-vehicle-icon
@@ -33,7 +36,7 @@
               />
               <div>{{ device.id }}</div>
             </div>
-          </ng-template>
+          </ng-template> -->
         </p-select>
 
         <div class="flex gap-1">
@@ -112,7 +115,7 @@
       @if (historyStore.isFetching()) {
         <div>
           @for (i of [].constructor(10); track idx; let idx = $index) {
-            <p-skeleton height="80px" width="100%" styleClass="mb-2" />
+            <p-skeleton height="80px" width="100%" class="mb-2" />
           }
         </div>
       }
@@ -129,6 +132,8 @@
           <cdk-virtual-scroll-viewport
             #cdkViewport
             itemSize="129"
+            minBufferPx="1290"
+            maxBufferPx="1290"
             class="h-full"
           >
             <div

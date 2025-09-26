@@ -9,14 +9,14 @@
           [(isHistoryPlaying)]="isHistoryPlaying"
           [(currentPlayingIndex)]="currentPlayingIndex"
           [batteryPercentageInterval]="batteryPercentageInterval()"
+          [selectedWaypoint]="selectedWaypoint()"
         />
       </div>
-      ''
     </ng-template>
 
     <ng-template #rightContent>
       <app-history-panel
-        [deviceStatus]="deviceStore.data() ?? []"
+        [connection]="connectionStore.data() ?? []"
         (historyReq)="fetchHistory($event)"
         [(isHistoryPlaying)]="isHistoryPlaying"
         [(selectedPlayingSpeed)]="selectedPlayingSpeed"

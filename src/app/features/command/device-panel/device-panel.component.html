@@ -9,10 +9,10 @@
     [allowEmpty]="false"
     size="small"
   />
-  <app-toolbar headerTitle="Danh sách thiết bị" [amount]="deviceStore.count()">
+  <app-toolbar headerTitle="Danh sách thiết bị" [amount]="connectionStore.count()">
     <ng-template #rightContent>
       <app-input-search
-        (textChanged)="deviceStore.setSearchTerm($event)"
+        (textChanged)="connectionStore.setSearchTerm($event)"
         placeholder="Tìm kiếm IMEI"
         size="small"
       />
@@ -28,37 +28,37 @@
   </section>
 
   <section class="flex-1 h-1 overflow-y-auto">
-    @if (deviceStore.isFetching()) {
+    @if (connectionStore.isFetching()) {
       @for (i of [].constructor(10); track $index) {
         <p-skeleton height="2rem" class="mb-2" />
       }
     }
-    @if (deviceStore.isError()) {
+    @if (connectionStore.isError()) {
       <app-data-state
         state="error"
         [showActionButton]="true"
-        (actionButtonClick)="deviceStore.refresh()"
+        (actionButtonClick)="connectionStore.refresh()"
       />
     }
 
-    @if (deviceStore.filteredData()) {
+    @if (connectionStore.filteredData()) {
       <cdk-virtual-scroll-viewport #cdkViewport itemSize="40" class="h-full">
         <div
           *cdkVirtualFor="
-            let device of deviceStore.filteredData();
+            let connection of connectionStore.filteredData();
             let idx = index
           "
         >
           <button
             class="w-full flex items-center gap-1 p-2 hover:bg-surface-100 cursor-pointer transition-colors duration-300 rounded"
-            [class.!bg-primary-100]="selectedDeviceId() === device.id"
-            (click)="selectedDeviceId.set(device.id)"
+            [class.!bg-primary-100]="selectedDeviceId() === connection.imei"
+            (click)="selectedDeviceId.set(connection.imei)"
           >
-            <app-vehicle-icon
-              [iconClass]="'bg-car_' + device.formatted.state"
+            <!-- <app-vehicle-icon
+              [iconClass]="'bg-car_' + connection.formatted.state"
               [isSmall]="true"
-            />
-            <div>{{ device.id }}</div>
+            /> -->
+            <div>{{ connection.imei }}</div>
           </button>
         </div>
       </cdk-virtual-scroll-viewport>

@@ -44,6 +44,9 @@
 
       <span class="text-xs text-surface-800 truncate">
         {{ waypoint().formatted.battery.value }}
+        @if (waypoint().formatted.battery.unit) {
+          {{ waypoint().formatted.battery.unit }}
+        }
       </span>
     </div>
     @for (info of waypointInfo(); track info.title) {

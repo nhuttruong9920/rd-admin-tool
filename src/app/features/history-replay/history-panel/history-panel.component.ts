@@ -21,18 +21,22 @@ import {
   ToolbarComponent,
   VehicleIconComponent,
 } from '@shared/components';
-import { DeviceState, DeviceStatus, GetDeviceHistoryReq } from '@shared/types';
-import { ButtonModule } from 'primeng/button';
-import { SelectModule } from 'primeng/select';
-import { MenuModule } from 'primeng/menu';
-import { MenuItem } from 'primeng/api';
-import { HistoryStore } from '@shared/stores';
-import { HistoryCardComponent } from './history-card/history-card.component';
 import { HistoryControlsComponent } from '@shared/components/history-controls.component';
+import { HistoryStore } from '@shared/stores';
+import {
+  ConnectionDto,
+  DeviceState,
+  GetDeviceHistoryReq
+} from '@shared/types';
 import { cdkScrollWhileHidden } from '@shared/utils';
-import { SkeletonModule } from 'primeng/skeleton';
+import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { MenuModule } from 'primeng/menu';
+import { SelectModule } from 'primeng/select';
+import { SkeletonModule } from 'primeng/skeleton';
+import { HistoryCardComponent } from './history-card/history-card.component';
 
 @Component({
   selector: 'app-history-panel',
@@ -63,7 +67,7 @@ export class HistoryPanelComponent {
 
   readonly cdkViewport = viewChild<CdkVirtualScrollViewport>('cdkViewport');
 
-  deviceStatus = input.required<DeviceStatus[]>();
+  connection = input.required<ConnectionDto[]>();
   isHistoryPlaying = model.required<boolean>();
   selectedPlayingSpeed = model.required<number>();
   currentPlayingIndex = model.required<number>();

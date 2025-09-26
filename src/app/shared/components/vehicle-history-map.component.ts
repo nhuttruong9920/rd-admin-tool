@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { MapService } from '@core/services';
+import { HistoryOdoChartComponent } from '@shared/component/history-odo-chart.component';
 import { MapInstanceService } from '@shared/services';
 import { FormattedWaypoint, HistoryStopRange } from '@shared/types';
 import * as L from 'leaflet';
@@ -15,7 +16,7 @@ import 'leaflet-ant-path';
 
 @Component({
   selector: 'app-vehicle-history-map',
-  imports: [],
+  imports: [HistoryOdoChartComponent],
   templateUrl: './vehicle-history-map.component.html',
   providers: [MapInstanceService],
 })
@@ -30,6 +31,7 @@ export class VehicleHistoryMapComponent implements AfterViewInit {
   historyChargeRanges = input.required<HistoryStopRange[]>();
   historyStopRanges = input.required<HistoryStopRange[]>();
   batteryPercentageInterval = input.required<number>();
+  selectedWaypoint = input.required<FormattedWaypoint | undefined>();
 
   // ! map instance
   map = signal<L.Map | undefined>(undefined);
@@ -47,6 +49,9 @@ export class VehicleHistoryMapComponent implements AfterViewInit {
   });
   historyPolyline!: L.LayerGroup;
   historyDeviceMarker!: L.Marker;
+
+  // chart
+  isOdoChartExpanded = signal<boolean>(true);
 
   constructor() {
     effect(() => {

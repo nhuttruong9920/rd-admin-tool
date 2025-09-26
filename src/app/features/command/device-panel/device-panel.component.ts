@@ -6,6 +6,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { SkeletonModule } from 'primeng/skeleton';
 import { take } from 'rxjs';
 
+import { ToastService } from '@core/services';
 import {
   DataStateComponent,
   InputSearchComponent,
@@ -13,10 +14,9 @@ import {
   VehicleIconComponent,
 } from '@shared/components';
 import { ConnectionApiService } from '@shared/services';
-import { DeviceStore } from '@shared/stores';
+import { ConnectionStore } from '@shared/stores';
 import { LabelValue, SendCommandReq } from '@shared/types';
 import { SendCommandInputComponent } from '../send-command-input/send-command-input.component';
-import { ToastService } from '@core/services';
 
 @Component({
   selector: 'app-device-panel',
@@ -37,7 +37,7 @@ export class DevicePanelComponent {
   #connectionApiService = inject(ConnectionApiService);
   #toastService = inject(ToastService);
 
-  deviceStore = inject(DeviceStore);
+  connectionStore = inject(ConnectionStore);
   tabs = signal<LabelValue<number>[]>([
     {
       label: 'Gói tin',
@@ -52,17 +52,15 @@ export class DevicePanelComponent {
   selectedDeviceId = model.required<string | null>();
 
   constructor() {
-    this.deviceStore.ensureData();
+    this.connectionStore.ensureData();
   }
 
   onSendingCommand(request: SendCommandReq): void {
-    console.log('request', request);
     this.#connectionApiService
       .sendCommand(request)
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.deviceStore.refresh();
           this.#toastService.showSuccess(
             `Lệnh ${request.command} gửi tới ${request.imei}  thành công!`,
           );
