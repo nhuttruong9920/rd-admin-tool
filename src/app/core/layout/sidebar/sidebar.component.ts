@@ -36,14 +36,18 @@ export class SidebarComponent {
           label: 'Tất cả xe',
           icon: 'far fa-cars',
           routerLink: '/monitor/all-vehicles',
-          attention: true,
+          command: (): void => this.closeOverlayNav(),
+        },
+        {
+          label: 'Chi tiết xe',
+          icon: 'far fa-car-side',
+          routerLink: '/monitor/vehicle-detail',
           command: (): void => this.closeOverlayNav(),
         },
         {
           label: 'Xem lại lộ trình',
           icon: 'far fa-history',
           routerLink: '/monitor/history-replay',
-          badge: '1',
           command: (): void => this.closeOverlayNav(),
         },
         {

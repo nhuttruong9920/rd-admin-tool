@@ -1,0 +1,19 @@
+<div class="p-2 md:p-4 md:px-16 relative flex flex-col gap-4">
+  <section class="flex items-center gap-2 mb-2">
+    <p-button icon="fas fa-arrow-left" severity="secondary" (click)="back()" />
+    <h1 class="font-bold text-xl text-surface-700 truncate">
+      Chi tiết xe {{ selectedConnectionId() }}
+    </h1>
+  </section>
+
+  <!-- information -->
+  <app-detail-information
+    [selectedConnectionStatus]="selectedConnectionStatus()"
+  />
+
+  <!-- history -->
+  <app-detail-history [selectedConnectionStatus]="selectedConnectionStatus()" />
+
+  <!-- command -->
+  <app-detail-command />
+</div>

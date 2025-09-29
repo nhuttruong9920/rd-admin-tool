@@ -11,11 +11,16 @@
       [isCharging]="isCharging"
     />
     <div class="flex-1">
-      <p class="font-bold text-lg leading-none my-[5px]">
-        {{ waypoint().unitId }}
+      <p class="">
+        <span
+          class="text-xs text-primary-800 dark:text-primary-400 bg-primary-500/20 rounded px-1 py-0.5"
+        >
+          #{{ index() }}
+        </span>
       </p>
       <p class="text-xs text-surface-800 leading-none">
-        {{ waypoint().formatted.gpsTime }}
+        {{ waypoint().formatted.gpsTime }} -
+        {{ waypoint().formatted.relativeGpsTime }}
       </p>
     </div>
   </section>

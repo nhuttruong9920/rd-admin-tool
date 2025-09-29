@@ -3,13 +3,12 @@ import { AuthGuard } from '@core/auth/guards/auth.guard';
 import { ReturnGuard } from '@core/auth/guards/return.guard';
 
 import { LayoutComponent } from '@core/layout/layout.component';
+import { VehicleDetailService } from '@features/vehicle-detail/vehicle-detail.service';
 import {
+  ConnectionStore,
   DeviceStore,
   GatewayServerStore,
-  HistoryStore,
-  PackageStore,
   ReverseProxyStore,
-  SendCommandStore,
 } from '@shared/stores';
 import { createWrapperComponent } from '@shared/utils';
 
@@ -34,7 +33,11 @@ export const routes: Routes = [
     children: [
       {
         path: 'monitor',
-        component: createWrapperComponent([DeviceStore]),
+        component: createWrapperComponent([
+          ConnectionStore,
+          DeviceStore,
+          VehicleDetailService,
+        ]),
         children: [
           {
             path: 'all-vehicles',
@@ -62,22 +65,19 @@ export const routes: Routes = [
           },
           {
             path: 'vehicle-detail',
-            component: createWrapperComponent([
-              DeviceStore,
-              HistoryStore,
-              PackageStore,
-              SendCommandStore,
-            ]),
-            children: [
-              {
-                path: '',
-                loadComponent: () =>
-                  import(
-                    './features/vehicle-detail/vehicle-detail.component'
-                  ).then((m) => m.VehicleDetailComponent),
-                title: 'Chi tiết xe',
-              },
-            ],
+            loadComponent: () =>
+              import('./features/vehicle-detail/vehicle-detail.component').then(
+                (m) => m.VehicleDetailComponent,
+              ),
+            title: 'Chi tiết xe',
+          },
+          {
+            path: 'vehicle-detail/:id',
+            loadComponent: () =>
+              import(
+                './features/vehicle-detail/detail-page/detail-page.component'
+              ).then((m) => m.DetailPageComponent),
+            title: 'Chi tiết xe',
           },
         ],
       },
@@ -102,7 +102,7 @@ export const routes: Routes = [
               import(
                 './features/gateway-server/gateway-server-create-update/gateway-server-create-update.component'
               ).then((m) => m.GatewayServerCreateUpdateComponent),
-            title: 'Gateway Server',
+            title: 'Tạo Gateway Server',
           },
           {
             path: 'gateway-server/:id/update',
@@ -110,7 +110,7 @@ export const routes: Routes = [
               import(
                 './features/gateway-server/gateway-server-create-update/gateway-server-create-update.component'
               ).then((m) => m.GatewayServerCreateUpdateComponent),
-            title: 'Gateway Server',
+            title: 'Cập nhật Gateway Server',
           },
           {
             path: 'reverse-proxy',
@@ -126,7 +126,7 @@ export const routes: Routes = [
               import(
                 './features/reverse-proxy/reverse-proxy-create-update/reverse-proxy-create-update.component'
               ).then((m) => m.ReverseProxyCreateUpdateComponent),
-            title: 'Reverse Proxy',
+            title: 'Tạo Reverse Proxy',
           },
           {
             path: 'reverse-proxy/:id/update',
@@ -134,7 +134,7 @@ export const routes: Routes = [
               import(
                 './features/reverse-proxy/reverse-proxy-create-update/reverse-proxy-create-update.component'
               ).then((m) => m.ReverseProxyCreateUpdateComponent),
-            title: 'Reverse Proxy',
+            title: 'Cập nhật Reverse Proxy',
           },
           {
             path: 'reverse-proxy/config',
@@ -142,7 +142,7 @@ export const routes: Routes = [
               import(
                 './features/reverse-proxy/reverse-proxy-config/reverse-proxy-config.component'
               ).then((m) => m.ReverseProxyConfigComponent),
-            title: 'Reverse Proxy',
+            title: 'Cấu hình Reverse Proxy',
           },
           {
             path: 'traffic',

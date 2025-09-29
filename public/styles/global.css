@@ -2,10 +2,10 @@
   touch-action: manipulation;
 }
 
-html,
+/* html,
 body {
   font-family: "Nunito Sans", sans-serif;
-}
+} */
 
 body {
   background-color: var(--surface-100);
@@ -16,10 +16,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-surface-300 rounded-full;
+  @apply bg-surface-400 rounded-full;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-surface-400;
+  @apply bg-surface-600;
 }
 
 ::-webkit-scrollbar-corner {

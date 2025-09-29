@@ -10,6 +10,7 @@ import { HistoryWaypoint } from '@shared/types';
 export class HistoryCardComponent {
   waypoint = input.required<HistoryWaypoint>();
   isSelected = input.required<boolean>();
+  index = input.required<number>();
 
   waypointInfo = computed(() => [
     { ...this.waypoint().formatted.voltage, colSpan: 'col-span-1' },

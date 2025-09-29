@@ -56,7 +56,7 @@ import { environment } from 'src/environments/environment';
         </defs>
       </svg>
       <span
-        class="absolute bottom-[2%] left-[62%] font-black italic select-none text-primary cursor-default leading-none"
+        class="absolute bottom-[3.5%] left-[62%] font-black italic select-none text-primary cursor-default leading-none"
         [class]="isVersionShowing() ? 'block' : 'hidden'"
         [style.font-size.px]="versionTextSize()"
       >

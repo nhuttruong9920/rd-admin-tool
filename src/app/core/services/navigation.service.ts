@@ -21,6 +21,14 @@ export class NavigationService {
     });
   }
 
+  toVehicleDetail(id?: string): void {
+    if (id) {
+      this.#router.navigate(['/monitor/vehicle-detail', id]);
+    } else {
+      this.#router.navigate(['/monitor/vehicle-detail']);
+    }
+  }
+
   toReplayHistory(params: Params = {}): void {
     this.#router.navigate(['/monitor/history-replay'], {
       queryParams: params,

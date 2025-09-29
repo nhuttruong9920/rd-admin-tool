@@ -32,7 +32,7 @@ import { filter, Subscription } from 'rxjs';
         @if (items.children) {
           <div class="mb-4" [class.!mb-0]="last">
             <h6
-              class="text-sm font-bold text-surface-500 mb-1 ml-4"
+              class="text-sm font-medium text-surface-500 mb-1 ml-4"
               [class.hidden]="isCompact"
             >
               {{ items.label }}

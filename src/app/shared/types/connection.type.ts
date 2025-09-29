@@ -174,7 +174,9 @@ type FormattedInfo = {
 type FormattedDevice = {
   address: string;
   pingTime: string;
+  relativePingTime: string;
   gpsTime: string;
+  relativeGpsTime: string;
   state: DeviceState;
   lat: number;
   long: number;
@@ -220,6 +222,7 @@ type FormattedWaypoint = {
   id: string;
   address: string;
   gpsTime: string;
+  relativeGpsTime: string;
   state: DeviceState;
   lat: number;
   long: number;

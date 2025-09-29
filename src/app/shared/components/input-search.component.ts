@@ -20,7 +20,7 @@ import { Subject, debounceTime, takeUntil } from 'rxjs';
   imports: [FormsModule, NgClass],
   template: `<div class="relative">
     <span class="relative z-20">
-      <div class="absolute top-1/2 left-3 -translate-y-1/2 text-surface-400">
+      <div class="absolute top-1/2 left-3 -translate-y-1/2 text-surface-500">
         @if (loading()) {
           <i class="fa-solid fa-spinner-third fa-spin"></i>
         } @else {
@@ -31,7 +31,7 @@ import { Subject, debounceTime, takeUntil } from 'rxjs';
         #input
         name="search"
         type="text"
-        class=" w-full rounded-md border border-surface-300 bg-surface px-9 hover:border-surface-500 focus-visible:outline-none focus-visible:border-primary-500  duration-300 transition-colors placeholder:text-surface-400"
+        class=" w-full rounded-md border border-surface-400 bg-surface px-9 hover:border-surface-500 focus-visible:outline-none focus-visible:border-primary-500  duration-300 transition-colors placeholder:text-surface-400"
         [ngClass]="size() === 'small' ? 'py-1 placeholder:text-sm' : 'py-2'"
         [class]="styleClass()"
         [(ngModel)]="value"

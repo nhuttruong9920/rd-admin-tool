@@ -21,9 +21,6 @@ const initialState: CommonStoreInitialState<ConnectionDto[]> = {
 };
 
 export const ConnectionStore = signalStore(
-  {
-    providedIn: 'root',
-  },
   withState(initialState),
   withComputed(({ data, _loading, searchTerm, error }) => ({
     count: computed(() => data()?.length ?? 0),

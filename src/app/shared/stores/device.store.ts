@@ -173,7 +173,9 @@ function getFormattedDevice(
   return {
     address: deviceStatusDto.last.info || 'Không xác định',
     pingTime: dateService.getFormattedDate(deviceStatusDto.pingTime),
+    relativePingTime: dateService.getRelativeTime(deviceStatusDto.pingTime),
     gpsTime: dateService.getFormattedDate(deviceStatusDto.gpsTime),
+    relativeGpsTime: dateService.getRelativeTime(deviceStatusDto.gpsTime),
     state: getDeviceState(
       deviceStatusDto.last.status,
       selectedTime,

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  version: '1.1.0',
+  version: '1.1.1',
   rdDevApiUrl: 'https://binhlh-gw.vietmap.vn/rd-dev',
   // gatewayAdminApiUrl: 'https://gateway.nangphanvan.software/api',
   gatewayAdminApiUrl: 'https://binhlh-gw.vietmap.vn/gw-admin/api',

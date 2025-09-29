@@ -4,9 +4,8 @@ import {
   patchState,
   signalStore,
   withComputed,
-  withHooks,
   withMethods,
-  withState,
+  withState
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { ConnectionApiService } from '@shared/services';
@@ -103,14 +102,6 @@ export const HistoryStore = signalStore(
 
     return methods;
   }),
-  withHooks({
-    onInit() {
-      console.log('HistoryStore onInit');
-    },
-    onDestroy() {
-      console.log('HistoryStore onDestroy');
-    },
-  }),
 );
 
 // Helper functions for device processing
@@ -124,6 +115,7 @@ function getFormattedWaypoint(
     id: deviceStatusDto.unitId,
     address: deviceStatusDto.info?.trim() || 'Không xác định',
     gpsTime: dateService.getFormattedDate(deviceStatusDto.gpsTime),
+    relativeGpsTime: dateService.getRelativeTime(deviceStatusDto.gpsTime),
     state: getDeviceState(
       deviceStatusDto.status,
       deviceStatusDto.gpsTime,

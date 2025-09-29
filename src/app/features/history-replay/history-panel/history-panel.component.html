@@ -132,8 +132,6 @@
           <cdk-virtual-scroll-viewport
             #cdkViewport
             itemSize="129"
-            minBufferPx="1290"
-            maxBufferPx="1290"
             class="h-full"
           >
             <div
@@ -144,6 +142,7 @@
             >
               <app-history-card
                 [id]="idx"
+                [index]="idx"
                 [waypoint]="waypoint"
                 [isSelected]="currentPlayingIndex() === idx"
                 (click)="selectWaypoint(idx)"
