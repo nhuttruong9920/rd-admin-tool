@@ -8,7 +8,6 @@ import {
   inject,
   input,
   model,
-  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -23,11 +22,7 @@ import {
 } from '@shared/components';
 import { HistoryControlsComponent } from '@shared/components/history-controls.component';
 import { HistoryStore } from '@shared/stores';
-import {
-  ConnectionDto,
-  DeviceState,
-  GetDeviceHistoryReq
-} from '@shared/types';
+import { ConnectionDto, DeviceState, GetDeviceHistoryReq } from '@shared/types';
 import { cdkScrollWhileHidden } from '@shared/utils';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -37,6 +32,7 @@ import { MenuModule } from 'primeng/menu';
 import { SelectModule } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
 import { HistoryCardComponent } from './history-card/history-card.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-history-panel',
@@ -71,11 +67,8 @@ export class HistoryPanelComponent {
   isHistoryPlaying = model.required<boolean>();
   selectedPlayingSpeed = model.required<number>();
   currentPlayingIndex = model.required<number>();
-  selectedDeviceId = signal<string | null>(null);
 
   batteryPercentageInterval = model.required<number>();
-
-  historyReq = output<GetDeviceHistoryReq>();
 
   dateRangeItems: MenuItem[] = this.#dateService.dateRangeOptions.map(
     (item) => ({
@@ -87,6 +80,8 @@ export class HistoryPanelComponent {
       },
     }),
   );
+
+  selectedDeviceId = signal<string | null>(null);
 
   historyFromDate = signal<Date>(
     this.#activatedRoute.snapshot.queryParams['fromTime']
@@ -105,19 +100,32 @@ export class HistoryPanelComponent {
       : this.#dateService.getToday('end'),
   );
 
+  hasLoaded = signal(false);
+
   constructor() {
     effect(() => {
       cdkScrollWhileHidden(this.cdkViewport(), this.currentPlayingIndex());
     });
+
+    this.#activatedRoute.queryParams
+      .pipe(takeUntilDestroyed())
+      .subscribe((params) => {
+        const queryId = params['id'];
+        if (queryId) {
+          this.selectedDeviceId.set(queryId);
+          this.loadHistory();
+        }
+      });
   }
 
   protected loadHistory(): void {
+    this.hasLoaded.set(true);
     if (!this.selectedDeviceId()) {
       this.#toastService.showError('Vui lòng chọn thiết bị');
       return;
     }
     const request: GetDeviceHistoryReq = {
-      id: this.selectedDeviceId() ?? '',
+      id: this.selectedDeviceId()!,
       fromTime: this.#dateService.getFormattedDate(
         this.historyFromDate(),
         'yyyy-MM-dd HH:mm:ss',
@@ -128,11 +136,7 @@ export class HistoryPanelComponent {
       ),
     };
 
-    this.historyReq.emit({
-      id: request.id,
-      fromTime: request.fromTime,
-      toTime: request.toTime,
-    });
+    this.historyStore.fetchHistory(request);
   }
 
   protected selectWaypoint(index: number): void {

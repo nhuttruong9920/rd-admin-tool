@@ -41,11 +41,17 @@
       <app-data-state
         state="pleaseSelect"
         title="Chưa chọn IMEI"
-        description="Vui lòng chọn một số IMEI bên phải để hiển thị lệnh"
+        description="Vui lòng <b class='text-primary'>chọn một IMEI</b> bên phải để hiển thị lệnh"
       />
     } @else {
       @if (packageStore.isError()) {
         <app-data-state state="error" />
+      }
+
+      @if (packageStore.isFetching()) {
+       @for (i of [].constructor(10); track $index) {
+        <p-skeleton height="4rem" class="mb-2" />
+      }
       }
 
       @if (packageStore.data()) {

@@ -38,7 +38,7 @@ echarts.use([
     <section
       echarts
       [options]="combinedChartOptions()"
-      [theme]="isDarkMode() ? 'dark' : 'light'"
+
       class="w-full h-full"
     ></section>
   `,

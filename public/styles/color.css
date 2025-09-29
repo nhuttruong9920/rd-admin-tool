@@ -13,30 +13,30 @@
   --primary-950: var(--p-primary-950);
 
   --surface: #ffffff;
-  --surface-50: var(--p-neutral-50);
-  --surface-100: var(--p-neutral-100);
-  --surface-200: var(--p-neutral-200);
-  --surface-300: var(--p-neutral-300);
-  --surface-400: var(--p-neutral-400);
-  --surface-500: var(--p-neutral-500);
-  --surface-600: var(--p-neutral-600);
-  --surface-700: var(--p-neutral-700);
-  --surface-800: var(--p-neutral-800);
-  --surface-900: var(--p-neutral-900);
-  --surface-950: var(--p-neutral-950);
+  --surface-50: var(--p-surface-50);
+  --surface-100: var(--p-surface-100);
+  --surface-200: var(--p-surface-200);
+  --surface-300: var(--p-surface-300);
+  --surface-400: var(--p-surface-400);
+  --surface-500: var(--p-surface-500);
+  --surface-600: var(--p-surface-600);
+  --surface-700: var(--p-surface-700);
+  --surface-800: var(--p-surface-800);
+  --surface-900: var(--p-surface-900);
+  --surface-950: var(--p-surface-950);
 }
 
 .dark {
-  --surface: var(--p-neutral-950);
-  --surface-50: var(--p-neutral-900);
-  --surface-100: var(--p-neutral-800);
-  --surface-200: var(--p-neutral-700);
-  --surface-300: var(--p-neutral-600);
-  --surface-400: var(--p-neutral-500);
-  --surface-500: var(--p-neutral-400);
-  --surface-600: var(--p-neutral-300);
-  --surface-700: var(--p-neutral-200);
-  --surface-800: var(--p-neutral-100);
-  --surface-900: var(--p-neutral-50);
+  --surface: var(--p-surface-950);
+  --surface-50: var(--p-surface-900);
+  --surface-100: var(--p-surface-800);
+  --surface-200: var(--p-surface-700);
+  --surface-300: var(--p-surface-600);
+  --surface-400: var(--p-surface-500);
+  --surface-500: var(--p-surface-400);
+  --surface-600: var(--p-surface-300);
+  --surface-700: var(--p-surface-200);
+  --surface-800: var(--p-surface-100);
+  --surface-900: var(--p-surface-50);
   --surface-950: #fff;
 }

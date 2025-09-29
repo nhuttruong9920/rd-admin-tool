@@ -13,13 +13,19 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 
-import { NavigationService, StorageService } from '@core/services';
+import {
+  NavigationService,
+  StorageService
+} from '@core/services';
 import {
   QuickCommandManagerComponent,
   VehicleIconComponent,
 } from '@shared/components';
 import { LSKeys } from '@shared/constants';
-import { DeviceStatus } from '@shared/types';
+import {
+  CommandExecutionService
+} from '@shared/services';
+import { DeviceStatus, SendCommandReq } from '@shared/types';
 
 @Component({
   selector: 'app-vehicle-card',
@@ -35,6 +41,7 @@ import { DeviceStatus } from '@shared/types';
 export class VehicleCardComponent implements OnInit {
   #storageService = inject(StorageService);
   #navigationService = inject(NavigationService);
+  #commandExecutionService = inject(CommandExecutionService);
 
   device = input.required<DeviceStatus>();
 
@@ -77,7 +84,7 @@ export class VehicleCardComponent implements OnInit {
       (command) => ({
         label: command,
         icon: 'fas fa-terminal',
-        command: (): void => this.executeCommand(command),
+        command: (): void => this.sendQuickCommand(command),
       }),
     );
 
@@ -102,10 +109,10 @@ export class VehicleCardComponent implements OnInit {
 
       { separator: true },
 
-      {
-        label: 'Xem nhanh lộ trình',
-        icon: 'far fa-history',
-      },
+      // {
+      //   label: 'Xem nhanh lộ trình',
+      //   icon: 'far fa-history',
+      // },
       {
         label: 'Trang xem lại lộ trình',
         icon: 'far fa-arrow-up-right-from-square',
@@ -117,11 +124,15 @@ export class VehicleCardComponent implements OnInit {
     return menuItems;
   }
 
-  private executeCommand(command: string): void {
-    // TODO: Implement command execution logic
-    console.log(
-      `Executing command: ${command} for device: ${this.device().id} (IMEI: ${this.device().last?.imei})`,
-    );
+  private sendQuickCommand(command: string): void {
+    const request: SendCommandReq = {
+      imei: this.device().id,
+      command,
+      label: '',
+      priority: 0,
+    };
+
+    this.#commandExecutionService.executeCommand(request);
   }
 
   protected onQuickCommandDialogClose(): void {

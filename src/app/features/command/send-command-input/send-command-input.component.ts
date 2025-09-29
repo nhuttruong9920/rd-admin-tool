@@ -4,8 +4,7 @@ import {
   inject,
   input,
   OnInit,
-  output,
-  signal,
+  signal
 } from '@angular/core';
 import {
   FormControl,
@@ -16,6 +15,7 @@ import {
 import { StorageService, ToastService } from '@core/services';
 import { QuickCommandManagerComponent } from '@shared/components';
 import { LSKeys } from '@shared/constants';
+import { CommandExecutionService } from '@shared/services';
 import { SendCommandReq } from '@shared/types';
 import { MenuItem } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
@@ -41,6 +41,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 export class SendCommandInputComponent implements OnInit {
   #toastService = inject(ToastService);
   #storageService = inject(StorageService);
+  #commandExecutionService = inject(CommandExecutionService);
 
   quickCommandDialogVisible = signal<boolean>(false);
   quickCommands = signal<string[]>([]);
@@ -54,7 +55,6 @@ export class SendCommandInputComponent implements OnInit {
 
   splitButtonMenus = computed<MenuItem[]>(() => this.updateSplitButtonMenus());
 
-  sending = output<SendCommandReq>();
 
   ngOnInit(): void {
     this.loadLocalCommands();
@@ -78,7 +78,7 @@ export class SendCommandInputComponent implements OnInit {
       priority,
     };
 
-    this.sending.emit(request);
+    this.#commandExecutionService.executeCommand(request);
   }
 
   private updateSplitButtonMenus(): MenuItem[] {

@@ -45,6 +45,5 @@ export class GatewayServerTableComponent {
         this.metadataPopover()?.align();
       }
     }
-    console.log('displayMetadata', metadata);
   }
 }

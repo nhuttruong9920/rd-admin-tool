@@ -4,18 +4,15 @@ import { FormsModule } from '@angular/forms';
 
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SkeletonModule } from 'primeng/skeleton';
-import { take } from 'rxjs';
 
-import { ToastService } from '@core/services';
 import {
   DataStateComponent,
   InputSearchComponent,
   ToolbarComponent,
   VehicleIconComponent,
 } from '@shared/components';
-import { ConnectionApiService } from '@shared/services';
 import { ConnectionStore } from '@shared/stores';
-import { LabelValue, SendCommandReq } from '@shared/types';
+import { LabelValue } from '@shared/types';
 import { SendCommandInputComponent } from '../send-command-input/send-command-input.component';
 
 @Component({
@@ -34,9 +31,6 @@ import { SendCommandInputComponent } from '../send-command-input/send-command-in
   templateUrl: './device-panel.component.html',
 })
 export class DevicePanelComponent {
-  #connectionApiService = inject(ConnectionApiService);
-  #toastService = inject(ToastService);
-
   connectionStore = inject(ConnectionStore);
   tabs = signal<LabelValue<number>[]>([
     {
@@ -53,23 +47,5 @@ export class DevicePanelComponent {
 
   constructor() {
     this.connectionStore.ensureData();
-  }
-
-  onSendingCommand(request: SendCommandReq): void {
-    this.#connectionApiService
-      .sendCommand(request)
-      .pipe(take(1))
-      .subscribe({
-        next: () => {
-          this.#toastService.showSuccess(
-            `Lệnh ${request.command} gửi tới ${request.imei}  thành công!`,
-          );
-        },
-        error: () => {
-          this.#toastService.showError(
-            `Lệnh ${request.command} gửi tới ${request.imei} thất bại!`,
-          );
-        },
-      });
   }
 }

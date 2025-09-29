@@ -10,8 +10,7 @@ import {
   output,
   signal,
   TemplateRef,
-  viewChild,
-  effect,
+  viewChild
 } from '@angular/core';
 
 import { BadgeModule } from 'primeng/badge';
@@ -120,14 +119,6 @@ export class ToolbarComponent {
       requestAnimationFrame(() => {
         this.hasAnimation.set(true);
       });
-    });
-
-    effect(() => {
-      console.log(this.toolbarContainer().nativeElement.clientWidth);
-    });
-
-    effect(() => {
-      console.log(this.isToolbarSmall());
     });
   }
 

@@ -115,7 +115,6 @@ export const DeviceStore = signalStore(
             });
           }),
           catchError((error) => {
-            console.log('error', error);
             patchState(store, {
               _loading: false,
               error: error.message || 'Lỗi khi tải dữ liệu thiết bị',
@@ -466,7 +465,7 @@ function parseOdoMeter(paramsString: string): OdoMeter | null {
     }
     return (JSON.parse(parsedParams.OdoMeter) as OdoMeter) ?? null;
   } catch (error) {
-    console.log('error', error);
+    console.error(error);
     return null;
   }
 }

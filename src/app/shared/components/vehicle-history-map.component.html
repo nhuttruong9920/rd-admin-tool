@@ -2,7 +2,7 @@
 
 @if (selectedWaypoint() && selectedWaypoint()?.battery?.value !== "N/A") {
   <div
-    class="absolute bottom-2 right-2 rounded z-500 bg-white duration-200"
+    class="absolute bottom-2 right-2 rounded z-500 bg-white/60 backdrop-blur duration-200"
     [class]="isOdoChartExpanded() ? 'w-100 h-60' : 'w-8 h-8'"
   >
     <div
@@ -10,7 +10,7 @@
       class="flex flex-col gap-1 p-2 h-full"
     >
       <div class="flex items-center justify-between gap-2">
-        <p class="font-bold">Biểu đồ odometer</p>
+        <p class="font-bold text-black">Biểu đồ odometer</p>
         <button
           class="size-6 cursor-pointer hover:bg-gray-100 rounded-full flex-center text-gray-500"
           (click)="isOdoChartExpanded.set(!isOdoChartExpanded())"

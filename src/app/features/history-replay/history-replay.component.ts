@@ -6,10 +6,10 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
+
 import { SplitPanelComponent } from '@shared/components';
 import { VehicleHistoryMapComponent } from '@shared/components/vehicle-history-map.component';
 import { ConnectionStore, HistoryStore } from '@shared/stores';
-import { GetDeviceHistoryReq } from '@shared/types';
 import { HistoryPanelComponent } from './history-panel/history-panel.component';
 
 @Component({
@@ -20,6 +20,7 @@ import { HistoryPanelComponent } from './history-panel/history-panel.component';
     HistoryPanelComponent,
   ],
   templateUrl: './history-replay.component.html',
+  providers: [HistoryStore],
 })
 export class HistoryReplayComponent implements OnInit {
   connectionStore = inject(ConnectionStore);
@@ -54,9 +55,5 @@ export class HistoryReplayComponent implements OnInit {
 
   ngOnInit(): void {
     this.connectionStore.ensureData();
-  }
-
-  fetchHistory(request: GetDeviceHistoryReq): void {
-    this.historyStore.fetchHistory(request);
   }
 }

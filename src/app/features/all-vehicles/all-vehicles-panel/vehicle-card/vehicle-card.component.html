@@ -17,10 +17,13 @@
       [isCharging]="isCharging"
     />
     <div class="flex-1">
-      <p class="font-bold text-lg leading-none my-[5px]">{{ device().id }}</p>
+      <p class="font-bold text-base leading-none">{{ device().id }}</p>
       <p class="text-xs text-surface-800 leading-none truncate">
-        ping: {{ device().formatted.pingTime }} - gps:
-        {{ device().formatted.gpsTime }}
+        ping: {{ device().formatted.pingTime }}
+      </p>
+
+      <p class="text-xs text-surface-800 leading-none truncate">
+        gps : {{ device().formatted.gpsTime }}
       </p>
     </div>
     <div>

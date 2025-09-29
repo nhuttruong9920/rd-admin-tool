@@ -17,7 +17,6 @@
     <ng-template #rightContent>
       <app-history-panel
         [connection]="connectionStore.data() ?? []"
-        (historyReq)="fetchHistory($event)"
         [(isHistoryPlaying)]="isHistoryPlaying"
         [(selectedPlayingSpeed)]="selectedPlayingSpeed"
         [(currentPlayingIndex)]="currentPlayingIndex"

@@ -23,7 +23,6 @@
   <section>
     <app-send-command-input
       [selectedDeviceId]="selectedDeviceId()"
-      (sending)="onSendingCommand($event)"
     />
   </section>
 
@@ -51,7 +50,7 @@
         >
           <button
             class="w-full flex items-center gap-1 p-2 hover:bg-surface-100 cursor-pointer transition-colors duration-300 rounded"
-            [class.!bg-primary-100]="selectedDeviceId() === connection.imei"
+            [class.!bg-primary-500/30]="selectedDeviceId() === connection.imei"
             (click)="selectedDeviceId.set(connection.imei)"
           >
             <!-- <app-vehicle-icon

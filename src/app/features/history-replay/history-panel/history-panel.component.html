@@ -105,11 +105,11 @@
 
   <!-- vehicle list -->
   <section class="flex-1 overflow-y-auto">
-    @if (!selectedDeviceId()) {
+    @if (!selectedDeviceId() || !hasLoaded()) {
       <app-data-state
         state="pleaseSelect"
         title="Chưa chọn IMEI"
-        description="Vui lòng chọn một số IMEI bên trên để xem lại lộ trình"
+        description="Vui lòng <b class='text-primary'>chọn một IMEI</b> bên trên và  <b class='text-primary'>nhấn tải</b> để xem lại lộ trình"
       />
     } @else {
       @if (historyStore.isFetching()) {

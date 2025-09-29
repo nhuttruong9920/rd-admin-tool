@@ -21,6 +21,7 @@ import {
   ShowInfoMethod,
 } from '../display-setting/display-setting.component';
 import { PackageCardComponent } from './package-card/package-card.component';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-package',
@@ -32,6 +33,7 @@ import { PackageCardComponent } from './package-card/package-card.component';
     FormsModule,
     PackageCardComponent,
     DataStateComponent,
+    SkeletonModule,
   ],
   templateUrl: './package.component.html',
   providers: [PackageStore],

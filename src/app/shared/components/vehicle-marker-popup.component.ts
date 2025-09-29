@@ -8,9 +8,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { StorageService } from '@core/services';
 import { AllVehiclesService } from '@features/all-vehicles/all-vehicles.service';
 import { LSKeys } from '@shared/constants';
-import { FormattedDevice } from '@shared/types';
+import { FormattedDevice, SendCommandReq } from '@shared/types';
 import { ScrollContainerComponent } from './scroll-container.component';
 import { VehicleIconComponent } from './vehicle-icon.component';
+import { CommandExecutionService } from '@shared/services';
 
 @Component({
   selector: 'app-vehicle-marker-popup',
@@ -140,7 +141,12 @@ import { VehicleIconComponent } from './vehicle-icon.component';
                   />
                   <label for="newCommand">Lệnh</label>
                 </p-floatlabel>
-                <p-button label="Gửi" size="small" icon="fas fa-send" />
+                <p-button
+                  label="Gửi"
+                  size="small"
+                  icon="fas fa-send"
+                  (onClick)="sendCommand()"
+                />
               </div>
               <div class="flex flex-wrap gap-1">
                 @for (command of quickCommands; track command) {
@@ -170,6 +176,7 @@ import { VehicleIconComponent } from './vehicle-icon.component';
 export class VehicleMarkerPopupComponent {
   #storageService = inject(StorageService);
   #allVehiclesService = inject(AllVehiclesService);
+  #commandExecutionService = inject(CommandExecutionService);
 
   deviceId = input.required<string>();
   device = input.required<FormattedDevice>();
@@ -203,4 +210,15 @@ export class VehicleMarkerPopupComponent {
   quickCommands =
     this.#storageService.getLocal<string[]>(LSKeys.QUICK_COMMANDS, true) || [];
   inputCommand = signal<string>('');
+
+  sendCommand(): void {
+    const request: SendCommandReq = {
+      imei: this.deviceId(),
+      command: this.inputCommand(),
+      label: '',
+      priority: 0,
+    };
+
+    this.#commandExecutionService.executeCommand(request);
+  }
 }

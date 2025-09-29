@@ -19,9 +19,8 @@ import {
   BehaviorSubject,
   catchError,
   combineLatest,
-  finalize,
   of,
-  switchMap,
+  switchMap
 } from 'rxjs';
 
 import { NavigationService, ToastService } from '@core/services';
@@ -170,7 +169,6 @@ export class ReverseProxyConfigComponent {
   ): void {
     this.#reverseProxyApiService
       .applyConfigYarp(environment, type, { routeIds })
-      .pipe(finalize(() => console.log('finalize')))
       .subscribe({
         next: () => {
           this.#toastService.showSuccess(

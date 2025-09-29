@@ -28,7 +28,7 @@ export class NavigationService {
   }
 
   toSendCommand(params: Params = {}): void {
-    this.#router.navigate(['/monitor/send-command'], {
+    this.#router.navigate(['/monitor/command'], {
       queryParams: params,
     });
   }

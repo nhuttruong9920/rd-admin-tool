@@ -34,7 +34,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'monitor',
-        component: createWrapperComponent([DeviceStore, HistoryStore]),
+        component: createWrapperComponent([DeviceStore]),
         children: [
           {
             path: 'all-vehicles',

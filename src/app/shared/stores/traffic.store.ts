@@ -76,7 +76,6 @@ export const TrafficStore = signalStore(
               });
             }),
             catchError((error) => {
-              console.log('error', error);
               patchState(store, {
                 _loading: false,
                 error: error.message || 'Lỗi khi tải dữ liệu traffic',

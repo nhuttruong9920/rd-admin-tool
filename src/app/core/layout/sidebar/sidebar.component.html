@@ -25,12 +25,25 @@
     </app-scroll-container>
   </section>
 
-  <section class="h-10 flex-center">
-    <button class="size-8 flex-center" (click)="toggleDarkMode()">
-      <i [class]="isDarkMode() ? 'fas fa-moon' : 'fas fa-sun'"></i>
-    </button>
-    <button class="size-8 flex-center" (click)="logout()">
-      <i class="fas fa-power-off"></i>
-    </button>
+  <section class="p-2 border-t border-surface-200">
+    <div class="flex items-center justify-end gap-2" [class.!flex-col]="isCompact">
+      <button
+        class="size-8 flex-center rounded-full bg-surface-100 cursor-pointer"
+        (click)="toggleDarkMode()"
+        [class]="
+          isDarkMode() ? 'bg-white/20 text-white' : 'bg-yellow-500/20 text-yellow-600'
+        "
+      >
+        @let themeIcon =
+          isDarkMode() ? "far fa-moon-stars" : "far fa-sun-bright";
+        <i [class]="themeIcon"></i>
+      </button>
+      <button
+        class="size-8 flex-center rounded-full cursor-pointer bg-red-500/20 text-red-600 dark:text-red-100"
+        (click)="logout()"
+      >
+        <i class="far fa-power-off"></i>
+      </button>
+    </div>
   </section>
 </div>

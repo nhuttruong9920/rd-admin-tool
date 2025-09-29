@@ -97,8 +97,6 @@ export class GatewayServerCreateUpdateComponent {
       }
     });
 
-    console.log('metadataRecord', metadataRecord);
-
     const requestBody = {
       ...formValue,
       metadata:

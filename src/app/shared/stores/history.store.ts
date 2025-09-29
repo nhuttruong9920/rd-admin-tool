@@ -4,6 +4,7 @@ import {
   patchState,
   signalStore,
   withComputed,
+  withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
@@ -101,6 +102,14 @@ export const HistoryStore = signalStore(
     };
 
     return methods;
+  }),
+  withHooks({
+    onInit() {
+      console.log('HistoryStore onInit');
+    },
+    onDestroy() {
+      console.log('HistoryStore onDestroy');
+    },
   }),
 );
 

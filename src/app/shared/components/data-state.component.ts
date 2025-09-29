@@ -13,8 +13,8 @@ type DataState =
   | 'pleaseSelect';
 
 type DataStateDisplay = {
-  titleKey: string;
-  descriptionKey: string;
+  stateTitle: string;
+  stateDescription: string;
   imgSrc: string;
 };
 
@@ -35,11 +35,12 @@ type DataStateDisplay = {
       priority
     />
     <h1 class="text-2xl font-bold">
-      {{ stateDisplay().titleKey }}
+      {{ stateDisplay().stateTitle }}
     </h1>
-    <p class="text-pretty text-surface-600 text-center !m-0">
-      {{ stateDisplay().descriptionKey }}
-    </p>
+    <p
+      class="text-pretty text-surface-600 text-center !m-0"
+      [innerHTML]="stateDisplay().stateDescription"
+    ></p>
     @if (showActionButton()) {
       <p-button
         [label]="actionButtonKey()"
@@ -78,56 +79,56 @@ export class DataStateComponent {
     switch (this.state()) {
       case 'empty':
         return {
-          titleKey: this.title() ?? 'Không có dữ liệu',
-          descriptionKey:
+          stateTitle: this.title() ?? 'Không có dữ liệu',
+          stateDescription:
             this.description() ??
             'Hiện tại không có dữ liệu để hiển thị, vui lòng thử lại sau.',
           imgSrc: this.imgSrc() ?? '/images/web/empty-min.svg',
         };
       case 'error':
         return {
-          titleKey: this.title() ?? 'Đã xảy ra lỗi',
-          descriptionKey:
+          stateTitle: this.title() ?? 'Đã xảy ra lỗi',
+          stateDescription:
             this.description() ??
             'Đã xảy ra lỗi khi tải dữ liệu. Vui lòng kiểm tra kết nối mạng hoặc thử lại sau.',
           imgSrc: this.imgSrc() ?? '/images/web/error-min.svg',
         };
       case 'broken':
         return {
-          titleKey: this.title() ?? 'Dữ liệu bị lỗi',
-          descriptionKey:
+          stateTitle: this.title() ?? 'Dữ liệu bị lỗi',
+          stateDescription:
             this.description() ??
             'Dữ liệu hiện tại có thể bị hỏng hoặc không thể đọc được. Vui lòng liên hệ hỗ trợ hoặc thử lại sau.',
           imgSrc: this.imgSrc() ?? '/images/web/broken-min.svg',
         };
       case 'somethingWentWrong':
         return {
-          titleKey: this.title() ?? 'Lỗi không xác định',
-          descriptionKey:
+          stateTitle: this.title() ?? 'Lỗi không xác định',
+          stateDescription:
             this.description() ??
             'Đã xảy ra lỗi không xác định. Vui lòng liên hệ hỗ trợ hoặc thử lại sau.',
           imgSrc: this.imgSrc() ?? '/images/web/sad-min.svg',
         };
       case 'notFound':
         return {
-          titleKey: this.title() ?? 'Không tìm thấy dữ liệu',
-          descriptionKey:
+          stateTitle: this.title() ?? 'Không tìm thấy dữ liệu',
+          stateDescription:
             this.description() ??
             'Không tìm thấy dữ liệu theo yêu cầu. Vui lòng kiểm tra lại thông tin hoặc thử lại sau.',
           imgSrc: this.imgSrc() ?? '/images/web/not-found-min.svg',
         };
       case 'noUnread':
         return {
-          titleKey: this.title() ?? 'Không có dữ liệu chưa đọc',
-          descriptionKey:
+          stateTitle: this.title() ?? 'Không có dữ liệu chưa đọc',
+          stateDescription:
             this.description() ??
             'Hiện tại không có dữ liệu chưa đọc để hiển thị, vui lòng thử lại sau.',
           imgSrc: this.imgSrc() ?? '/images/web/no-unread-min.svg',
         };
       case 'pleaseSelect':
         return {
-          titleKey: this.title() ?? 'Vui lòng chọn',
-          descriptionKey:
+          stateTitle: this.title() ?? 'Vui lòng chọn',
+          stateDescription:
             this.description() ?? 'Vui lòng chọn dữ liệu để hiển thị',
           imgSrc: this.imgSrc() ?? '/images/web/please-select-min.svg',
         };
