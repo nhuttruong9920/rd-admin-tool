@@ -1,0 +1,85 @@
+<div class="h-full p-2">
+  <p-table
+    [value]="filteredDataWithStatus()"
+    size="small"
+    scrollHeight="flex"
+    scrollable
+    virtualScroll
+    [virtualScrollItemSize]="53"
+    [loading]="serviceKeyStore.isFetching()"
+  >
+    <ng-template #header>
+      <tr>
+        <th></th>
+        <th pSortableColumn="keyCode">
+          Key Code <p-sortIcon field="keyCode" />
+        </th>
+        <th pSortableColumn="status">
+          Trạng thái <p-sortIcon field="status" />
+        </th>
+        <th pSortableColumn="assignedToUserId">
+          User Id <p-sortIcon field="assignedToUserId" />
+        </th>
+        <th pSortableColumn="validFrom">
+          Thời gian hiệu lực <p-sortIcon field="validFrom" />
+        </th>
+        <th pSortableColumn="createdAt">
+          Ngày tạo <p-sortIcon field="createdAt" />
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-serviceKey>
+      <tr>
+        <td>
+          <div class="flex">
+            <p-button
+              icon="fas fa-eye"
+              rounded
+              text
+              size="small"
+              severity="secondary"
+              (click)="detail.emit(serviceKey)"
+            />
+          </div>
+        </td>
+        <td class="whitespace-nowrap font-mono">
+          {{ serviceKey.keyCode }}
+          <app-copy-button
+            [value]="serviceKey.keyCode"
+            [showLabel]="false"
+            size="small"
+          />
+        </td>
+        <td>
+          <span
+            class="rounded px-2 py-1 text-xs font-medium"
+            [class]="
+              serviceKey.status.textColor +
+              ' ' +
+              serviceKey.status.backgroundColor
+            "
+          >
+            {{ serviceKey.status.name }}
+          </span>
+        </td>
+        <td>
+          {{ serviceKey.assignedToUserId }}
+        </td>
+        <td>
+          {{ serviceKey.validFrom | toDate }} -
+          {{ serviceKey.validUntil | toDate }}
+        </td>
+        <td>
+          {{ serviceKey.generatedAt | toDate }}
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="6">
+          <app-data-state state="empty" />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

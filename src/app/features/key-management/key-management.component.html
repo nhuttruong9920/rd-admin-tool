@@ -1,0 +1,160 @@
+<div class="h-full-main-layout p-2 md:p-4 flex flex-col gap-4">
+  <!-- toolbar -->
+  <section>
+    <app-toolbar headerTitle="Quản lý key" [amount]="serviceKeyStore.count()">
+      <ng-template #leftContent>
+        <p-button
+          [icon]="
+            serviceKeyStore.isLoading()
+              ? 'fas fa-arrows-rotate fa-spin'
+              : 'fas fa-arrows-rotate'
+          "
+          [rounded]="true"
+          [text]="true"
+          (click)="serviceKeyStore.refresh()"
+          [disabled]="
+            serviceKeyStore.isLoading() || serviceKeyStore.isFetching()
+          "
+          size="small"
+        />
+      </ng-template>
+      <ng-template #rightContent>
+        <p-select
+          [options]="keyApplicationStore.data() ?? []"
+          optionLabel="appName"
+          size="small"
+          class="w-56"
+          placeholder="Application"
+          [(ngModel)]="selectedKeyApplication"
+          showClear
+          (onChange)="requestKey()"
+        >
+          <ng-template #selectedItem let-selectedOption>
+            @if (selectedOption) {
+              <div class="flex items-center gap-2">
+                <figure
+                  class="size-2 rounded-full flex-shrink-0"
+                  [class]="
+                    selectedOption.appCode ? 'bg-green-500' : 'bg-red-500'
+                  "
+                ></figure>
+                <span
+                  >{{ selectedOption.appCode }} -
+                  {{ selectedOption.appName }}</span
+                >
+              </div>
+            }
+          </ng-template>
+          <ng-template let-keyApplication #item>
+            <div class="flex items-center gap-2">
+              <figure
+                class="size-2 rounded-full flex-shrink-0"
+                [class]="
+                  keyApplication.isActive ? 'bg-green-500' : 'bg-red-500'
+                "
+              ></figure>
+              <span
+                >{{ keyApplication.appCode }} -
+                {{ keyApplication.appName }}</span
+              >
+            </div>
+          </ng-template>
+        </p-select>
+        <p-select
+          [options]="keyPackageStore.data() ?? []"
+          optionLabel="packageCode"
+          size="small"
+          class="w-56"
+          placeholder="Package"
+          [(ngModel)]="selectedKeyPackage"
+          showClear
+          (onChange)="requestKey()"
+        >
+          <ng-template #selectedItem let-selectedOption>
+            @if (selectedOption) {
+              <div class="flex items-center gap-2">
+                <figure
+                  class="size-2 rounded-full flex-shrink-0"
+                  [class]="
+                    selectedOption.packageCode ? 'bg-green-500' : 'bg-red-500'
+                  "
+                ></figure>
+                <span
+                  >{{ selectedOption.packageCode }} -
+                  {{ selectedOption.name }}</span
+                >
+              </div>
+            }
+          </ng-template>
+          <ng-template let-keyPackage #item>
+            <div class="flex items-center gap-2">
+              <figure
+                class="size-2 rounded-full flex-shrink-0"
+                [class]="keyPackage.packageCode ? 'bg-green-500' : 'bg-red-500'"
+              ></figure>
+              <span>{{ keyPackage.packageCode }} - {{ keyPackage.name }}</span>
+            </div>
+          </ng-template>
+        </p-select>
+        <p-select
+          [options]="keyStatues()"
+          optionLabel="name"
+          size="small"
+          class="min-w-40"
+          placeholder="Trạng thái"
+          [(ngModel)]="selectedKeyStatus"
+          showClear
+          (onChange)="requestKey()"
+        >
+          <ng-template #selectedItem let-selectedOption>
+            @if (selectedOption) {
+              <div
+                class="rounded px-2 py-0.5 text-xs font-medium text-center"
+                [class]="
+                  selectedOption.textColor +
+                  ' ' +
+                  selectedOption.backgroundColor
+                "
+              >
+                {{ selectedOption.name }}
+              </div>
+            }
+          </ng-template>
+          <ng-template let-keyStatus #item>
+            <div
+              class="rounded px-2 py-0.5 text-xs font-medium text-center"
+              [class]="keyStatus.textColor + ' ' + keyStatus.backgroundColor"
+            >
+              {{ keyStatus.name }}
+            </div>
+          </ng-template>
+        </p-select>
+        <app-input-search
+          (textChanged)="serviceKeyStore.setSearchTerm($event)"
+          placeholder="Tìm kiếm theo code"
+          size="small"
+        />
+        <p-button
+          icon="fas fa-plus"
+          size="small"
+          label="Tạo key"
+          (onClick)="keyGenerationDialogVisible.set(true)"
+        />
+      </ng-template>
+    </app-toolbar>
+  </section>
+
+  <!-- content -->
+  <section class="flex-1 overflow-hidden shadow-lg rounded-lg bg-surface">
+    <app-key-table [keyStatues]="keyStatues()" />
+  </section>
+</div>
+
+<p-dialog
+  header="Tạo key"
+  [modal]="true"
+  [(visible)]="keyGenerationDialogVisible"
+  styleClass=""
+>
+  <app-key-batch-generation-dialog />
+</p-dialog>

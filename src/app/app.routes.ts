@@ -158,6 +158,14 @@ export const routes: Routes = [
         path: 'others',
         children: [
           {
+            path: 'key-management',
+            loadComponent: () =>
+              import('./features/key-management/key-management.component').then(
+                (m) => m.KeyManagementComponent,
+              ),
+            title: 'Quản lý key',
+          },
+          {
             path: 'chatbot',
             loadComponent: () =>
               import('./features/chatbot/chatbot.component').then(

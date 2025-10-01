@@ -3,7 +3,11 @@ import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { GATEWAY_ADMIN_API_URL, RD_DEV_API_URL } from '@core/tokens';
+import {
+  GATEWAY_ADMIN_API_URL,
+  RD_DEV_API_URL,
+  SUBSCRIPTION_API_URL,
+} from '@core/tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +38,9 @@ export class RestService {
 
     for (const key in params) {
       if (Object.prototype.hasOwnProperty.call(params, key)) {
+        if (params[key] === undefined || params[key] === null) {
+          continue;
+        }
         httpParams = httpParams.append(key, params[key].toString());
       }
     }
@@ -94,4 +101,11 @@ export class RdDevRestService extends RestService {
 })
 export class GatewayAdminRestService extends RestService {
   protected override readonly baseUrl = inject(GATEWAY_ADMIN_API_URL);
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class SubscriptionRestService extends RestService {
+  protected override readonly baseUrl = inject(SUBSCRIPTION_API_URL);
 }

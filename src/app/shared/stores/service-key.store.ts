@@ -4,23 +4,31 @@ import {
   patchState,
   signalStore,
   withComputed,
+  withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, of, pipe, switchMap, tap } from 'rxjs';
 
-import { ConnectionApiService } from '@shared/services';
-import { CommonStoreInitialState, ConnectionDto } from '@shared/types';
+import { ServiceKeyApiService } from '@shared/services';
+import {
+  CommonStoreInitialState,
+  ServiceKeyDto,
+  ServiceKeyReq,
+} from '@shared/types';
 
-const initialState: CommonStoreInitialState<ConnectionDto[]> = {
+const initialState: CommonStoreInitialState<ServiceKeyDto[]> & {
+  request: ServiceKeyReq | undefined;
+} = {
   data: null,
   _loading: false,
   error: null,
   searchTerm: '',
+  request: undefined,
 };
 
-export const ConnectionStore = signalStore(
+export const ServiceKeyStore = signalStore(
   withState(initialState),
   withComputed(({ data, _loading, searchTerm, error }) => ({
     count: computed(() => data()?.length ?? 0),
@@ -39,23 +47,31 @@ export const ConnectionStore = signalStore(
         return allData;
       }
 
-      return allData.filter((data) => data.imei.toLowerCase().includes(search));
+      return allData.filter((data) =>
+        data.keyCode.toLowerCase().includes(search),
+      );
     }),
   })),
   withMethods((store) => {
-    const connectionApiService = inject(ConnectionApiService);
+    const serviceKeyApiService = inject(ServiceKeyApiService);
 
     const methods = {
       ensureData: (): void => {
         if (!store.data()) {
-          methods.load();
+          methods.load(store.request());
         }
       },
-      load: rxMethod<void>(
+      load: rxMethod<ServiceKeyReq | undefined>(
         pipe(
-          tap(() => patchState(store, { _loading: true, error: null })),
-          switchMap(() =>
-            connectionApiService.getAllConnectionByGroup().pipe(
+          tap((request) => {
+            patchState(store, {
+              _loading: true,
+              error: null,
+              request: request,
+            });
+          }),
+          switchMap((request) =>
+            serviceKeyApiService.getServiceKeys(request).pipe(
               tap((response) => {
                 patchState(store, {
                   data: response.data ?? [],
@@ -75,7 +91,7 @@ export const ConnectionStore = signalStore(
         ),
       ),
       refresh: (): void => {
-        methods.load();
+        methods.load(store.request());
       },
       setSearchTerm: (searchTerm: string): void => {
         patchState(store, { searchTerm });
@@ -83,11 +99,19 @@ export const ConnectionStore = signalStore(
       clearSearch: (): void => {
         patchState(store, { searchTerm: '' });
       },
-      patchData: (data: ConnectionDto[]): void => {
+      patchData: (data: ServiceKeyDto[]): void => {
         patchState(store, { data });
+      },
+      setRequest: (request: ServiceKeyReq): void => {
+        patchState(store, { request });
       },
     };
 
     return methods;
+  }),
+  withHooks({
+    onInit: (store) => {
+      store.ensureData();
+    },
   }),
 );

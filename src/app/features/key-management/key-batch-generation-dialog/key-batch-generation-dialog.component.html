@@ -1,0 +1,132 @@
+<div class="flex flex-col md:flex-row gap-2">
+  <form
+    [formGroup]="createForm"
+    (ngSubmit)="submitCreateForm()"
+    class="space-y-2 w-[350px]"
+  >
+    <div>
+      <p class="mb-0.5">
+        <label for="appId" class="text-sm font-medium text-surface-700"
+          >Ứng dụng</label
+        >
+        <sup class="text-red-500 dark:text-red-400 ml-1">*</sup>
+      </p>
+
+      <p-select
+        [options]="keyApplicationStore.data() ?? []"
+        optionLabel="appName"
+        optionValue="id"
+        class="w-full"
+        placeholder="Chọn 1 ứng dụng"
+        formControlName="appId"
+      >
+        <ng-template #selectedItem let-selectedOption>
+          @if (selectedOption) {
+            <div class="flex items-center gap-2">
+              <figure
+                class="size-2 rounded-full flex-shrink-0"
+                [class]="selectedOption.appCode ? 'bg-green-500' : 'bg-red-500'"
+              ></figure>
+              <span
+                >{{ selectedOption.appCode }} -
+                {{ selectedOption.appName }}</span
+              >
+            </div>
+          }
+        </ng-template>
+        <ng-template let-keyApplication #item>
+          <div class="flex items-center gap-2">
+            <figure
+              class="size-2 rounded-full flex-shrink-0"
+              [class]="keyApplication.isActive ? 'bg-green-500' : 'bg-red-500'"
+            ></figure>
+            <span
+              >{{ keyApplication.appCode }} - {{ keyApplication.appName }}</span
+            >
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+
+    <div>
+      <p class="mb-0.5">
+        <label for="packageId" class="text-sm font-medium text-surface-700"
+          >Package Id</label
+        >
+        <sup class="text-red-500 dark:text-red-400 ml-1">*</sup>
+      </p>
+      <p-select
+        [options]="packageOptions()"
+        optionLabel="packageCode"
+        optionValue="id"
+        class="w-full"
+        placeholder="Package"
+        formControlName="packageId"
+      >
+        <ng-template #selectedItem let-selectedOption>
+          @if (selectedOption) {
+            <div class="flex items-center gap-2">
+              <figure
+                class="size-2 rounded-full flex-shrink-0"
+                [class]="
+                  selectedOption.packageCode ? 'bg-green-500' : 'bg-red-500'
+                "
+              ></figure>
+              <span
+                >{{ selectedOption.packageCode }} -
+                {{ selectedOption.name }}</span
+              >
+            </div>
+          }
+        </ng-template>
+        <ng-template let-keyPackage #item>
+          <div class="flex items-center gap-2">
+            <figure
+              class="size-2 rounded-full flex-shrink-0"
+              [class]="keyPackage.packageCode ? 'bg-green-500' : 'bg-red-500'"
+            ></figure>
+            <span>{{ keyPackage.packageCode }} - {{ keyPackage.name }}</span>
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+    <div>
+      <p class="mb-0.5">
+        <label for="quantity" class="text-sm font-medium text-surface-700"
+          >Quantity</label
+        >
+        <sup class="text-red-500 dark:text-red-400 ml-1">*</sup>
+      </p>
+      <p-inputnumber
+        formControlName="quantity"
+        [min]="1"
+        [max]="1000"
+        showButtons
+        class="w-full"
+      />
+    </div>
+    <div class="flex justify-end gap-2 mt-4">
+      <p-button
+        label="Hủy"
+        type="button"
+        text
+        size="small"
+        (click)="closeDialog.emit()"
+      />
+
+      <p-button label="Tạo" type="submit" size="small" />
+    </div>
+  </form>
+  @if (generatedKeys().length > 0) {
+    <section
+      class="h-[271px] overflow-y-auto w-[350px] border border-surface-200 rounded-lg p-2 border-dashed bg-surface-50"
+    >
+      @for (key of generatedKeys(); track key.id) {
+        <p class="font-mono mb-2">
+          {{ key.keyCode }}
+         <app-copy-button [value]="key.keyCode" [showLabel]="false" size="small" />
+        </p>
+      }
+    </section>
+  }
+</div>

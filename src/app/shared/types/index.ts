@@ -6,4 +6,5 @@ export * from './layout.type';
 export * from './live-server.type';
 export * from './livestream.type';
 export * from './reverse-proxy.type';
+export * from './servivce-key.type';
 export * from './traffic.type';

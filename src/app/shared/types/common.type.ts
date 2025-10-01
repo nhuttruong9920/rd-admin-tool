@@ -25,6 +25,13 @@ type Api<T> = {
   message: string | null;
 };
 
+type Api2<T> = {
+  data: T | null;
+  success: boolean;
+  message: string | null;
+  errors: string[] | null;
+};
+
 type CommonStoreInitialState<T> = {
   data: T | null;
   _loading: boolean;
@@ -32,4 +39,4 @@ type CommonStoreInitialState<T> = {
   searchTerm: string;
 };
 
-export type { Api, Button, Column, KeyValue, LabelValue, CommonStoreInitialState };
+export type { Api, Api2, Button, Column, KeyValue, LabelValue, CommonStoreInitialState };

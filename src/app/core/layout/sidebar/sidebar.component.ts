@@ -38,12 +38,12 @@ export class SidebarComponent {
           routerLink: '/monitor/all-vehicles',
           command: (): void => this.closeOverlayNav(),
         },
-        {
-          label: 'Chi tiết xe',
-          icon: 'far fa-car-side',
-          routerLink: '/monitor/vehicle-detail',
-          command: (): void => this.closeOverlayNav(),
-        },
+        // {
+        //   label: 'Chi tiết xe',
+        //   icon: 'far fa-car-side',
+        //   routerLink: '/monitor/vehicle-detail',
+        //   command: (): void => this.closeOverlayNav(),
+        // },
         {
           label: 'Xem lại lộ trình',
           icon: 'far fa-history',
@@ -107,6 +107,12 @@ export class SidebarComponent {
     {
       label: 'Khác',
       children: [
+        {
+          label: 'Quản lý key',
+          icon: 'far fa-key',
+          routerLink: '/others/key-management',
+          command: (): void => this.closeOverlayNav(),
+        },
         {
           label: 'Chatbot',
           icon: 'far fa-message-bot',
