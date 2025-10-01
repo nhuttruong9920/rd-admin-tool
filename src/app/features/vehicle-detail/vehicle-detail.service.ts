@@ -6,6 +6,7 @@ import { ConnectionDto, DeviceStatus } from '@shared/types';
 export type ConnectionStatus = ConnectionDto & {
   status: DeviceStatus | undefined;
 };
+
 @Injectable()
 export class VehicleDetailService {
   #connectionStore = inject(ConnectionStore);

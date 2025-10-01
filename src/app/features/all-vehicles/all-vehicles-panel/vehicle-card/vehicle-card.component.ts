@@ -13,18 +13,13 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 
-import {
-  NavigationService,
-  StorageService
-} from '@core/services';
+import { NavigationService, StorageService } from '@core/services';
 import {
   QuickCommandManagerComponent,
   VehicleIconComponent,
 } from '@shared/components';
 import { LSKeys } from '@shared/constants';
-import {
-  CommandExecutionService
-} from '@shared/services';
+import { CommandExecutionService } from '@shared/services';
 import { DeviceStatus, SendCommandReq } from '@shared/types';
 
 @Component({

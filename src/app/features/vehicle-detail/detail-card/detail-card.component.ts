@@ -1,10 +1,11 @@
 import { Component, computed, input } from '@angular/core';
+
+import { VehicleIconComponent } from '@shared/components';
 import { ConnectionStatus } from '../vehicle-detail.service';
-import { DataStateComponent, VehicleIconComponent } from '@shared/components';
 
 @Component({
   selector: 'app-detail-card',
-  imports: [VehicleIconComponent, DataStateComponent],
+  imports: [VehicleIconComponent],
   templateUrl: './detail-card.component.html',
 })
 export class DetailCardComponent {

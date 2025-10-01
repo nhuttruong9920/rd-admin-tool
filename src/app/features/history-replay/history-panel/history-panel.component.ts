@@ -11,6 +11,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { DateService, ExportService, ToastService } from '@core/services';
@@ -18,7 +19,6 @@ import {
   DataStateComponent,
   DateTimePickerComponent,
   ToolbarComponent,
-  VehicleIconComponent,
 } from '@shared/components';
 import { HistoryControlsComponent } from '@shared/components/history-controls.component';
 import { HistoryStore } from '@shared/stores';
@@ -32,7 +32,6 @@ import { MenuModule } from 'primeng/menu';
 import { SelectModule } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
 import { HistoryCardComponent } from './history-card/history-card.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-history-panel',
@@ -41,7 +40,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     ScrollingModule,
     SelectModule,
     FormsModule,
-    VehicleIconComponent,
     DateTimePickerComponent,
     ButtonModule,
     MenuModule,

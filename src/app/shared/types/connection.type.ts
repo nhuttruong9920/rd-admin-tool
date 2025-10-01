@@ -178,6 +178,7 @@ type FormattedDevice = {
   gpsTime: string;
   relativeGpsTime: string;
   state: DeviceState;
+  stateColor: string;
   lat: number;
   long: number;
   heading: number;

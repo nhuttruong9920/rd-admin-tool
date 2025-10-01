@@ -1,5 +1,6 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NavigationService } from '@core/services';
+
 import { DataStateComponent } from '@shared/components';
 import { DetailCardComponent } from './detail-card/detail-card.component';
 import { VehicleDetailService } from './vehicle-detail.service';
@@ -15,11 +16,6 @@ export class VehicleDetailComponent {
 
   connectionStatus = this.#vehicleDetailService.connectionStatus;
 
-  constructor() {
-    effect(() => {
-      console.log(this.connectionStatus());
-    });
-  }
 
   toVehicleDetail(id: string): void {
     this.#navigationService.toVehicleDetail(id);

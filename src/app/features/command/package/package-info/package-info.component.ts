@@ -16,7 +16,6 @@ import {
   switchMap,
 } from 'rxjs';
 
-import { DataStateComponent } from '@shared/components';
 import { SafeHtmlPipe } from '@shared/pipes';
 import { ConnectionApiService } from '@shared/services';
 
@@ -29,7 +28,6 @@ import { ConnectionApiService } from '@shared/services';
     FormsModule,
     AsyncPipe,
     SafeHtmlPipe,
-    DataStateComponent,
     SkeletonModule,
   ],
   templateUrl: './package-info.component.html',

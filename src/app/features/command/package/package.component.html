@@ -49,9 +49,9 @@
       }
 
       @if (packageStore.isFetching()) {
-       @for (i of [].constructor(10); track $index) {
-        <p-skeleton height="4rem" class="mb-2" />
-      }
+        @for (i of [].constructor(10); track $index) {
+          <p-skeleton height="4rem" class="mb-2" />
+        }
       }
 
       @if (packageStore.data()) {

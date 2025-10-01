@@ -283,6 +283,36 @@ export class MapService {
     return `<div class="p-2"><table>${content}</table></div>`;
   }
 
+  convertDegreeToDirection(degree: number): string {
+    const directions = [
+      'Bắc',
+      'Đông Bắc',
+      'Đông',
+      'Đông Nam',
+      'Nam',
+      'Tây Nam',
+      'Tây',
+      'Tây Bắc',
+    ];
+    return directions[Math.round(degree / 45)];
+  }
+
+  convertLatLonToDMS(lat: number, lon: number): string {
+    const convert = (decimal: number, isLat: boolean): string => {
+      const dir = isLat ? (decimal >= 0 ? 'N' : 'S') : decimal >= 0 ? 'E' : 'W';
+
+      const absVal = Math.abs(decimal);
+      const deg = Math.floor(absVal);
+      const minFloat = (absVal - deg) * 60;
+      const min = Math.floor(minFloat);
+      const sec = ((minFloat - min) * 60).toFixed(2);
+
+      return `${deg}° ${min}′ ${sec}″ ${dir}`;
+    };
+
+    return `${convert(lat, true)}, ${convert(lon, false)}`;
+  }
+
   //! private methods
   private getLocalLayer(): string {
     const localLayerKey = this.#storageService.getLocal<string>(

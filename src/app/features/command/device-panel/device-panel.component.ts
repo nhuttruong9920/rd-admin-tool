@@ -9,7 +9,6 @@ import {
   DataStateComponent,
   InputSearchComponent,
   ToolbarComponent,
-  VehicleIconComponent,
 } from '@shared/components';
 import { ConnectionStore } from '@shared/stores';
 import { LabelValue } from '@shared/types';
@@ -24,7 +23,6 @@ import { SendCommandInputComponent } from '../send-command-input/send-command-in
     InputSearchComponent,
     SkeletonModule,
     DataStateComponent,
-    VehicleIconComponent,
     ScrollingModule,
     SendCommandInputComponent,
   ],

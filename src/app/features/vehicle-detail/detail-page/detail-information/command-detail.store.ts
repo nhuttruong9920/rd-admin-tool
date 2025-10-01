@@ -10,7 +10,6 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { ConnectionApiService } from '@shared/services';
 import {
-  CommonStoreInitialState,
   GetDeviceHistoryReq,
   HistoryWaypoint,
   HistoryWaypointDto,
@@ -22,14 +21,19 @@ import {
 } from '@shared/utils';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 
-const initialState: CommonStoreInitialState<HistoryWaypoint[]> = {
+type HistoryDetailState = {
+  data: HistoryWaypoint[] | null;
+  _loading: boolean;
+  error: string | null;
+};
+
+const initialState: HistoryDetailState = {
   data: null,
   _loading: false,
   error: null,
-  searchTerm: '',
 };
 
-export const HistoryStore = signalStore(
+export const HistoryDetailStore = signalStore(
   withState(initialState),
 
   withComputed(({ data, _loading, error }) => {
@@ -53,7 +57,6 @@ export const HistoryStore = signalStore(
           patchState(store, {
             _loading: true,
             error: null,
-            data: null,
           });
 
           return connectionApiService.fetchDeviceHistory(request).pipe(
@@ -82,21 +85,6 @@ export const HistoryStore = signalStore(
           );
         }),
       ),
-
-      setSearchTerm: (searchTerm: string): void => {
-        patchState(store, { searchTerm });
-      },
-
-      clearSearch: (): void => {
-        patchState(store, { searchTerm: '' });
-      },
-
-      clearData: (): void => {
-        patchState(store, {
-          data: null,
-          error: null,
-        });
-      },
     };
 
     return methods;
