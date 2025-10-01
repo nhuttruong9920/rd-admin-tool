@@ -27,6 +27,10 @@ type ServiceKeyDto = {
   generatedAt: string;
 };
 
+type ServiceKey = ServiceKeyDto & {
+  status: KeyStatus;
+};
+
 type ServiceKeyReq = {
   appId?: number;
   packageId?: string;
@@ -65,4 +69,5 @@ export type {
   GenerateKeyBatchReq,
   GeneratedKeyDto,
   KeyPackageReq,
+  ServiceKey,
 };

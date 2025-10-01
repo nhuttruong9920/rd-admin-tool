@@ -3,7 +3,7 @@ import { CopyButtonComponent } from '@shared/component';
 import { DataStateComponent } from '@shared/components';
 import { ToDatePipe } from '@shared/pipes';
 import { ServiceKeyStore } from '@shared/stores';
-import { KeyStatus, ServiceKeyDto } from '@shared/types';
+import { KeyStatus, ServiceKey } from '@shared/types';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 
@@ -23,7 +23,7 @@ export class KeyTableComponent {
 
   keyStatues = input<KeyStatus[]>();
 
-  detail = output<ServiceKeyDto>();
+  detail = output<ServiceKey>();
 
   filteredDataWithStatus = computed(() =>
     this.serviceKeyStore.filteredData().map((data) => ({

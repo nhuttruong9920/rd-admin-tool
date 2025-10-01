@@ -6,12 +6,19 @@ import {
   KeyPackageStore,
   ServiceKeyStore,
 } from '@shared/stores';
-import { KeyApplicationDto, KeyPackageDto, KeyStatus } from '@shared/types';
+import {
+  KeyApplicationDto,
+  KeyPackageDto,
+  KeyStatus,
+  ServiceKey,
+} from '@shared/types';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { KeyBatchGenerationDialogComponent } from './key-batch-generation-dialog/key-batch-generation-dialog.component';
+import { KeyDetailDialogComponent } from './key-detail-dialog/key-detail-dialog.component';
 import { KeyTableComponent } from './key-table/key-table.component';
+import { KeyManualFlowDialogComponent } from './key-manual-flow-dialog/key-manual-flow-dialog.component';
 @Component({
   selector: 'app-key-management',
   imports: [
@@ -23,6 +30,8 @@ import { KeyTableComponent } from './key-table/key-table.component';
     FormsModule,
     DialogModule,
     KeyBatchGenerationDialogComponent,
+    KeyDetailDialogComponent,
+    KeyManualFlowDialogComponent,
   ],
   templateUrl: './key-management.component.html',
   providers: [ServiceKeyStore, KeyApplicationStore, KeyPackageStore],
@@ -70,6 +79,10 @@ export class KeyManagementComponent {
   selectedKeyPackage = signal<KeyPackageDto | undefined>(undefined);
 
   keyGenerationDialogVisible = signal<boolean>(false);
+  detailDialogVisible = signal<boolean>(false);
+  manualFlowDialogVisible = signal<boolean>(false);
+  selectedKey = signal<ServiceKey | undefined>(undefined);
+
   protected requestKey(): void {
     this.serviceKeyStore.setRequest({
       appId: this.selectedKeyApplication()?.id,
@@ -78,5 +91,10 @@ export class KeyManagementComponent {
     });
 
     this.serviceKeyStore.refresh();
+  }
+
+  openDetailDialog(key: ServiceKey): void {
+    this.selectedKey.set(key);
+    this.detailDialogVisible.set(true);
   }
 }

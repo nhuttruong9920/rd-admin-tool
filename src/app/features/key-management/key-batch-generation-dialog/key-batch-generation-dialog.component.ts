@@ -44,6 +44,8 @@ export class KeyBatchGenerationDialogComponent {
     quantity: new FormControl(5, [Validators.required]),
   });
 
+  quickQuantityOption: number[] = [1, 5, 10, 20, 30, 40, 50];
+
   generatedKeys = signal<ServiceKeyDto[]>([]);
 
   constructor() {

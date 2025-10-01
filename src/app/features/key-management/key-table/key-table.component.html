@@ -1,18 +1,11 @@
 <div class="h-full p-2">
-  <p-table
-    [value]="filteredDataWithStatus()"
-    size="small"
-    scrollHeight="flex"
-    scrollable
-    virtualScroll
-    [virtualScrollItemSize]="53"
-    [loading]="serviceKeyStore.isFetching()"
-  >
+  <p-table [value]="filteredDataWithStatus()" size="small" scrollHeight="flex" scrollable virtualScroll
+    [virtualScrollItemSize]="53" [loading]="serviceKeyStore.isFetching()" stripedRows>
     <ng-template #header>
       <tr>
         <th></th>
         <th pSortableColumn="keyCode">
-          Key Code <p-sortIcon field="keyCode" />
+          Code <p-sortIcon field="keyCode" />
         </th>
         <th pSortableColumn="status">
           Trạng thái <p-sortIcon field="status" />
@@ -32,33 +25,20 @@
       <tr>
         <td>
           <div class="flex">
-            <p-button
-              icon="fas fa-eye"
-              rounded
-              text
-              size="small"
-              severity="secondary"
-              (click)="detail.emit(serviceKey)"
-            />
+            <p-button icon="fas fa-eye" rounded text size="small" severity="secondary"
+              (click)="detail.emit(serviceKey)" />
           </div>
         </td>
         <td class="whitespace-nowrap font-mono">
           {{ serviceKey.keyCode }}
-          <app-copy-button
-            [value]="serviceKey.keyCode"
-            [showLabel]="false"
-            size="small"
-          />
+          <app-copy-button [value]="serviceKey.keyCode" [showLabel]="false" size="small" variant="text" />
         </td>
         <td>
-          <span
-            class="rounded px-2 py-1 text-xs font-medium"
-            [class]="
+          <span class="rounded px-2 py-1 text-xs font-medium" [class]="
               serviceKey.status.textColor +
               ' ' +
               serviceKey.status.backgroundColor
-            "
-          >
+            ">
             {{ serviceKey.status.name }}
           </span>
         </td>
