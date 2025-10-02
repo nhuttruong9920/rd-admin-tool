@@ -135,6 +135,7 @@ export class PrimengService {
       dateAfter: 'Sau ngày',
       weekHeader: 'Tuần',
       emptyMessage: 'Không có dữ liệu',
+      emptyFilterMessage:'Không tìm thấy kết quả',
     };
   }
 }

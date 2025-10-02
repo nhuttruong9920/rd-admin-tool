@@ -4,6 +4,7 @@
 @import "../public/styles/color.css";
 @import "../public/styles/fonts.css";
 @import "../public/styles/global.css";
+@import "../public/styles/animation.css";
 @import "../public/styles/utilities.css";
 @import "../public/styles/primeng.css";
 @import "../node_modules/leaflet/dist/leaflet.css";

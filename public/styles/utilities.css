@@ -6,6 +6,21 @@
   @apply h-[calc(100dvh-52px)] sm:h-dvh;
 }
 
+.form-field {
+  @apply flex flex-col relative pb-4;
+
+  label {
+    @apply font-semibold mb-0.5;
+
+    .required {
+      @apply text-red-500 dark:text-red-400;
+    }
+  }
+  .form-error-container {
+    @apply absolute;
+  }
+}
+
 .shadow-card {
   box-shadow:
     0 1px 3px 0 rgba(0, 0, 0, 0.1),

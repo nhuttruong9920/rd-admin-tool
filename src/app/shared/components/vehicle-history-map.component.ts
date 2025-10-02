@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { MapService } from '@core/services';
-import { HistoryOdoChartComponent } from '@shared/component/history-odo-chart.component';
+import { HistoryOdoChartComponent } from '@shared/components/history-odo-chart.component';
 import { MapInstanceService } from '@shared/services';
 import { FormattedWaypoint, HistoryStopRange } from '@shared/types';
 import * as L from 'leaflet';

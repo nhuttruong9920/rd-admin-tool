@@ -1,23 +1,29 @@
 <div class="h-full p-2">
-  <p-table [value]="filteredDataWithStatus()" size="small" scrollHeight="flex" scrollable virtualScroll
-    [virtualScrollItemSize]="53" [loading]="serviceKeyStore.isFetching()" stripedRows>
+  <p-table
+    [value]="filteredDataWithStatus()"
+    size="small"
+    scrollHeight="flex"
+    scrollable
+    [loading]="serviceKeyStore.isFetching()"
+    stripedRows
+    virtualScroll
+    [virtualScrollItemSize]="48"
+  >
     <ng-template #header>
       <tr>
         <th></th>
-        <th pSortableColumn="keyCode">
-          Code <p-sortIcon field="keyCode" />
-        </th>
-        <th pSortableColumn="status">
+        <th pSortableColumn="keyCode">Code <p-sortIcon field="keyCode" /></th>
+        <th pSortableColumn="status" class="whitespace-nowrap">
           Trạng thái <p-sortIcon field="status" />
         </th>
-        <th pSortableColumn="assignedToUserId">
-          User Id <p-sortIcon field="assignedToUserId" />
+        <th pSortableColumn="assignedToUserId" class="whitespace-nowrap">
+          Người dùng <p-sortIcon field="assignedToUserId" />
         </th>
-        <th pSortableColumn="validFrom">
+        <th pSortableColumn="validFrom" class="whitespace-nowrap">
           Thời gian hiệu lực <p-sortIcon field="validFrom" />
         </th>
-        <th pSortableColumn="createdAt">
-          Ngày tạo <p-sortIcon field="createdAt" />
+        <th pSortableColumn="generatedAt" class="whitespace-nowrap">
+          Ngày tạo <p-sortIcon field="generatedAt" />
         </th>
       </tr>
     </ng-template>
@@ -25,31 +31,69 @@
       <tr>
         <td>
           <div class="flex">
-            <p-button icon="fas fa-eye" rounded text size="small" severity="secondary"
-              (click)="detail.emit(serviceKey)" />
+            <p-button
+              icon="fas fa-eye"
+              rounded
+              text
+              size="small"
+              severity="primary"
+              (click)="detail.emit(serviceKey)"
+              pTooltip="Xem chi tiết"
+              tooltipPosition="top"
+            />
+            <!-- <p-button
+              icon="fas fa-pencil"
+              rounded
+              text
+              size="small"
+              severity="warn"
+              (click)="update.emit(serviceKey)"
+              pTooltip="Chỉnh sửa"
+              tooltipPosition="top"
+            />
+            @if (!serviceKey.assignedToUserId) {
+              <p-button
+                icon="fas fa-user-check"
+                rounded
+                text
+                size="small"
+                severity="success"
+                (click)="assign.emit(serviceKey)"
+                pTooltip="Gán key"
+                tooltipPosition="top"
+              />
+            } -->
           </div>
         </td>
         <td class="whitespace-nowrap font-mono">
           {{ serviceKey.keyCode }}
-          <app-copy-button [value]="serviceKey.keyCode" [showLabel]="false" size="small" variant="text" />
+          <app-copy-button
+            [value]="serviceKey.keyCode"
+            [showLabel]="false"
+            size="small"
+            variant="text"
+          />
         </td>
-        <td>
-          <span class="rounded px-2 py-1 text-xs font-medium" [class]="
-              serviceKey.status.textColor +
+        <td class="whitespace-nowrap">
+          <span
+            class="rounded px-2 py-1 text-xs font-medium"
+            [class]="
+              serviceKey.formattedStatus.textColor +
               ' ' +
-              serviceKey.status.backgroundColor
-            ">
-            {{ serviceKey.status.name }}
+              serviceKey.formattedStatus.backgroundColor
+            "
+          >
+            {{ serviceKey.formattedStatus.name }}
           </span>
         </td>
         <td>
           {{ serviceKey.assignedToUserId }}
         </td>
-        <td>
+        <td class="whitespace-nowrap">
           {{ serviceKey.validFrom | toDate }} -
           {{ serviceKey.validUntil | toDate }}
         </td>
-        <td>
+        <td class="whitespace-nowrap">
           {{ serviceKey.generatedAt | toDate }}
         </td>
       </tr>

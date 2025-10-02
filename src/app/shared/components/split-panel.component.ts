@@ -58,11 +58,11 @@ import { LayoutService } from '@core/services';
             }
 
             <button
-              class="bg-surface shadow rounded-r-full flex-center absolute top-1/2 -translate-y-1/2 left-0 z-401 w-6 h-8 cursor-pointer"
+              class="btn__leaflet absolute top-2 left-2 z-401"
               (click)="toggleMobileRightPanel()"
             >
               <i
-                class="text-xs fa-solid fa-chevron-right !transition-transform duration-300"
+                class="fa-solid fa-chevron-right !transition-transform duration-300"
               ></i>
             </button>
           </div>

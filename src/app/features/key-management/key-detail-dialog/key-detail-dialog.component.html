@@ -6,24 +6,34 @@
         <div class="text-xs text-surface-600">Code</div>
         <div class="flex items-center gap-2 font-mono">
           <span class="break-all">{{ key().keyCode }}</span>
-          <app-copy-button [value]="key().keyCode" [showLabel]="false" size="small" variant="text" />
+          <app-copy-button
+            [value]="key().keyCode"
+            [showLabel]="false"
+            size="small"
+            variant="text"
+          />
         </div>
       </div>
 
       <div class="space-y-1">
         <div class="text-xs text-surface-600">Trạng thái</div>
         <div>
-          <span class="rounded px-2 py-1 text-xs font-medium" [class]="
-              key().status.textColor + ' ' + key().status.backgroundColor
-            ">
-            {{ key().status.name }}
+          <span
+            class="rounded px-2 py-1 text-xs font-medium"
+            [class]="
+              key().formattedStatus.textColor +
+              ' ' +
+              key().formattedStatus.backgroundColor
+            "
+          >
+            {{ key().formattedStatus.name }}
           </span>
         </div>
       </div>
 
       <div class="space-y-1">
         <div class="text-xs text-surface-600">User Id</div>
-        <div class="truncate">{{ key().assignedToUserId || '-' }}</div>
+        <div class="truncate">{{ key().assignedToUserId || "-" }}</div>
       </div>
 
       <div class="space-y-1">
@@ -32,7 +42,9 @@
           <span>
             {{ key().validFrom | toDate }} - {{ key().validUntil | toDate }}
           </span>
-          <span class="text-xs text-surface-600">(còn {{ remainingDays }} ngày)</span>
+          <span class="text-xs text-surface-600"
+            >(còn {{ remainingDays }} ngày)</span
+          >
         </div>
       </div>
 
@@ -44,6 +56,10 @@
   </section>
 
   <section class="flex items-center justify-end gap-2">
-    <p-button label="Đóng" severity="secondary" (onClick)="closeDialog.emit()" />
+    <p-button
+      label="Đóng"
+      severity="secondary"
+      (onClick)="closeDialog.emit()"
+    />
   </section>
 </div>

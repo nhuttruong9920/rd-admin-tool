@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { CopyButtonComponent } from '@shared/component';
+import { CopyButtonComponent } from '@shared/components';
 import { ToDatePipe } from '@shared/pipes';
 import { ServiceKey } from '@shared/types';
 import { ButtonModule } from 'primeng/button';

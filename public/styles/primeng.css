@@ -35,3 +35,42 @@
 .p-button-label {
   white-space: nowrap;
 }
+
+/* form */
+.p-inputtext,
+.p-inputnumber,
+.p-textarea,
+.p-select {
+  &:enabled:focus {
+    & + .p-inputicon {
+      color: var(--p-primary-color) !important;
+    }
+  }
+
+  &.ng-invalid.ng-dirty {
+    animation: shakeHorizontally 0.3s linear;
+    border-color: red !important;
+
+    & + .p-inputicon {
+      color: red !important;
+      animation: shakeHorizontally 0.3s linear;
+    }
+  }
+}
+
+.p-inputicon {
+  &:has(+ :enabled:focus) {
+    color: var(--p-primary-color) !important;
+  }
+
+  &:has(+ .ng-invalid.ng-dirty) {
+    color: red !important;
+    animation: shakeHorizontally 0.3s linear;
+    z-index: 1;
+  }
+}
+
+/* inputgroup */
+.p-inputgroup:has(> p-button:last-child) .p-button {
+  border-radius: 0;
+}

@@ -28,7 +28,7 @@ type ServiceKeyDto = {
 };
 
 type ServiceKey = ServiceKeyDto & {
-  status: KeyStatus;
+  formattedStatus: KeyStatus;
 };
 
 type ServiceKeyReq = {
@@ -60,6 +60,29 @@ type GeneratedKeyDto = {
   keysGenerated: number;
 };
 
+type AssignKeyReq = {
+  keyCode: string;
+  userId: string;
+  reason: string | null;
+  autoActivate: boolean;
+};
+
+type AssignKeyDto = {
+  keyCode: string;
+  assignedToUserId: string;
+  status: number;
+  subscription: {
+    id: string;
+    userId: string;
+    packageName: string;
+    startDate: string;
+    endDate: string;
+    daysRemaining: number;
+    isActive: boolean;
+    isSuspended: boolean;
+  };
+};
+
 export type {
   KeyStatus,
   KeyApplicationDto,
@@ -70,4 +93,6 @@ export type {
   GeneratedKeyDto,
   KeyPackageReq,
   ServiceKey,
+  AssignKeyReq,
+  AssignKeyDto,
 };

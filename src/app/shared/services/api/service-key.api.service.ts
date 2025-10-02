@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { SubscriptionRestService } from '@core/services';
 import {
   Api2,
+  AssignKeyDto,
+  AssignKeyReq,
   GeneratedKeyDto,
   GenerateKeyBatchReq,
   KeyPackageReq,
@@ -43,6 +45,13 @@ export class ServiceKeyApiService {
   ): Observable<Api2<GeneratedKeyDto>> {
     return this.#restService.post<GenerateKeyBatchReq, Api2<GeneratedKeyDto>>(
       `/admin/keys/generate-batch`,
+      request,
+    );
+  }
+
+  assignKey(request: AssignKeyReq): Observable<Api2<AssignKeyDto>> {
+    return this.#restService.post<AssignKeyReq, Api2<AssignKeyDto>>(
+      `/admin/keys/assign`,
       request,
     );
   }

@@ -5,8 +5,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
+import { ButtonModule } from 'primeng/button';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
+
 import { ToastService } from '@core/services';
-import { CopyButtonComponent } from '@shared/component';
+import { CopyButtonComponent, ErrorMessageComponent } from '@shared/components';
 import { ServiceKeyApiService } from '@shared/services';
 import { KeyApplicationStore, ServiceKeyStore } from '@shared/stores';
 import {
@@ -14,9 +19,7 @@ import {
   KeyPackageDto,
   ServiceKeyDto,
 } from '@shared/types';
-import { ButtonModule } from 'primeng/button';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { SelectModule } from 'primeng/select';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-key-batch-generation-dialog',
@@ -26,6 +29,8 @@ import { SelectModule } from 'primeng/select';
     InputNumberModule,
     ButtonModule,
     CopyButtonComponent,
+    ErrorMessageComponent,
+    InputTextModule,
   ],
   templateUrl: './key-batch-generation-dialog.component.html',
 })
@@ -39,9 +44,13 @@ export class KeyBatchGenerationDialogComponent {
   closeDialog = output<void>();
 
   createForm = new FormGroup({
-    appId: new FormControl(null, [Validators.required]),
-    packageId: new FormControl(null, [Validators.required]),
-    quantity: new FormControl(5, [Validators.required]),
+    appId: new FormControl<number | null>(null, [Validators.required]),
+    packageId: new FormControl<string | null>(null, [Validators.required]),
+    quantity: new FormControl<number>(5, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(1000),
+    ]),
   });
 
   quickQuantityOption: number[] = [1, 5, 10, 20, 30, 40, 50];
@@ -72,6 +81,10 @@ export class KeyBatchGenerationDialogComponent {
   }
 
   submitCreateForm(): void {
+    Object.values(this.createForm.controls).forEach((control) => {
+      control.markAsDirty();
+    });
+
     if (this.createForm.invalid) {
       return;
     }

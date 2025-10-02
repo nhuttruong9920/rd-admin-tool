@@ -1,4 +1,4 @@
-<div class="px-6 flex flex-col gap-16 h-full overflow-y-auto">
+<div class="px-2 sm:px-6 flex flex-col gap-16 h-full overflow-y-auto">
   @if (trafficStore.data(); as trafficData) {
     <app-traffic-summary [trafficData]="trafficData" (submitTimeRange)="onSubmitTimeRange($event)" />
     <app-traffic-by-route [trafficByRoute]="trafficData.overview.byRoute" />

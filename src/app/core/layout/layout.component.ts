@@ -35,7 +35,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     <!-- end overlay nav -->
 
     <section
-      class="h-10 fixed top-0 left-0 w-full bg-surface block sm:hidden"
+      class="h-10 fixed z-1000 top-0 left-0 w-full border-b border-surface-200 bg-surface block sm:hidden"
       [style.height.px]="topBarHeightPx()"
       style="box-shadow: 0 1px 2px rgba(0, 0, 0, 0.13),0 0px 2px rgba(0, 0, 0, 0.13)"
     >
