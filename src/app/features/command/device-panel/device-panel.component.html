@@ -1,66 +1,48 @@
 <div class="flex flex-col gap-1 p-2 h-full">
-  <p-selectbutton
-    [options]="tabs()"
-    [(ngModel)]="selectedTabIdx"
-    optionLabel="label"
-    optionValue="value"
-    class="w-full"
-    styleClass="flex-1"
-    [allowEmpty]="false"
-    size="small"
-  />
+  <div class="pl-10 sm:pl-0">
+    <p-selectbutton [options]="tabs()" [(ngModel)]="selectedTabIdx" optionLabel="label" optionValue="value"
+      class="w-full" styleClass="flex-1" [allowEmpty]="false" size="small" />
+  </div>
   <app-toolbar headerTitle="Danh sách thiết bị" [amount]="connectionStore.count()">
     <ng-template #rightContent>
-      <app-input-search
-        (textChanged)="connectionStore.setSearchTerm($event)"
-        placeholder="Tìm kiếm IMEI"
-        size="small"
-      />
+      <app-input-search (textChanged)="connectionStore.setSearchTerm($event)" placeholder="Tìm kiếm IMEI"
+        size="small" />
       <div></div>
     </ng-template>
   </app-toolbar>
 
   <section>
-    <app-send-command-input
-      [selectedDeviceId]="selectedDeviceId()"
-    />
+    <app-send-command-input [selectedDeviceId]="selectedDeviceId()" />
   </section>
 
   <section class="flex-1 h-1 overflow-y-auto">
     @if (connectionStore.isFetching()) {
-      @for (i of [].constructor(10); track $index) {
-        <p-skeleton height="2rem" class="mb-2" />
-      }
+    @for (i of [].constructor(10); track $index) {
+    <p-skeleton height="2rem" class="mb-2" />
+    }
     }
     @if (connectionStore.isError()) {
-      <app-data-state
-        state="error"
-        [showActionButton]="true"
-        (actionButtonClick)="connectionStore.refresh()"
-      />
+    <app-data-state state="error" [showActionButton]="true" (actionButtonClick)="connectionStore.refresh()" />
     }
 
     @if (connectionStore.filteredData()) {
-      <cdk-virtual-scroll-viewport #cdkViewport itemSize="40" class="h-full">
-        <div
-          *cdkVirtualFor="
+    <cdk-virtual-scroll-viewport #cdkViewport itemSize="40" class="h-full">
+      <div *cdkVirtualFor="
             let connection of connectionStore.filteredData();
             let idx = index
-          "
-        >
-          <button
-            class="w-full flex items-center gap-1 p-2 hover:bg-surface-100 cursor-pointer transition-colors duration-300 rounded"
-            [class.!bg-primary-500/30]="selectedDeviceId() === connection.imei"
-            (click)="selectedDeviceId.set(connection.imei)"
-          >
-            <!-- <app-vehicle-icon
+          ">
+        <button
+          class="w-full flex items-center gap-1 p-2 hover:bg-surface-100 cursor-pointer transition-colors duration-300 rounded"
+          [class.!bg-primary-500/30]="selectedDeviceId() === connection.imei"
+          (click)="selectedDeviceId.set(connection.imei)">
+          <!-- <app-vehicle-icon
               [iconClass]="'bg-car_' + connection.formatted.state"
               [isSmall]="true"
             /> -->
-            <div>{{ connection.imei }}</div>
-          </button>
-        </div>
-      </cdk-virtual-scroll-viewport>
+          <div>{{ connection.imei }}</div>
+        </button>
+      </div>
+    </cdk-virtual-scroll-viewport>
     }
   </section>
 </div>

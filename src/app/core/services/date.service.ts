@@ -234,7 +234,7 @@ export class DateService {
   ): string {
     if (!date) return '';
 
-    const rtf = new Intl.RelativeTimeFormat('vi', { numeric: 'auto' });
+    const rtf = new Intl.RelativeTimeFormat('vi', { numeric: 'always' });
     let inputDate: Date;
 
     if (typeof date === 'string') {

@@ -1,22 +1,10 @@
 <div class="h-full w-full p-2 flex flex-col gap-2">
   <!-- toolbar -->
   <section>
-    <app-toolbar
-      headerTitle="Xem lại lộ trình"
-      [amount]="historyStore.data()?.length"
-    >
+    <app-toolbar headerTitle="Xem lại lộ trình" [amount]="historyStore.data()?.length" styleClass="h-9 pl-10 sm:pl-0">
       <ng-template #rightContent>
-        <p-select
-          [options]="connection()"
-          appendTo="body"
-          [(ngModel)]="selectedDeviceId"
-          optionLabel="imei"
-          optionValue="imei"
-          placeholder="Chọn thiết bị"
-          class="w-full"
-          [filter]="true"
-          size="small"
-        >
+        <p-select [options]="connection()" appendTo="body" [(ngModel)]="selectedDeviceId" optionLabel="imei"
+          optionValue="imei" placeholder="Chọn thiết bị" class="w-full" [filter]="true" size="small">
           <!-- <ng-template #selectedItem let-selectedOption>
             @if (selectedOption) {
               <div class="flex items-center gap-1">
@@ -40,54 +28,22 @@
         </p-select>
 
         <div class="flex gap-1">
-          <app-date-time-picker
-            [(date)]="historyFromDate"
-            inputId="from"
-            size="small"
-            [showIcon]="false"
-          />
-          <app-date-time-picker
-            [(date)]="historyToDate"
-            inputId="to"
-            size="small"
-            [showIcon]="false"
-          />
-          <p-button
-            icon="fas fa-ellipsis-vertical"
-            text
-            severity="secondary"
-            (click)="dateRangeMenu.toggle($event)"
-            size="small"
-          />
+          <app-date-time-picker [(date)]="historyFromDate" inputId="from" size="small" [showIcon]="false" />
+          <app-date-time-picker [(date)]="historyToDate" inputId="to" size="small" [showIcon]="false" />
+          <p-button icon="fas fa-ellipsis-vertical" text severity="secondary" (click)="dateRangeMenu.toggle($event)"
+            size="small" />
         </div>
 
         <div class="flex gap-1 justify-end">
           <p-floatlabel variant="on" class="flex-1">
-            <p-inputnumber
-              [(ngModel)]="batteryPercentageInterval"
-              [showButtons]="true"
-              size="small"
-              [min]="0"
-              [max]="100"
-              suffix="%"
-              inputStyleClass="w-30"
-            />
+            <p-inputnumber [(ngModel)]="batteryPercentageInterval" [showButtons]="true" size="small" [min]="0"
+              [max]="100" suffix="%" inputStyleClass="w-30" />
             <label for="batteryPercentageInterval">Khoảng pin</label>
           </p-floatlabel>
 
-          <p-button
-            icon="fas fa-magnifying-glass"
-            size="small"
-            label="Tải"
-            (click)="loadHistory()"
-          />
-          <p-button
-            severity="secondary"
-            icon="fas fa-file-excel"
-            size="small"
-            label="Xuất file"
-            (click)="downloadExcel()"
-          />
+          <p-button icon="fas fa-magnifying-glass" size="small" label="Tải" (click)="loadHistory()" />
+          <p-button severity="secondary" icon="fas fa-file-excel" size="small" label="Xuất file"
+            (click)="downloadExcel()" />
         </div>
       </ng-template>
     </app-toolbar>
@@ -95,69 +51,46 @@
 
   <!-- history controls -->
   <section>
-    <app-history-controls
-      [historyLength]="historyStore.data()?.length"
-      [(currentPlayingIndex)]="currentPlayingIndex"
-      [(isHistoryPlaying)]="isHistoryPlaying"
-      [(selectedPlayingSpeed)]="selectedPlayingSpeed"
-    />
+    <app-history-controls [historyLength]="historyStore.data()?.length" [(currentPlayingIndex)]="currentPlayingIndex"
+      [(isHistoryPlaying)]="isHistoryPlaying" [(selectedPlayingSpeed)]="selectedPlayingSpeed" />
   </section>
 
   <!-- vehicle list -->
   <section class="flex-1 overflow-y-auto">
     @if (!selectedDeviceId() || !hasLoaded()) {
-      <app-data-state
-        state="pleaseSelect"
-        title="Chưa chọn IMEI"
-        description="Vui lòng <b class='text-primary'>chọn một IMEI</b> bên trên và  <b class='text-primary'>nhấn tải</b> để xem lại lộ trình"
-      />
+    <app-data-state state="pleaseSelect" title="Chưa chọn IMEI"
+      description="Vui lòng <b class='text-primary'>chọn một IMEI</b> bên trên và  <b class='text-primary'>nhấn tải</b> để xem lại lộ trình" />
     } @else {
-      @if (historyStore.isFetching()) {
-        <div>
-          @for (i of [].constructor(10); track idx; let idx = $index) {
-            <p-skeleton height="80px" width="100%" class="mb-2" />
-          }
-        </div>
+    @if (historyStore.isFetching()) {
+    <div>
+      @for (i of [].constructor(10); track idx; let idx = $index) {
+      <p-skeleton height="80px" width="100%" class="mb-2" />
       }
+    </div>
+    }
 
-      @if (historyStore.isError()) {
-        <app-data-state state="error" />
-      }
+    @if (historyStore.isError()) {
+    <app-data-state state="error" />
+    }
 
-      @if (historyStore.data()) {
-        @let data = historyStore.data()!;
-        @if (data.length === 0) {
-          <app-data-state state="empty" />
-        } @else {
-          <cdk-virtual-scroll-viewport
-            #cdkViewport
-            itemSize="129"
-            class="h-full"
-          >
-            <div
-              *cdkVirtualFor="
+    @if (historyStore.data()) {
+    @let data = historyStore.data()!;
+    @if (data.length === 0) {
+    <app-data-state state="empty" />
+    } @else {
+    <cdk-virtual-scroll-viewport #cdkViewport itemSize="129" class="h-full">
+      <div *cdkVirtualFor="
                 let waypoint of historyStore.data();
                 let idx = index
-              "
-            >
-              <app-history-card
-                [id]="idx"
-                [index]="idx"
-                [waypoint]="waypoint"
-                [isSelected]="currentPlayingIndex() === idx"
-                (click)="selectWaypoint(idx)"
-              />
-            </div>
-          </cdk-virtual-scroll-viewport>
-        }
-      }
+              ">
+        <app-history-card [id]="idx" [index]="idx" [waypoint]="waypoint" [isSelected]="currentPlayingIndex() === idx"
+          (click)="selectWaypoint(idx)" />
+      </div>
+    </cdk-virtual-scroll-viewport>
+    }
+    }
     }
   </section>
 </div>
 
-<p-menu
-  #dateRangeMenu
-  appendTo="body"
-  [model]="dateRangeItems"
-  [popup]="true"
-/>
+<p-menu #dateRangeMenu appendTo="body" [model]="dateRangeItems" [popup]="true" />
